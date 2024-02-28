@@ -12,8 +12,8 @@ export default function OperationItemsPricesChanges() {
     const averageValues = useSignal({})
     const sortValue = useSignal(-1)
     const isLoading = useSignal(false)
-    
-    dynamicTitle(window.location.pathname.slice(1).replaceAll('-',' '))
+
+    dynamicTitle(window.location.pathname.slice(1).replaceAll('-', ' '))
 
     const getOperationItemsPriceChangesData = async () => {
         if (eventName == '-' || itemType == '-') return false
@@ -85,7 +85,12 @@ export default function OperationItemsPricesChanges() {
                 {isLoading.value && <div className="bubbles-wrapper"><Bubbles /></div>}
                 {data.value.length > 0 && data.value.map((item, index) =>
                     <div className="item-div" key={index}>
-                        <img className="image" src={'https://api.steamapis.com/image/item/730/' + item.name} />
+                        <div className="image-wrapper">
+                            <img className="image" src={'https://api.steamapis.com/image/item/730/' + item.name} />
+                            <div className="tool-tip mobile-size-tool-tip tool-tip-from-left">
+                                <span>{item.name}</span>
+                            </div>
+                        </div>
                         <span className="item-div-children item-name">{item.name}</span>
                         <span className="item-div-children min-price-during-operation">
                             <span>{item.minPriceDuringOperation[0]}</span>
@@ -98,7 +103,7 @@ export default function OperationItemsPricesChanges() {
                         <span className="item-div-children highest-price">
                             <span>{item.highestPrice[0]}</span>
                             <span>{`(${item.highestPrice[1]}x)`}</span>
-                            <div className="tool-tip">
+                            <div className="tool-tip tool-tip-from-right">
                                 {item.highestPrice[item.highestPrice.length - 1].map((item2, index2) =>
                                     <span key={index2}>{`${item2[0]} | ${item2[1]} | ${item2[2]}`}</span>
                                 )}

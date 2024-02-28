@@ -121,8 +121,15 @@ export default function MajorItemsPricesChanges() {
 
                 {data.value.length > 0 && data.value.map((item, index) =>
                     <div className="item-div" key={index}>
-                        <img className="image" src={'https://api.steamapis.com/image/item/730/' + item.name} />
-                        <span className="item-div-children item-name">{item.name}</span>
+                        <div className="image-wrapper">
+                            <img className="image" src={'https://api.steamapis.com/image/item/730/' + item.name} />
+                            <div className="tool-tip mobile-size-tool-tip tool-tip-from-left">
+                                <span>{item.name}</span>
+                            </div>
+                        </div>
+                        <span className="item-div-children item-name">
+                            <span>{item.name}</span>
+                        </span>
                         <span className="item-div-children price-before-sale">
                             <span>{item.priceBeforeSale[0]}</span>
                             <div className="tool-tip">
@@ -153,7 +160,7 @@ export default function MajorItemsPricesChanges() {
                             <span>{item.highestPrice[0]}</span>
                             <span>{`(${item.highestPrice[1]}x)`}</span>
                             {getMinPriceAfterSale.value && <span>{`(${item.highestPrice[2]}x)`}</span>}
-                            <div className="tool-tip">
+                            <div className="tool-tip tool-tip-from-right">
                                 {item.highestPrice[item.highestPrice.length - 1].map((item2, index2) =>
                                     <span key={index2}>{`${item2[0]} | ${item2[1]} | ${item2[2]}`}</span>
                                 )}

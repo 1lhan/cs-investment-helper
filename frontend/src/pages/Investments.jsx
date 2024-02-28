@@ -217,7 +217,9 @@ export default function Investments({ user }) {
                 </div>
                 {investments && investments.map((investment, index) =>
                     <div className="item-div" key={index}>
-                        <img className="image" src={'https://api.steamapis.com/image/item/730/' + investment.name} onClick={() => { if (user.value.username == username) selectedInvestmentItem.value = investment }} />
+                        <div className="image-wrapper">
+                            <img className="image" src={'https://api.steamapis.com/image/item/730/' + investment.name} onClick={() => { if (user.value.username == username) selectedInvestmentItem.value = investment }} />
+                        </div>
                         <span className="item-div-children item-name">{investment.name}</span>
                         <span className="item-div-children buy-price">{+investment.buyPrice.toFixed(3)}</span>
                         <span className="item-div-children quantity">{investment.quantity}</span>
@@ -488,7 +490,6 @@ export default function Investments({ user }) {
                         </button>
                         <button className="btn add-investment-btn" onClick={() => { batch(() => { showAddInvestmentForm.value = true, stopUpdateInvestmentsMarketPrice.value = true }) }}>
                             <i className="fa-solid fa-plus" />
-                            <span>Add Investment</span>
                         </button>
                     </div>}
                 </div>

@@ -34,12 +34,12 @@ export default function Header({ user }) {
                                 <i className="fa-solid fa-table-list" />
                                 <span>Operation Items Price Changes</span>
                             </NavLink>
-                            <NavLink to='/major-analysis-center'>
-                                <i className="fa-solid fa-magnifying-glass-chart" onClick={() => onClickNavItem()} />
+                            <NavLink to='/major-analysis-center' onClick={() => onClickNavItem()} >
+                                <i className="fa-solid fa-magnifying-glass-chart" />
                                 <span>Major Analysis Center</span>
                             </NavLink>
-                            <NavLink to='/event-dates'>
-                                <i className="fa-solid fa-calendar-days" onClick={() => onClickNavItem()} />
+                            <NavLink to='/event-dates' onClick={() => onClickNavItem()}>
+                                <i className="fa-solid fa-calendar-days" />
                                 <span>Event Dates</span>
                             </NavLink>
                         </div>

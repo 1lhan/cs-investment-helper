@@ -927,6 +927,154 @@ html .message-box {
   border-radius: 4px;
   color: #fb923c;
 }
+html .template-style-wrapper .field-names,
+html .template-style-wrapper .item-div,
+html .template-style-wrapper .average-values {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  width: 100%;
+  height: 4rem;
+  background: #1f2a48;
+  border-radius: 3px;
+}
+html .template-style-wrapper .field-names .image-wrapper,
+html .template-style-wrapper .item-div .image-wrapper,
+html .template-style-wrapper .average-values .image-wrapper {
+  position: relative;
+  width: 4.5rem;
+  aspect-ratio: 1/0.7777777778;
+}
+html .template-style-wrapper .field-names .image-wrapper img,
+html .template-style-wrapper .item-div .image-wrapper img,
+html .template-style-wrapper .average-values .image-wrapper img {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+html .template-style-wrapper .field-names .image-wrapper .mobile-size-tool-tip,
+html .template-style-wrapper .item-div .image-wrapper .mobile-size-tool-tip,
+html .template-style-wrapper .average-values .image-wrapper .mobile-size-tool-tip {
+  display: none;
+}
+html .template-style-wrapper .field-names .tool-tip,
+html .template-style-wrapper .item-div .tool-tip,
+html .template-style-wrapper .average-values .tool-tip {
+  display: none;
+  gap: 0.25rem;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #324372;
+  z-index: 2;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+html .template-style-wrapper .field-names .tool-tip span,
+html .template-style-wrapper .item-div .tool-tip span,
+html .template-style-wrapper .average-values .tool-tip span {
+  white-space: nowrap;
+}
+html .template-style-wrapper .field-names .tool-tip-from-right,
+html .template-style-wrapper .item-div .tool-tip-from-right,
+html .template-style-wrapper .average-values .tool-tip-from-right {
+  left: auto;
+  transform: translateX(0);
+  right: 0%;
+}
+html .template-style-wrapper .field-names .tool-tip-from-left,
+html .template-style-wrapper .item-div .tool-tip-from-left,
+html .template-style-wrapper .average-values .tool-tip-from-left {
+  transform: translateX(0);
+  left: 0;
+}
+html .template-style-wrapper .field-names .item-div-children,
+html .template-style-wrapper .field-names .field-names-item,
+html .template-style-wrapper .field-names .average-values-item,
+html .template-style-wrapper .item-div .item-div-children,
+html .template-style-wrapper .item-div .field-names-item,
+html .template-style-wrapper .item-div .average-values-item,
+html .template-style-wrapper .average-values .item-div-children,
+html .template-style-wrapper .average-values .field-names-item,
+html .template-style-wrapper .average-values .average-values-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  flex: 1;
+  height: 100%;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+html .template-style-wrapper .field-names .item-div-children:hover .tool-tip,
+html .template-style-wrapper .field-names .field-names-item:hover .tool-tip,
+html .template-style-wrapper .field-names .average-values-item:hover .tool-tip,
+html .template-style-wrapper .item-div .item-div-children:hover .tool-tip,
+html .template-style-wrapper .item-div .field-names-item:hover .tool-tip,
+html .template-style-wrapper .item-div .average-values-item:hover .tool-tip,
+html .template-style-wrapper .average-values .item-div-children:hover .tool-tip,
+html .template-style-wrapper .average-values .field-names-item:hover .tool-tip,
+html .template-style-wrapper .average-values .average-values-item:hover .tool-tip {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+html .template-style-wrapper .field-names .item-name,
+html .template-style-wrapper .item-div .item-name,
+html .template-style-wrapper .average-values .item-name {
+  flex: 2;
+  justify-content: flex-start;
+  text-align: start;
+  -webkit-user-select: auto;
+     -moz-user-select: auto;
+          user-select: auto;
+}
+html .template-style-wrapper .field-names .market-price,
+html .template-style-wrapper .item-div .market-price,
+html .template-style-wrapper .average-values .market-price {
+  flex-direction: column;
+}
+html .template-style-wrapper .field-names .market-price span:nth-of-type(2),
+html .template-style-wrapper .item-div .market-price span:nth-of-type(2),
+html .template-style-wrapper .average-values .market-price span:nth-of-type(2) {
+  font-weight: 600;
+}
+html .template-style-wrapper .field-names,
+html .template-style-wrapper .average-values {
+  background: #324372;
+  height: auto;
+  z-index: 2;
+}
+html .template-style-wrapper .field-names .item-name,
+html .template-style-wrapper .average-values .item-name {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+html .template-style-wrapper .field-names .image,
+html .template-style-wrapper .average-values .image {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 4.5rem;
+}
+html .template-style-wrapper .field-names .field-names-item > span,
+html .template-style-wrapper .average-values .field-names-item > span {
+  cursor: pointer;
+}
 @keyframes rainbow {
   0% {
     background: #34d399;
@@ -1155,136 +1303,6 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   width: 8rem;
 }
 
-.template-style-wrapper .field-names,
-.template-style-wrapper .item-div,
-.template-style-wrapper .average-values {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  width: 100%;
-  height: 4rem;
-  background: #1f2a48;
-  border-radius: 3px;
-}
-.template-style-wrapper .field-names .item-div-children,
-.template-style-wrapper .field-names .field-names-item,
-.template-style-wrapper .field-names .average-values-item,
-.template-style-wrapper .item-div .item-div-children,
-.template-style-wrapper .item-div .field-names-item,
-.template-style-wrapper .item-div .average-values-item,
-.template-style-wrapper .average-values .item-div-children,
-.template-style-wrapper .average-values .field-names-item,
-.template-style-wrapper .average-values .average-values-item {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  flex: 1;
-  height: 100%;
-  text-align: center;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.template-style-wrapper .field-names .item-div-children:hover .tool-tip,
-.template-style-wrapper .field-names .field-names-item:hover .tool-tip,
-.template-style-wrapper .field-names .average-values-item:hover .tool-tip,
-.template-style-wrapper .item-div .item-div-children:hover .tool-tip,
-.template-style-wrapper .item-div .field-names-item:hover .tool-tip,
-.template-style-wrapper .item-div .average-values-item:hover .tool-tip,
-.template-style-wrapper .average-values .item-div-children:hover .tool-tip,
-.template-style-wrapper .average-values .field-names-item:hover .tool-tip,
-.template-style-wrapper .average-values .average-values-item:hover .tool-tip {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.template-style-wrapper .field-names .item-div-children .tool-tip,
-.template-style-wrapper .field-names .field-names-item .tool-tip,
-.template-style-wrapper .field-names .average-values-item .tool-tip,
-.template-style-wrapper .item-div .item-div-children .tool-tip,
-.template-style-wrapper .item-div .field-names-item .tool-tip,
-.template-style-wrapper .item-div .average-values-item .tool-tip,
-.template-style-wrapper .average-values .item-div-children .tool-tip,
-.template-style-wrapper .average-values .field-names-item .tool-tip,
-.template-style-wrapper .average-values .average-values-item .tool-tip {
-  display: none;
-  gap: 0.25rem;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #324372;
-  z-index: 2;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-.template-style-wrapper .field-names .item-div-children .tool-tip span,
-.template-style-wrapper .field-names .field-names-item .tool-tip span,
-.template-style-wrapper .field-names .average-values-item .tool-tip span,
-.template-style-wrapper .item-div .item-div-children .tool-tip span,
-.template-style-wrapper .item-div .field-names-item .tool-tip span,
-.template-style-wrapper .item-div .average-values-item .tool-tip span,
-.template-style-wrapper .average-values .item-div-children .tool-tip span,
-.template-style-wrapper .average-values .field-names-item .tool-tip span,
-.template-style-wrapper .average-values .average-values-item .tool-tip span {
-  white-space: nowrap;
-}
-.template-style-wrapper .field-names .item-name,
-.template-style-wrapper .item-div .item-name,
-.template-style-wrapper .average-values .item-name {
-  flex: 2;
-  justify-content: flex-start;
-  text-align: start;
-  -webkit-user-select: auto;
-     -moz-user-select: auto;
-          user-select: auto;
-}
-.template-style-wrapper .field-names .image,
-.template-style-wrapper .item-div .image,
-.template-style-wrapper .average-values .image {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 4.5rem;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.template-style-wrapper .field-names .market-price,
-.template-style-wrapper .item-div .market-price,
-.template-style-wrapper .average-values .market-price {
-  flex-direction: column;
-}
-.template-style-wrapper .field-names .market-price span:nth-of-type(2),
-.template-style-wrapper .item-div .market-price span:nth-of-type(2),
-.template-style-wrapper .average-values .market-price span:nth-of-type(2) {
-  font-weight: 600;
-}
-.template-style-wrapper .field-names,
-.template-style-wrapper .average-values {
-  background: #324372;
-  height: auto;
-}
-.template-style-wrapper .field-names .item-name,
-.template-style-wrapper .average-values .item-name {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.template-style-wrapper .field-names .field-names-item > span,
-.template-style-wrapper .average-values .field-names-item > span {
-  cursor: pointer;
-}
-
 .data-control-center-page {
   display: flex;
   flex-direction: column;
@@ -1372,7 +1390,7 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
 }
 .event-dates-page section {
   width: 100%;
-  overflow: auto;
+  overflow-x: scroll;
 }
 .event-dates-page section .section-inner {
   display: flex;
@@ -1383,70 +1401,9 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   width: 100%;
   min-width: 1000px;
 }
-.event-dates-page section .section-inner .section-item,
-.event-dates-page section .section-inner .field-names {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.25rem;
-  width: 100%;
-  height: 4rem;
-  background: #1f2a48;
-  border-radius: 3px;
-  padding: 0.25rem;
-}
-.event-dates-page section .section-inner .section-item .image,
-.event-dates-page section .section-inner .field-names .image {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 4.5rem;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.event-dates-page section .section-inner .section-item .section-item-children,
-.event-dates-page section .section-inner .section-item .field-names-item,
-.event-dates-page section .section-inner .section-item .time-difference-span,
-.event-dates-page section .section-inner .field-names .section-item-children,
-.event-dates-page section .section-inner .field-names .field-names-item,
-.event-dates-page section .section-inner .field-names .time-difference-span {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  flex: 1;
-  height: 100%;
-  padding: 0.25rem;
-  text-align: center;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.event-dates-page section .section-inner .section-item .time-difference-span,
-.event-dates-page section .section-inner .field-names .time-difference-span {
+.event-dates-page section .section-inner .item-div .time-difference,
+.event-dates-page section .section-inner .field-names .time-difference {
   flex: 0.25;
-}
-.event-dates-page section .section-inner .section-item .event-name,
-.event-dates-page section .section-inner .field-names .event-name {
-  justify-content: flex-start;
-  flex: 2;
-  -webkit-user-select: auto;
-     -moz-user-select: auto;
-          user-select: auto;
-}
-.event-dates-page section .section-inner .field-names {
-  background: #324372;
-  height: auto;
-}
-.event-dates-page section .section-inner .field-names .event-name {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
 }
 
 .major-analysis-center-page {
@@ -1812,6 +1769,9 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   gap: 0.5rem;
   margin-left: auto;
 }
+.investments-page .top-div .buttons .add-investment-btn {
+  padding: 0.5rem;
+}
 .investments-page .top-div .buttons .filter-btn {
   background: #1f2a48;
   box-shadow: 0 0 6px 2px #324372;
@@ -1838,6 +1798,13 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.investments-page .investments .field-names {
+  position: sticky;
+  top: 0;
+}
+.investments-page .investments .image-wrapper {
+  cursor: pointer;
 }
 .investments-page .add-investment-form-container {
   display: flex;
@@ -2032,8 +1999,53 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
 }
 
 @media (max-width: 700px) {
-  * {
+  html * {
     font-size: 0.95rem;
+  }
+  html .template-style-wrapper .field-names .image-wrapper,
+  html .template-style-wrapper .item-div .image-wrapper,
+  html .template-style-wrapper .average-values .image-wrapper {
+    width: 3.5rem;
+  }
+  html .template-style-wrapper .field-names .image-wrapper:hover .mobile-size-tool-tip,
+  html .template-style-wrapper .item-div .image-wrapper:hover .mobile-size-tool-tip,
+  html .template-style-wrapper .average-values .image-wrapper:hover .mobile-size-tool-tip {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  html .template-style-wrapper .field-names .item-div-children,
+  html .template-style-wrapper .field-names .field-names-item,
+  html .template-style-wrapper .field-names .average-values-item,
+  html .template-style-wrapper .item-div .item-div-children,
+  html .template-style-wrapper .item-div .field-names-item,
+  html .template-style-wrapper .item-div .average-values-item,
+  html .template-style-wrapper .average-values .item-div-children,
+  html .template-style-wrapper .average-values .field-names-item,
+  html .template-style-wrapper .average-values .average-values-item {
+    gap: 0.125rem;
+    flex-direction: column;
+  }
+  html .template-style-wrapper .field-names .item-div-children .tool-tip,
+  html .template-style-wrapper .field-names .field-names-item .tool-tip,
+  html .template-style-wrapper .field-names .average-values-item .tool-tip,
+  html .template-style-wrapper .item-div .item-div-children .tool-tip,
+  html .template-style-wrapper .item-div .field-names-item .tool-tip,
+  html .template-style-wrapper .item-div .average-values-item .tool-tip,
+  html .template-style-wrapper .average-values .item-div-children .tool-tip,
+  html .template-style-wrapper .average-values .field-names-item .tool-tip,
+  html .template-style-wrapper .average-values .average-values-item .tool-tip {
+    gap: 0.125rem;
+    padding: 0.4rem;
+  }
+  html .template-style-wrapper .field-names .item-name,
+  html .template-style-wrapper .item-div .item-name,
+  html .template-style-wrapper .average-values .item-name {
+    display: none;
+  }
+  html .template-style-wrapper .field-names .image {
+    width: 3.5rem;
   }
   header .header-div .hamburger-btn {
     display: block;
@@ -2082,40 +2094,6 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
     border-radius: 0;
     width: 100%;
     left: 0;
-  }
-  .template-style-wrapper .field-names .item-div-children,
-  .template-style-wrapper .field-names .field-names-item,
-  .template-style-wrapper .field-names .average-values-item,
-  .template-style-wrapper .item-div .item-div-children,
-  .template-style-wrapper .item-div .field-names-item,
-  .template-style-wrapper .item-div .average-values-item,
-  .template-style-wrapper .average-values .item-div-children,
-  .template-style-wrapper .average-values .field-names-item,
-  .template-style-wrapper .average-values .average-values-item {
-    gap: 0.125rem;
-    flex-direction: column;
-  }
-  .template-style-wrapper .field-names .item-div-children .tool-tip,
-  .template-style-wrapper .field-names .field-names-item .tool-tip,
-  .template-style-wrapper .field-names .average-values-item .tool-tip,
-  .template-style-wrapper .item-div .item-div-children .tool-tip,
-  .template-style-wrapper .item-div .field-names-item .tool-tip,
-  .template-style-wrapper .item-div .average-values-item .tool-tip,
-  .template-style-wrapper .average-values .item-div-children .tool-tip,
-  .template-style-wrapper .average-values .field-names-item .tool-tip,
-  .template-style-wrapper .average-values .average-values-item .tool-tip {
-    gap: 0.125rem;
-    padding: 0.4rem;
-  }
-  .template-style-wrapper .field-names .item-name,
-  .template-style-wrapper .item-div .item-name,
-  .template-style-wrapper .average-values .item-name {
-    display: none;
-  }
-  .template-style-wrapper .field-names .image,
-  .template-style-wrapper .item-div .image,
-  .template-style-wrapper .average-values .image {
-    width: 3.5rem;
   }
 }
 @media (max-width: 600px) {

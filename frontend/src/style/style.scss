@@ -962,6 +962,119 @@ html {
         color: $orange;
     }
 
+    .template-style-wrapper {
+
+        .field-names,
+        .item-div,
+        .average-values {
+            @include flex(row, flex-start, center);
+            gap: 0.25rem;
+            padding: 0.25rem;
+            width: 100%;
+            height: $item-div-height;
+            background: $bg-color-1;
+            border-radius: 3px;
+
+            .image-wrapper {
+                position: relative;
+                width: 4.5rem;
+                aspect-ratio: 1/0.7777777777777778;
+
+                img {
+                    position: absolute;
+                    width: 100%;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+                .mobile-size-tool-tip {
+                    display: none;
+                }
+            }
+
+            .tool-tip {
+                display: none;
+                gap: 0.25rem;
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: $bg-color-2;
+                z-index: 2;
+                padding: 0.5rem;
+                border-radius: 4px;
+
+                span {
+                    white-space: nowrap;
+                }
+            }
+
+            .tool-tip-from-right {
+                left: auto;
+                transform: translateX(0);
+                right: 0%;
+            }
+
+            .tool-tip-from-left {
+                transform: translateX(0);
+                left: 0;
+
+            }
+
+            .item-div-children,
+            .field-names-item,
+            .average-values-item {
+                @include flex(row, center, center);
+                position: relative;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                flex: 1;
+                height: 100%;
+                text-align: center;
+                user-select: none;
+
+                &:hover .tool-tip {
+                    @include flex(column, flex-start, flex-start);
+                }
+            }
+
+            .item-name {
+                flex: 2;
+                justify-content: flex-start;
+                text-align: start;
+                user-select: auto;
+            }
+
+            .market-price {
+                flex-direction: column;
+
+                span:nth-of-type(2) {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .field-names,
+        .average-values {
+            background: $bg-color-2;
+            height: auto;
+            z-index: 2;
+
+            .item-name {
+                user-select: none;
+            }
+
+            .image {
+                @include flex(row, center, center);
+                width: 4.5rem;
+            }
+
+            .field-names-item>span {
+                cursor: pointer;
+            }
+        }
+    }
 
     @keyframes rainbow {
         0% {
@@ -1175,90 +1288,6 @@ header {
     }
 }
 
-.template-style-wrapper {
-
-    .field-names,
-    .item-div,
-    .average-values {
-        @include flex(row, flex-start, center);
-        gap: 0.25rem;
-        padding: 0.25rem;
-        width: 100%;
-        height: $item-div-height;
-        background: $bg-color-1;
-        border-radius: 3px;
-
-        .item-div-children,
-        .field-names-item,
-        .average-values-item {
-            @include flex(row, center, center);
-            position: relative;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-            flex: 1;
-            height: 100%;
-            text-align: center;
-            user-select: none;
-
-            &:hover .tool-tip {
-                @include flex(column, flex-start, flex-start);
-            }
-
-            .tool-tip {
-                display: none;
-                gap: 0.25rem;
-                position: absolute;
-                top: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background: $bg-color-2;
-                z-index: 2;
-                padding: 0.5rem;
-                border-radius: 4px;
-
-                span {
-                    white-space: nowrap;
-                }
-            }
-        }
-
-        .item-name {
-            flex: 2;
-            justify-content: flex-start;
-            text-align: start;
-            user-select: auto;
-        }
-
-        .image {
-            @include flex(row, center, center);
-            width: 4.5rem;
-            user-select: none;
-        }
-
-        .market-price {
-            flex-direction: column;
-
-            span:nth-of-type(2) {
-                font-weight: 600;
-            }
-        }
-    }
-
-    .field-names,
-    .average-values {
-        background: $bg-color-2;
-        height: auto;
-
-        .item-name {
-            user-select: none;
-        }
-
-        .field-names-item>span {
-            cursor: pointer;
-        }
-    }
-}
-
 .data-control-center-page {
     @include flex(column, flex-start, flex-start);
     gap: 1rem;
@@ -1334,7 +1363,7 @@ header {
 
     section {
         width: 100%;
-        overflow: auto;
+        overflow-x: scroll;
 
         .section-inner {
             @include flex(column, flex-start, flex-start);
@@ -1342,52 +1371,10 @@ header {
             width: 100%;
             min-width: 1000px;
 
-            .section-item,
+            .item-div,
             .field-names {
-                @include flex(row, flex-start, center);
-                gap: 0.25rem;
-                width: 100%;
-                height: $item-div-height;
-                background: $bg-color-1;
-                border-radius: 3px;
-                padding: 0.25rem;
-
-                .image {
-                    @include flex(row, center, center);
-                    width: 4.5rem;
-                    user-select: none;
-                }
-
-                .section-item-children,
-                .field-names-item,
-                .time-difference-span {
-                    @include flex(row, center, center);
-                    flex-wrap: wrap;
-                    gap: 0.25rem;
-                    flex: 1;
-                    height: 100%;
-                    padding: 0.25rem;
-                    text-align: center;
-                    user-select: none;
-                }
-
-                .time-difference-span {
+                .time-difference {
                     flex: 0.25;
-                }
-
-                .event-name {
-                    justify-content: flex-start;
-                    flex: 2;
-                    user-select: auto;
-                }
-            }
-
-            .field-names {
-                background: $bg-color-2;
-                height: auto;
-
-                .event-name {
-                    user-select: none;
                 }
             }
         }
@@ -1705,6 +1692,10 @@ header {
             gap: 0.5rem;
             margin-left: auto;
 
+            .add-investment-btn {
+                padding: 0.5rem;
+            }
+
             .filter-btn {
                 background: $bg-color-1;
                 box-shadow: 0 0 6px 2px $bg-color-2;
@@ -1729,6 +1720,15 @@ header {
         width: 100%;
         overflow-y: auto;
         overflow-x: hidden;
+
+        .field-names {
+            position: sticky;
+            top: 0;
+        }
+
+        .image-wrapper{
+            cursor: pointer;
+        }
     }
 
     .add-investment-form-container {
@@ -1906,8 +1906,49 @@ header {
 }
 
 @media(max-width:700px) {
-    * {
-        font-size: 0.95rem;
+    html {
+        * {
+            font-size: 0.95rem;
+        }
+
+        .template-style-wrapper {
+
+            .field-names,
+            .item-div,
+            .average-values {
+                .image-wrapper {
+                    width: 3.5rem;
+                }
+
+                .image-wrapper {
+                    &:hover .mobile-size-tool-tip {
+                        @include flex(column, flex-start, flex-start);
+                    }
+                }
+
+                .item-div-children,
+                .field-names-item,
+                .average-values-item {
+                    gap: 0.125rem;
+                    flex-direction: column;
+
+                    .tool-tip {
+                        gap: 0.125rem;
+                        padding: 0.4rem;
+                    }
+                }
+
+                .item-name {
+                    display: none;
+                }
+            }
+
+            .field-names {
+                .image {
+                    width: 3.5rem;
+                }
+            }
+        }
     }
 
     header {
@@ -1958,34 +1999,6 @@ header {
                         left: 0;
                     }
                 }
-            }
-        }
-    }
-
-    .template-style-wrapper {
-
-        .field-names,
-        .item-div,
-        .average-values {
-
-            .item-div-children,
-            .field-names-item,
-            .average-values-item {
-                gap: 0.125rem;
-                flex-direction: column;
-
-                .tool-tip {
-                    gap: 0.125rem;
-                    padding: 0.4rem;
-                }
-            }
-
-            .item-name {
-                display: none;
-            }
-
-            .image {
-                width: 3.5rem;
             }
         }
     }
