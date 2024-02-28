@@ -1,0 +1,2065 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+$bg-color-1: #1f2a48;
+$bg-color-2: #324372;
+$header-bg: #091c52;
+$options-bg : #4b63a0;
+$bg-hover: #405691;
+$button-bg: #066edd;
+$body-bg: #141c2f;
+
+$orange: #fb923c;
+$green: #34d399;
+$red: #ff6c6c;
+$gray: #a1a1a1;
+
+$item-div-height: 4rem;
+
+html {
+    body {
+        background: $body-bg;
+        color: #fff;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Roboto", sans-serif;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 1rem 0.5rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: #fff;
+    }
+
+    .btn {
+        @include flex(row, center, center);
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+        background: $button-bg;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+
+        &:hover {
+            box-shadow: 0 0 8px 1px $button-bg;
+        }
+    }
+
+    .custom-select {
+        @include flex(row, center, center);
+        position: relative;
+
+        .title {
+            position: absolute;
+            top: 0;
+            left: 0.25rem;
+            transform: translateY(-50%);
+            background: $body-bg;
+            padding: 0 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        .custom-select-checkbox {
+            display: none;
+
+            &:checked {
+                ~.options {
+                    @include flex(column, flex-start, center);
+                }
+
+                ~label {
+                    border-color: $button-bg;
+
+                    .fa-chevron-up {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+
+        label {
+            @include flex(row, space-between, center);
+            gap: 0.5rem;
+            height: 2.75rem;
+            padding: 0.75rem 0.5rem;
+            cursor: pointer;
+            border: 1px solid $bg-color-2;
+            border-radius: 4px;
+
+            .state-value {
+                text-transform: capitalize;
+            }
+
+            .fa-chevron-up {
+                transition: 0.4s;
+            }
+        }
+
+        .options {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.25rem);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            padding: 0.5rem 0;
+            background: $bg-color-1;
+            border-radius: 4px;
+            box-shadow: 0 0 6px 2px $bg-color-2;
+            z-index: 5;
+
+            button {
+                @include flex(row, flex-start, center);
+                padding: 0.4rem 0.75rem;
+                background: none;
+                color: #fff;
+                border: none;
+                width: 100%;
+                cursor: pointer;
+                white-space: nowrap;
+                text-transform: capitalize;
+
+                &:hover {
+                    background: $bg-color-2;
+                }
+            }
+        }
+    }
+
+    .line-chart {
+        @include flex(column, flex-start, flex-end);
+        width: 100%;
+
+        .chart-header {
+            @include flex(row, space-between, center);
+            width: 100%;
+            padding: 0.75rem 1.25%;
+            border-radius: 4px 4px 0 0;
+
+            .buttons {
+                @include flex(row, flex-start, center);
+                gap: 0.5rem;
+
+                button {
+                    @include flex(row, center, center);
+                    background: none;
+                    border: none;
+                    padding: 0.25rem 0.4rem;
+                    cursor: pointer;
+                    border-radius: 2px;
+                    font-size: 0.85rem
+                }
+            }
+        }
+
+        .chart-body {
+            @include flex(row, center, flex-start);
+            width: 100%;
+            aspect-ratio: 2/0.5;
+            padding: 0.5rem 0;
+
+            .vertical-points {
+                @include flex(column, flex-start, flex-start);
+                width: 5%;
+                height: 100%;
+
+                .vertical-points-item {
+                    @include flex(row, flex-end, flex-end);
+                    width: 100%;
+                    height: 16.66%;
+
+                    span {
+                        transform: translateY(50%);
+                        margin-right: 0.5rem;
+                    }
+                }
+
+                .vertical-points-item:nth-of-type(1),
+                .vertical-points-item:nth-last-of-type(1) {
+                    display: none;
+                }
+            }
+
+            .chart {
+                position: relative;
+                width: 92.5%;
+                height: 100%;
+
+                .dot {
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    border-radius: 50%;
+                    transform: translateX(-50%);
+                    z-index: 3;
+
+                    .dot-children {
+                        width: 400%;
+                        height: 400%;
+                        border-radius: 50%;
+                        background: transparent;
+                        transform: translate(-37.5%, -37.5%);
+                        z-index: 3;
+                    }
+                }
+
+                .tool-tip {
+                    @include flex(column, flex-start, flex-start);
+                    gap: 0.25rem;
+                    position: absolute;
+                    padding: 0.5rem;
+                    z-index: 4;
+                    border-radius: 2px;
+
+                    .tool-tip-item {
+                        @include flex(row, flex-start, center);
+                        gap: 0.25rem;
+                        text-transform: capitalize;
+                        white-space: nowrap;
+
+                        span:nth-of-type(1) {
+                            color: #e2e2e2;
+                        }
+                    }
+                }
+
+                .chart-line {
+                    display: flex;
+                    position: absolute;
+                    height: 2px;
+                    transform-origin: left;
+                    z-index: 2;
+                }
+
+                .horizontal-back-lines {
+                    @include flex(column, flex-start, flex-start);
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+
+                    span {
+                        z-index: 1;
+                        width: 100%;
+                        height: 16.66%;
+                        border: 1px solid;
+                        border-top: 0;
+                    }
+
+                    span:nth-of-type(1) {
+                        border-top: 1px solid;
+                    }
+                }
+
+                .vertical-back-lines {
+                    @include flex(row, flex-start, flex-start);
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+
+                    span {
+                        z-index: 1;
+                        width: 16.66%;
+                        height: 100%;
+                        border-right: 1px solid;
+                    }
+
+                    span:nth-last-of-type(1) {
+                        border-right: 0;
+                    }
+                }
+            }
+        }
+
+        .chart-footer-wrapper {
+            @include flex(row, flex-end, center);
+            width: 100%;
+            border-radius: 0 0 4px 4px;
+
+            .chart-footer {
+                @include flex(row, flex-start, center);
+                width: calc(100% - 10%);
+                margin-right: 1.25%;
+                padding: 0.75rem 0;
+                font-size: 0.9rem;
+
+                span {
+                    @include flex(row, center, center);
+                }
+            }
+        }
+
+        @media (width<900px) {
+            .chart-header {
+                font-size: 0.85rem;
+                padding: 0.5rem 1.25%;
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.6;
+
+                .vertical-points {
+                    font-size: 0.85rem;
+                }
+
+                .chart {
+                    .tool-tip {
+                        padding: 0.4rem;
+                        font-size: 0.85rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.75rem;
+                padding: 0.5rem 0;
+            }
+        }
+
+        @media (width<600px) {
+            .chart-header {
+                font-size: 0.6rem;
+                padding: 0.25rem 1.25%;
+
+                .buttons {
+                    gap: 0.25rem;
+
+                    button {
+                        padding: 0.125rem 0.2rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.75;
+
+                .vertical-points {
+                    font-size: 0.6rem;
+
+                    .vertical-points-item {
+                        span {
+                            margin-right: 0.125rem;
+                        }
+                    }
+                }
+
+                .chart {
+                    .dot {
+                        width: 1px;
+                        height: 1px;
+                    }
+
+                    .chart-line {
+                        height: 1px;
+                    }
+
+                    .tool-tip {
+                        padding: 0.25rem;
+                        font-size: 0.6rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.5rem;
+                padding: 0.25rem 0;
+            }
+        }
+
+        @media (width<425px) {
+            .chart-header {
+                font-size: 0.5rem;
+                padding: 0.25rem 1.25%;
+
+                .buttons {
+                    gap: 0.25rem;
+
+                    button {
+                        padding: 0.1rem 0.15rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.75;
+
+                .vertical-points {
+                    font-size: 0.5rem;
+
+                    .vertical-points-item {
+                        span {
+                            margin-right: 0.125rem;
+                        }
+                    }
+                }
+
+                .chart {
+                    .dot {
+                        width: 1px;
+                        height: 1px;
+                    }
+
+                    .chart-line {
+                        height: 1px;
+                    }
+
+                    .tool-tip {
+                        padding: 0.25rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.4rem;
+                padding: 0.25rem 0;
+            }
+        }
+    }
+
+    .multiple-data-set-line-chart {
+        @include flex(column, flex-start, flex-end);
+        width: 100%;
+
+        .chart-header {
+            @include flex(row, space-between, center);
+            width: 100%;
+            padding: 0.75rem 1.25%;
+            border-radius: 4px 4px 0 0;
+
+            .buttons {
+                @include flex(row, flex-start, center);
+                gap: 0.5rem;
+
+                button {
+                    @include flex(row, center, center);
+                    background: none;
+                    border: none;
+                    padding: 0.25rem 0.4rem;
+                    cursor: pointer;
+                    border-radius: 2px;
+                    font-size: 0.85rem
+                }
+            }
+        }
+
+        .chart-body {
+            @include flex(row, center, flex-start);
+            width: 100%;
+            aspect-ratio: 2/0.5;
+            padding: 0.5rem 0;
+
+            .chart {
+                @include flex(row, flex-start, center);
+                position: relative;
+                width: 97.5%;
+                height: 100%;
+
+                .dot {
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    border-radius: 50%;
+                    transform: translateX(-50%);
+                    z-index: 3;
+
+                    .dot-children {
+                        width: 400%;
+                        height: 400%;
+                        border-radius: 50%;
+                        background: transparent;
+                        transform: translate(-37.5%, -37.5%);
+                        z-index: 3;
+                    }
+                }
+
+                .chart-value-columns {
+                    height: 100%;
+                    z-index: 4;
+                }
+
+                .tool-tip {
+                    @include flex(column, flex-start, flex-start);
+                    gap: 0.25rem;
+                    position: absolute;
+                    padding: 0.5rem;
+                    z-index: 4;
+                    border-radius: 2px;
+
+                    .tool-tip-item {
+                        @include flex(row, flex-start, center);
+                        gap: 0.25rem;
+                        text-transform: capitalize;
+                        white-space: nowrap;
+
+                        span:nth-of-type(1) {
+                            color: #e2e2e2;
+                        }
+                    }
+                }
+
+                .chart-line {
+                    display: flex;
+                    position: absolute;
+                    height: 2px;
+                    transform-origin: left;
+                    z-index: 2;
+                }
+
+                .horizontal-back-lines {
+                    @include flex(column, flex-start, flex-start);
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+
+                    span {
+                        z-index: 1;
+                        width: 100%;
+                        height: 16.66%;
+                        border: 1px solid;
+                        border-top: 0;
+                    }
+
+                    span:nth-of-type(1) {
+                        border-top: 1px solid;
+                    }
+                }
+
+                .vertical-back-lines {
+                    @include flex(row, flex-start, flex-start);
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+
+                    span {
+                        z-index: 1;
+                        width: 16.66%;
+                        height: 100%;
+                        border-right: 1px solid;
+                    }
+
+                    span:nth-last-of-type(1) {
+                        border-right: 0;
+                    }
+                }
+            }
+        }
+
+        .chart-footer-wrapper {
+            @include flex(row, flex-end, center);
+            width: 100%;
+            border-radius: 0 0 4px 4px;
+
+            .chart-footer {
+                @include flex(row, flex-start, center);
+                width: calc(100% - 10%);
+                margin-right: 1.25%;
+                padding: 0.75rem 0;
+                font-size: 0.9rem;
+
+                span {
+                    @include flex(row, center, center);
+                }
+            }
+        }
+
+        @media (width<900px) {
+            .chart-header {
+                font-size: 0.85rem;
+                padding: 0.5rem 1.25%;
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.6;
+
+                .chart {
+                    .tool-tip {
+                        padding: 0.4rem;
+                        font-size: 0.85rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.75rem;
+                padding: 0.5rem 0;
+            }
+        }
+
+        @media (width<600px) {
+            .chart-header {
+                font-size: 0.6rem;
+                padding: 0.25rem 1.25%;
+
+                .buttons {
+                    gap: 0.25rem;
+
+                    button {
+                        padding: 0.125rem 0.2rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.75;
+
+                .chart {
+                    .dot {
+                        width: 1px;
+                        height: 1px;
+                    }
+
+                    .chart-line {
+                        height: 1px;
+                    }
+
+                    .tool-tip {
+                        padding: 0.25rem;
+                        font-size: 0.6rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.5rem;
+                padding: 0.25rem 0;
+            }
+        }
+
+        @media (width<425px) {
+            .chart-header {
+                font-size: 0.5rem;
+                padding: 0.25rem 1.25%;
+
+                .buttons {
+                    gap: 0.25rem;
+
+                    button {
+                        padding: 0.1rem 0.15rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-body {
+                aspect-ratio: 2/0.75;
+
+                .chart {
+                    .dot {
+                        width: 1px;
+                        height: 1px;
+                    }
+
+                    .chart-line {
+                        height: 1px;
+                    }
+
+                    .tool-tip {
+                        padding: 0.25rem;
+                        font-size: 0.5rem;
+                    }
+                }
+            }
+
+            .chart-footer {
+                font-size: 0.4rem;
+                padding: 0.25rem 0;
+            }
+        }
+    }
+
+    .bubbles {
+        @include flex(row, space-evenly, center);
+        width: 100%;
+        aspect-ratio: 5/1;
+
+        @keyframes bubble-animation {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .bubble {
+            width: 10%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: $button-bg;
+            animation: bubble-animation ease infinite 0.75s;
+        }
+
+        .bubble:nth-of-type(2) {
+            animation-delay: 0.1s;
+
+        }
+
+        .bubble:nth-of-type(3) {
+            animation-delay: 0.2s;
+
+        }
+    }
+
+    .column-chart-wrapper {
+        @include flex(column, flex-start, center);
+        gap: 1%;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        background-color: $bg-color-1;
+        border-radius: 0 0 4px 4px;
+
+        .chart-header {
+            @include flex(row, flex-start, center);
+            padding: 0 0.5rem;
+            width: 100%;
+            height: 15%;
+            background-color: $bg-color-2;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .chart-body {
+            @include flex(row, flex-start, flex-start);
+            position: relative;
+            width: 99%;
+            height: 83%;
+
+            .value-wrapper {
+                @include flex(row, center, flex-end);
+                height: 100%;
+
+                div {
+                    background: $button-bg;
+                    border-radius: 2px;
+                }
+            }
+
+            .tool-tip {
+                @include flex(column, flex-start, center);
+                gap: 0.25rem;
+                position: absolute;
+                top: calc(100% + 0.25rem);
+                padding: 0.5rem;
+                border-radius: 3px;
+                background: $bg-color-2;
+                box-shadow: 0 0 4px 2px $button-bg;
+                z-index: 2;
+
+                .tool-tip-children {
+                    @include flex(row, flex-start, center);
+                    gap: 0.5rem;
+                    width: 100%;
+                    white-space: nowrap;
+
+                    span:nth-of-type(1) {
+                        color: '#dfdfdf';
+                    }
+
+                    span:nth-of-type(2) {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+
+    .double-value-column-chart {
+        @include flex(column, flex-start, center);
+        gap: 1%;
+        width: 100%;
+        height: 100%;
+        color: #fff;
+        background-color: $bg-color-1;
+        border-radius: 0 0 4px 4px;
+
+        .chart-header {
+            @include flex(row, flex-start, center);
+            padding: 0.75rem;
+            width: 100%;
+            background-color: $bg-color-2;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .chart-body {
+            @include flex(row, flex-start, flex-start);
+            gap: 1%;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 0.75rem;
+
+            .value-wrapper {
+                @include flex(row, center, flex-end);
+                position: relative;
+                gap: 5%;
+                height: 100%;
+
+                .value {
+                    border-radius: 4px;
+                }
+
+                .value:nth-of-type(1) {
+                    background: $button-bg;
+                }
+
+                .value:nth-of-type(2) {
+                    background: $bg-color-2;
+                }
+
+                &:hover .tool-tip {
+                    @include flex(column, flex-start, center);
+                }
+            }
+
+            .tool-tip {
+                display: none;
+                gap: 0.25rem;
+                position: absolute;
+                top: calc(100% + 0.5rem);
+                padding: 0.5rem;
+                border-radius: 3px;
+                background: $bg-color-2;
+                box-shadow: 0 0 6px 1px $button-bg;
+                z-index: 2;
+
+                .tool-tip-item {
+                    @include flex(row, flex-start, center);
+                    gap: 0.5rem;
+                    width: 100%;
+                    white-space: nowrap;
+                    text-transform: capitalize;
+
+                    span:nth-of-type(1) {
+                        color: '#dfdfdf';
+                    }
+
+                    span:nth-of-type(2) {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+
+    .form {
+        @include flex(column, flex-start, center);
+        width: 100%;
+        max-width: 30rem;
+        margin: 0 auto;
+        background: $bg-color-1;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .form-header-div {
+            @include flex(row, center, center);
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background: $header-bg;
+
+            .form-header {
+                color: $button-bg;
+            }
+        }
+
+        .form-body {
+            @include flex(column, flex-start, center);
+            gap: 1.5rem;
+            width: 100%;
+            padding: 1.5rem 1rem;
+
+            .form-body-item {
+                @include flex(column, flex-start, flex-start);
+                gap: 0.5rem;
+                width: 100%;
+
+                input {
+                    width: 100%;
+                    padding: 0.75rem 0.75rem;
+                    background: $bg-color-2;
+                    color: #fff;
+                    outline: none;
+                    border: none;
+                    border-radius: 3px;
+                }
+
+                select {
+                    @include flex(row, center, center);
+                    padding: 0.5rem 0.75rem;
+                    background: $bg-color-2;
+                    color: #fff;
+                    outline: none;
+                    border: none;
+                    border-radius: 3px;
+                }
+            }
+
+            .form-msg {
+                @include flex(row, center, center);
+                width: 100%;
+                color: $orange;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 0.65rem 0.75rem;
+                background: $button-bg;
+                color: #fff;
+                outline: none;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    .message-box {
+        @include flex(row, center, center);
+        width: 100%;
+        padding: 1rem;
+        background: $bg-color-1;
+        border-radius: 4px;
+        color: $orange;
+    }
+
+
+    @keyframes rainbow {
+        0% {
+            background: #34d399;
+        }
+
+        16% {
+            background: #ff6c6c;
+        }
+
+        32% {
+            background: #a014fd;
+        }
+
+        48% {
+            background: #7290f3;
+        }
+
+        64% {
+            background: #05c7e6;
+        }
+
+        82% {
+            background: #dfd051;
+        }
+
+        100% {
+            background: #34d399;
+        }
+    }
+
+    ::-webkit-scrollbar {
+        background: none;
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $button-bg;
+    }
+}
+
+header {
+    width: 100%;
+    height: 4rem;
+    background: $header-bg;
+
+    .header-div {
+        @include flex(row, flex-start, center);
+        position: relative;
+        gap: 2%;
+        max-width: 1500px;
+        height: 100%;
+        padding: 0 0.5rem;
+        margin: 0 auto;
+
+        .home-btn {
+            color: $button-bg;
+            font-weight: 600;
+            font-size: 1.125rem;
+            white-space: nowrap;
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            margin-left: auto;
+
+            label {
+                cursor: pointer;
+            }
+        }
+
+        #header-nav-cb {
+            display: none;
+        }
+
+        nav {
+            @include flex(row, flex-start, center);
+            gap: 1%;
+            width: 100%;
+            height: 100%;
+            z-index: 11;
+            transition: 0.4s all;
+
+            .nav-item {
+                @include flex(row, center, center);
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background: none;
+                color: #fff;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                cursor: pointer;
+                white-space: nowrap;
+
+                &:hover {
+                    color: $button-bg;
+                }
+            }
+
+            .login-btn,
+            .profile-btn {
+                margin-left: auto;
+            }
+
+            .tools-btn {
+                position: relative;
+                z-index: 10;
+
+                &:hover .tools-btn-dropdown {
+                    @include flex(column, flex-start, flex-start);
+                }
+
+                .tools-btn-dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    white-space: nowrap;
+                    background: $body-bg;
+                    padding: 0.25rem;
+                    border-radius: 3px;
+                    box-shadow: 0 0 4px 1px $button-bg;
+
+                    a {
+                        @include flex(row, flex-start, center);
+                        width: 100%;
+                        gap: 0.5rem;
+                        padding: 0.5rem;
+                        color: #fff;
+
+                        &:hover {
+                            color: $button-bg;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.login-page,
+.register-page {
+    @include flex(column, flex-start, center);
+    gap: 2rem;
+
+    .login-register-nav {
+        @include flex(row, center, center);
+        width: 100%;
+        max-width: 30rem;
+        height: 2.75rem;
+        background: $bg-color-1;
+        border-radius: 4px;
+
+        a {
+            @include flex(row, center, center);
+            flex: 1;
+
+            &:hover {
+                color: $button-bg;
+            }
+        }
+
+        hr {
+            width: 1px;
+            height: 75%;
+            background: $button-bg;
+            border: 0;
+        }
+    }
+}
+
+.major-items-price-changes-page,
+.operation-items-price-changes-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+
+    .top-div {
+        @include flex(row, space-between, center);
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 1rem 2%;
+
+        h2 {
+            @include flex(row, flex-start, center);
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .get-data-settings {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+    }
+
+    section {
+        @include flex(column, flex-start, center);
+        gap: 0.3rem;
+        width: 100%;
+
+        .bubbles-wrapper {
+            width: 8rem;
+        }
+    }
+}
+
+.template-style-wrapper {
+
+    .field-names,
+    .item-div,
+    .average-values {
+        @include flex(row, flex-start, center);
+        gap: 0.25rem;
+        padding: 0.25rem;
+        width: 100%;
+        height: $item-div-height;
+        background: $bg-color-1;
+        border-radius: 3px;
+
+        .item-div-children,
+        .field-names-item,
+        .average-values-item {
+            @include flex(row, center, center);
+            position: relative;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            flex: 1;
+            height: 100%;
+            text-align: center;
+            user-select: none;
+
+            &:hover .tool-tip {
+                @include flex(column, flex-start, flex-start);
+            }
+
+            .tool-tip {
+                display: none;
+                gap: 0.25rem;
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: $bg-color-2;
+                z-index: 2;
+                padding: 0.5rem;
+                border-radius: 4px;
+
+                span {
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .item-name {
+            flex: 2;
+            justify-content: flex-start;
+            text-align: start;
+            user-select: auto;
+        }
+
+        .image {
+            @include flex(row, center, center);
+            width: 4.5rem;
+            user-select: none;
+        }
+
+        .market-price {
+            flex-direction: column;
+
+            span:nth-of-type(2) {
+                font-weight: 600;
+            }
+        }
+    }
+
+    .field-names,
+    .average-values {
+        background: $bg-color-2;
+        height: auto;
+
+        .item-name {
+            user-select: none;
+        }
+
+        .field-names-item>span {
+            cursor: pointer;
+        }
+    }
+}
+
+.data-control-center-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+
+    .top-div {
+        h2 {
+            @include flex(row, flex-start, center);
+            gap: 0.5rem;
+            width: 100%;
+        }
+    }
+
+    section {
+        @include flex(row, space-between, flex-start);
+        gap: 0.5rem 1%;
+        width: 100%;
+
+        .settings-div {
+            @include flex(column, flex-start, flex-start);
+            gap: 1rem;
+            flex: 1;
+
+            .settings-div-item {
+                @include flex(row, space-between, flex-start);
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                width: 100%;
+
+                >span {
+                    width: 100%;
+                }
+            }
+
+            hr {
+                width: 100%;
+                border: none;
+                height: 1px;
+                background: $bg-color-2
+            }
+        }
+
+        .output-div {
+            @include flex(column, flex-start, flex-start);
+            gap: 0.5rem;
+            flex: 1;
+            background: $bg-color-1;
+            box-shadow: 0 0 4px 2px $bg-color-2;
+            height: auto;
+
+            .output-div-header,
+            .output-text {
+                width: 100%;
+                padding: 0.75rem;
+                white-space: pre-wrap;
+            }
+        }
+    }
+}
+
+.event-dates-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+
+    .top-div {
+        width: 100%;
+
+        h2 {
+            @include flex(row, flex-start, center);
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+    }
+
+    section {
+        width: 100%;
+        overflow: auto;
+
+        .section-inner {
+            @include flex(column, flex-start, flex-start);
+            gap: 0.3rem;
+            width: 100%;
+            min-width: 1000px;
+
+            .section-item,
+            .field-names {
+                @include flex(row, flex-start, center);
+                gap: 0.25rem;
+                width: 100%;
+                height: $item-div-height;
+                background: $bg-color-1;
+                border-radius: 3px;
+                padding: 0.25rem;
+
+                .image {
+                    @include flex(row, center, center);
+                    width: 4.5rem;
+                    user-select: none;
+                }
+
+                .section-item-children,
+                .field-names-item,
+                .time-difference-span {
+                    @include flex(row, center, center);
+                    flex-wrap: wrap;
+                    gap: 0.25rem;
+                    flex: 1;
+                    height: 100%;
+                    padding: 0.25rem;
+                    text-align: center;
+                    user-select: none;
+                }
+
+                .time-difference-span {
+                    flex: 0.25;
+                }
+
+                .event-name {
+                    justify-content: flex-start;
+                    flex: 2;
+                    user-select: auto;
+                }
+            }
+
+            .field-names {
+                background: $bg-color-2;
+                height: auto;
+
+                .event-name {
+                    user-select: none;
+                }
+            }
+        }
+    }
+}
+
+.major-analysis-center-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+
+    .top-div {
+        @include flex(row, space-between, center);
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 1rem 2%;
+
+        h2 {
+            @include flex(row, flex-start, center);
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .get-data-settings {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+    }
+
+    section {
+        @include flex(column, flex-start, center);
+        gap: 2.5rem;
+        width: 100%;
+
+        .bubbles-wrapper {
+            width: 10rem;
+        }
+
+        .capsules-data-section {
+            @include flex(column, flex-start, flex-start);
+            gap: 0.5rem;
+            width: 100%;
+
+            .double-value-column-chart-wrapper {
+                width: 100%;
+                aspect-ratio: 3.5/1;
+            }
+
+            .capsule-images {
+                @include flex(row, space-between, center);
+                gap: 1%;
+                padding: 0.75rem;
+                width: 100%;
+                background: $bg-color-1;
+
+                .image-wrapper {
+                    @include flex(row, center, center);
+                    flex: 1;
+
+                    .image {
+                        @include flex(row, center, center);
+                        width: 5rem;
+                    }
+                }
+            }
+        }
+
+        .sticker-compare-section-wrapper {
+            @include flex(column, flex-start, flex-start);
+            gap: 0.5rem;
+            width: 100%;
+
+            h3 {
+                width: 100%;
+            }
+
+            .sticker-compare-section {
+                @include flex(column, flex-start, flex-start);
+                width: 100%;
+                border-radius: 4px;
+                overflow: hidden;
+
+                .sticker-compare-section-field-names,
+                .sticker-compare-section-item {
+                    @include flex(row, flex-start, center);
+                    width: 100%;
+                    background: $bg-color-1;
+                    padding: 0.25rem;
+
+                    span {
+                        @include flex(row, center, center);
+                        text-align: center;
+                        flex: 1;
+                    }
+
+                    .image {
+                        @include flex(row, center, center);
+                        text-align: center;
+                        width: 4rem;
+                    }
+                }
+
+                .sticker-compare-section-item {
+                    border-bottom: 1px solid $bg-color-2;
+                }
+
+                .sticker-compare-section-item:nth-last-of-type(1) {
+                    border: none;
+                }
+
+                .sticker-compare-section-field-names {
+                    background: $bg-color-2;
+
+                    span {
+                        cursor: pointer;
+                        user-select: none;
+                    }
+                }
+            }
+        }
+
+        .sticker-price-changes-section {
+            @include flex(row, flex-start, flex-start);
+            flex-wrap: wrap;
+            gap: 0.5rem 1%;
+
+            h3 {
+                width: 100%;
+            }
+
+            .sticker-price-changes-section-item {
+                @include flex(column, flex-start, flex-start);
+                flex: 1;
+                border-radius: 4px;
+                overflow: hidden;
+
+                .title {
+                    @include flex(row, center, center);
+                    background: $bg-color-2;
+                    width: 100%;
+                    padding: 0.5rem;
+                }
+
+                .sticker-div,
+                .sticker-price-changes-section-field-names {
+                    @include flex(row, space-between, center);
+                    width: 100%;
+                    background: $bg-color-1;
+                    padding: 0.125rem 0;
+
+                    .sticker-div-item,
+                    .field-names-item {
+                        @include flex(row, center, center);
+                        flex: 1;
+                        text-align: center;
+                    }
+
+                    .image {
+                        text-align: center;
+                        width: 20%;
+                    }
+                }
+
+                .sticker-price-changes-section-field-names {
+                    .div-children {
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.profile-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+
+    .line-chart-wrapper {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    section {
+        @include flex(row, flex-start, flex-start);
+        flex-wrap: wrap;
+        gap: 1rem;
+        width: 100%;
+
+        .section-item {
+            @include flex(column, flex-start, flex-start);
+            width: 100%;
+            max-width: 30rem;
+            border-radius: 4px;
+            overflow: hidden;
+
+            .section-item-header {
+                @include flex(row, flex-start, center);
+                gap: 0.5rem;
+                width: 100%;
+                background: $bg-color-2;
+                padding: 0.75rem 1rem;
+            }
+
+            .section-item-body {
+                @include flex(column, flex-start, flex-start);
+                gap: 0.75rem;
+                width: 100%;
+                background: $bg-color-1;
+                padding: 0.75rem 1rem;
+
+                hr {
+                    width: 100%;
+                    height: 1px;
+                    background: $bg-color-2;
+                    border: 0;
+                }
+
+                div {
+                    @include flex(row, space-between, center);
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
+                    width: 100%;
+
+                    .description-span {
+                        color: $gray;
+                    }
+                }
+            }
+        }
+
+        .log-out-btn {
+            background: $red;
+        }
+    }
+}
+
+.investments-page {
+    @include flex(column, flex-start, flex-start);
+    position: relative;
+    gap: 1.25rem;
+    overflow: hidden;
+    height: calc(100vh - 4rem);
+
+    .top-div {
+        @include flex(row, space-between, center);
+        flex-wrap: wrap;
+        z-index: 2;
+        gap: 1.25rem;
+        width: 100%;
+        background: $body-bg;
+
+        .investment-stats {
+            @include flex(row, space-between, center);
+            background: $bg-color-1;
+            box-shadow: 0 0 6px 2px $bg-color-2;
+            user-select: none;
+
+            .investment-stats-item {
+                @include flex(row, center, center);
+                position: relative;
+                gap: 0.4rem;
+                padding: 0.5rem;
+
+                &:hover .tool-tip {
+                    display: block;
+                }
+
+                .tool-tip {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    white-space: nowrap;
+                }
+            }
+
+            .investment-stats-item:nth-of-type(3) {
+                span:nth-of-type(1) {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .market-price-update-info-div {
+            @include flex(row, center, center);
+            position: relative;
+            gap: 1rem;
+            background: $gray;
+            padding: 0.5rem 1.25rem;
+            animation: rainbow 10s ease infinite;
+            border-radius: 3px;
+
+            .fa-rotate-right,
+            .fa-x {
+                cursor: pointer;
+            }
+
+            &:hover .tool-tip {
+                display: block;
+            }
+
+            .tool-tip {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                white-space: nowrap;
+            }
+        }
+
+        .buttons {
+            @include flex(row, center, center);
+            gap: 0.5rem;
+            margin-left: auto;
+
+            .filter-btn {
+                background: $bg-color-1;
+                box-shadow: 0 0 6px 2px $bg-color-2;
+                border: none;
+                color: #fff;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .filters-section {
+        @include flex(row, flex-start, center);
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .investments {
+        @include flex(column, flex-start, flex-start);
+        gap: 0.3rem;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .add-investment-form-container {
+        @include flex(column, flex-start, flex-end);
+        position: absolute;
+        gap: 1.5rem;
+        top: 1rem;
+        right: 0;
+        transform: translateX(100%);
+        width: 100%;
+        max-width: 32rem;
+        height: calc(100vh - 6rem);
+        padding: 1rem;
+        transition: 0.4s transform;
+        background: rgba(31, 42, 72, 0.15);
+        backdrop-filter: blur(26px);
+        z-index: 3;
+
+        #add-investment-form {
+            label {
+                @include flex(row, space-between, center);
+                width: 100%;
+                color: #ccc;
+
+                input {
+                    width: auto;
+                }
+            }
+        }
+
+        .close-btn {
+            background: none;
+            font-size: 1.25rem;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+        }
+    }
+
+    .investment-item-details-div {
+        @include flex(column, flex-start, flex-start);
+        position: absolute;
+        gap: 1.5rem;
+        top: 1rem;
+        right: 0;
+        transform: translateX(100%);
+        width: 100%;
+        max-width: 32rem;
+        height: calc(100vh - 6rem);
+        padding: 1rem;
+        transition: 0.4s transform;
+        background: rgba(31, 42, 72, 0.15);
+        backdrop-filter: blur(26px);
+        overflow: auto;
+        z-index: 4;
+
+        .investment-item-details-div-inner-div {
+            @include flex(column, flex-start, flex-start);
+            gap: 1.5rem;
+            width: 100%;
+
+            .buttons {
+                @include flex(row, flex-end, center);
+                gap: 1rem;
+                width: 100%;
+
+                button {
+                    background: none;
+                    font-size: 1rem;
+                    border: none;
+                    cursor: pointer;
+                    color: #fff;
+                }
+
+                .delete-btn {
+                    &:hover {
+                        color: $red;
+                    }
+                }
+            }
+
+            .investment-item-informations {
+                @include flex(column, flex-start, center);
+                gap: 0.75rem;
+                width: 100%;
+
+                .image {
+                    width: 50%;
+                }
+
+                .item-name {
+                    justify-content: center;
+                    font-weight: 600;
+                }
+
+                div {
+                    @include flex(row, space-between, center);
+                    width: 100%;
+
+                    span:nth-of-type(2) {
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .action-history {
+                width: 100%;
+                border-radius: 3px;
+                overflow: hidden;
+
+                .action-history-title {
+                    @include flex(row, center, center);
+                    background: $header-bg;
+                    padding: 0.25rem;
+                }
+
+                .action-history-field-names {
+                    @include flex(row, center, center);
+                    text-align: center;
+                    background: $bg-color-2;
+                    padding: 0.25rem;
+
+                    span {
+                        @include flex(row, center, center);
+                        flex: 1;
+                    }
+                }
+
+                .action-history-item {
+                    @include flex(row, center, center);
+                    background: $bg-color-1;
+                    padding: 0.25rem;
+
+                    span {
+                        @include flex(row, center, center);
+                        flex: 1;
+                    }
+                }
+            }
+
+            #purchase-sale-form {
+                height: auto;
+
+                label {
+                    @include flex(row, space-between, center);
+                    width: 100%;
+                    color: #ccc;
+
+                    input {
+                        width: auto;
+                    }
+                }
+
+                .action-type {
+                    .action-type-values {
+                        @include flex(row, flex-start, center);
+                        width: 100%;
+
+                        label {
+                            @include flex(row, flex-start, center);
+                            gap: 0.5rem;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.home-page {
+    @include flex(column, flex-start, flex-start);
+    gap: 1rem;
+}
+
+@media(max-width:700px) {
+    * {
+        font-size: 0.95rem;
+    }
+
+    header {
+        .header-div {
+            .hamburger-btn {
+                display: block;
+            }
+
+            #header-nav-cb {
+                &:checked~nav {
+                    @include flex(column, flex-start, center);
+                }
+            }
+
+            nav {
+                display: none;
+                gap: 0rem;
+                position: absolute;
+                top: 4rem;
+                right: 0%;
+                width: 100%;
+                height: calc(100vh - 4rem);
+                padding: 0.5rem 0;
+                background: $body-bg;
+
+                .nav-item {
+                    @include flex(row, flex-start, center);
+                    width: 100%;
+                }
+
+                .tools-btn {
+                    padding: 0;
+
+                    >i,
+                    >span {
+                        display: none;
+                    }
+
+                    .tools-btn-dropdown {
+                        @include flex(column, flex-start, flex-start);
+                        position: static;
+                        transform: translateX(0%);
+                        box-shadow: none;
+                        background: none;
+                        padding: 0px;
+                        border-radius: 0;
+                        width: 100%;
+                        left: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .template-style-wrapper {
+
+        .field-names,
+        .item-div,
+        .average-values {
+
+            .item-div-children,
+            .field-names-item,
+            .average-values-item {
+                gap: 0.125rem;
+                flex-direction: column;
+
+                .tool-tip {
+                    gap: 0.125rem;
+                    padding: 0.4rem;
+                }
+            }
+
+            .item-name {
+                display: none;
+            }
+
+            .image {
+                width: 3.5rem;
+            }
+        }
+    }
+}
+
+@media (max-width:600px) {
+    .investments-page {
+        .filters-section {
+            gap: 0.65rem;
+        }
+
+        .investments {
+
+            .item-div,
+            .field-names {
+
+                .item-name,
+                .cost,
+                .value {
+                    display: none;
+                }
+            }
+        }
+
+        .add-investment-form-container,
+        .investment-item-details-div {
+            padding: 0.75rem;
+        }
+    }
+
+    .data-control-center-page {
+        section {
+            @include flex(column, space-between, flex-start);
+            gap: 1rem 1%;
+
+            .output-div {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media (max-width:400px) {
+    html {
+        * {
+            font-size: 0.9rem;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .form {
+            .form-header-div {
+                padding: 0.5rem;
+            }
+
+            .form-body {
+                padding: 1.5rem 0.5rem;
+            }
+        }
+    }
+
+    .investments-page {
+        .top-div {
+            .investment-stats {
+                width: 100%;
+            }
+        }
+
+        .add-investment-form-container,
+        .investment-item-details-div {
+            gap: 0.75rem;
+            padding: 0.5rem;
+        }
+    }
+}
