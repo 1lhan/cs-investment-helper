@@ -946,7 +946,7 @@ html .template-style-wrapper .item-div .image-wrapper,
 html .template-style-wrapper .average-values .image-wrapper {
   position: relative;
   width: 4.5rem;
-  aspect-ratio: 1/0.7777777778;
+  aspect-ratio: 1.3333333333/1;
 }
 html .template-style-wrapper .field-names .image-wrapper img,
 html .template-style-wrapper .item-div .image-wrapper img,

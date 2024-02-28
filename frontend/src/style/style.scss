@@ -978,7 +978,7 @@ html {
             .image-wrapper {
                 position: relative;
                 width: 4.5rem;
-                aspect-ratio: 1/0.7777777777777778;
+                aspect-ratio: 1.333333333333333/1;
 
                 img {
                     position: absolute;
@@ -1726,7 +1726,7 @@ header {
             top: 0;
         }
 
-        .image-wrapper{
+        .image-wrapper {
             cursor: pointer;
         }
     }
