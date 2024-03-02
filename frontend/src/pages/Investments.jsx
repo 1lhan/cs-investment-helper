@@ -473,6 +473,13 @@ export default function Investments({ user }) {
                 <CustomSelect id={'stickerType'} title={'Choose Sticker Type'} state={stickerType} options={['All', 'Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']} width={'10rem'} />
                 <CustomSelect id={'eventName'} title={'Choose Event'} state={eventName} width={'10rem'}
                     options={['All', ...events.filter(item => item.eventType == 'tournament').map(item => { return item.name })]} />
+                <button className="clear-filters-btn" onClick={() => {
+                    batch(() => {
+                        itemType.value = 'All', stickerType.value = 'All', eventName.value = 'All'
+                    })
+                }}>
+                    <i className="fa-solid fa-filter-circle-xmark" />
+                </button>
             </div>
         )
     }

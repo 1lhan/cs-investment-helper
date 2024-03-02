@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import MessageBox from "../components/MessageBox"
-import LineChart from "../components/LineChart";
 import { dynamicTitle, usePostRequest } from "../utils";
 import { batch, useSignal } from "@preact/signals-react";
+import MultipleDataSetLineChart from "../components/MultipleDataSetLineChart";
 
 export default function Profile({ user }) {
     const navigate = useNavigate()
     const postingData = useSignal(false)
-    
+
     dynamicTitle(window.location.pathname.slice(1))
 
     const logout = () => {
@@ -36,14 +36,10 @@ export default function Profile({ user }) {
             {user.value ?
                 <>
                     {user.value.investmentsValueHistory.length > 0 && <div className="line-chart-wrapper">
-                        <LineChart data={user.value.investmentsValueHistory.map(item => {
-                            return {
-                                cost: item.cost,
-                                value: +item.value.toFixed(2),
-                                date: new Date(item.date).toLocaleDateString().slice(0, 10).split('-').reverse().join('.')
-                            }
-                        })}
-                            headerText='Investments Value History Chart' valueKey='value' horizontalAreaKey='date' toolTipKeys={['cost', 'value', 'date']} dataSliceOptions={[30, 60]} />
+                        <MultipleDataSetLineChart data={[user.value.investmentsValueHistory.slice().map(item => { return { date: item.date.slice(0, 10).split('-').reverse().join('.'), value: item.value } }),
+                        user.value.investmentsValueHistory.slice().map(item => { return { date: item.date.slice(0, 10).split('-').reverse().join('.'), value: item.cost } })]}
+                            title={'Investments Value History Chart'} yKey={'value'} xKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC']}
+                            toolTipKeys={['value', 'cost']} />
                     </div>}
                     <section>
                         <div className="section-item">
@@ -83,7 +79,7 @@ export default function Profile({ user }) {
                                     <span>Investment Visibility</span>
                                     <input name="investmentVisibilityCb" type="checkbox" defaultChecked={user.value.accountSettings.investmentVisibility} disabled={postingData.value}
                                         onChange={(e) => changeInvestmentVisibility(e.target.checked)} />
-                                    <span className="description-span">If box is marked people can access your investments page</span>
+                                    <span className="description-span">If box is marked people can view your investments page</span>
                                 </div>
                             </div>
                         </div>
@@ -99,3 +95,13 @@ export default function Profile({ user }) {
         </div>
     )
 }
+/*
+<LineChart data={user.value.investmentsValueHistory.map(item => {
+    return {
+        cost: item.cost,
+        value: +item.value.toFixed(2),
+        date: new Date(item.date).toLocaleDateString().slice(0, 10).split('-').reverse().join('.')
+    }
+})}
+    headerText='Investments Value History Chart' valueKey='value' horizontalAreaKey='date' toolTipKeys={['cost', 'value', 'date']} dataSliceOptions={[30, 60]} />
+*/

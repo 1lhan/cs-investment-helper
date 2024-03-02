@@ -1,0 +1,329 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+$bg-color-1: #1f2a48;
+$bg-hover: #405691;
+$button-bg: #066edd;
+
+.multiple-data-set-line-chart {
+    @include flex(column, flex-start, flex-end);
+    width: 100%;
+
+    .chart-header {
+        @include flex(row, space-between, center);
+        width: 100%;
+        padding: 1rem 3%;
+        border-radius: 4px 4px 0 0;
+        background: $bg-color-1;
+
+        .chart-color-info-div {
+            @include flex(row, center, center);
+            gap: 0.4rem;
+
+            .chart-color-info-div-item {
+                @include flex(row, center, center);
+                gap: 0.25rem;
+
+                span:nth-of-type(1) {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        .buttons {
+            @include flex(row, flex-start, center);
+            gap: 0.5rem;
+
+            button {
+                @include flex(row, center, center);
+                background: none;
+                border: none;
+                padding: 0.25rem 0.4rem;
+                cursor: pointer;
+                border-radius: 2px;
+                font-size: 0.85rem;
+                background: $button-bg;
+                color: #fff;
+            }
+        }
+    }
+
+    .chart-wrapper {
+        @include flex(row, center, center);
+        width: 100%;
+        aspect-ratio: 2/0.5;
+        background: $bg-color-1;
+
+        .chart {
+            @include flex(row, flex-start, center);
+            position: relative;
+            width: 94%;
+            height: 100%;
+
+            .dot {
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                border-radius: 50%;
+                transform: translateX(-50%);
+                z-index: 3;
+
+                .dot-children {
+                    width: 400%;
+                    height: 400%;
+                    border-radius: 50%;
+                    background: transparent;
+                    transform: translate(-37.5%, -37.5%);
+                    z-index: 3;
+                }
+            }
+
+            .chart-value-columns {
+                position: relative;
+                height: 100%;
+                z-index: 4;
+
+                .line-for-x-keys {
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    height: 0.5rem;
+                    width: 1px;
+                    background: $bg-hover;
+                }
+            }
+
+            .tool-tip {
+                position: absolute;
+                z-index: 2;
+                border-radius: 2px;
+                background: $bg-hover;
+
+                .tool-tip-inner {
+                    @include flex(column, flex-start, flex-start);
+                    position: relative;
+                    gap: 0.25rem;
+                    padding: 0.5rem;
+
+                    .tool-tip-item {
+                        @include flex(row, flex-start, center);
+                        gap: 0.25rem;
+                        text-transform: capitalize;
+                        white-space: nowrap;
+
+                        span:nth-of-type(1) {
+                            color: #e2e2e2;
+                        }
+                    }
+
+                    .tool-tip-arrow {
+                        position: absolute;
+                        top: 0;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(45deg);
+                        width: 10%;
+                        aspect-ratio: 1;
+                        background: $bg-hover;
+                    }
+
+                    .dashed-vertical-line {
+                        position: absolute;
+                        bottom: 100%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 1px;
+                        border-left: 1px dashed $bg-hover;
+                    }
+                }
+            }
+
+            .chart-line {
+                display: flex;
+                position: absolute;
+                height: 2px;
+                transform-origin: left;
+                z-index: 2;
+            }
+
+            .horizontal-back-lines,
+            .vertical-back-lines {
+                @include flex(column, flex-start, flex-start);
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+
+                .vertical-back-line {
+                    width: 16.66%;
+                    height: 100%;
+                    z-index: 1;
+                    border-right: 1px solid #2b3b69;
+                }
+
+                .vertical-back-line:nth-last-of-type(1) {
+                    border-right: 0;
+                }
+
+                .horizontal-back-line {
+                    width: 100%;
+                    height: 16.66%;
+                    z-index: 1;
+                    border: 1px solid #2b3b69;
+                    border-top: 0;
+                }
+
+                .horizontal-back-line:nth-of-type(1) {
+                    border-top: 1px solid #2b3b69;
+                }
+            }
+
+            .vertical-back-lines {
+                flex-direction: row;
+            }
+        }
+    }
+
+    .chart-footer {
+        @include flex(row, space-between, center);
+        width: 100%;
+        padding: 1rem 3%;
+        background: $bg-color-1;
+        border-radius: 0 0 4px 4px;
+        font-size: 0.9rem;
+        overflow: hidden;
+
+        .chart-footer-item {
+            @include flex(row, center, center);
+            white-space: nowrap;
+            position: relative;
+
+            span {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 2px;
+                height: 0.75rem;
+                background: $button-bg;
+            }
+        }
+    }
+}
+
+@media (width<1200px) {
+    .multiple-data-set-line-chart {
+        .chart-footer {
+            font-size: 0.85rem;
+
+            .chart-footer-item {
+                justify-content: flex-start;
+            }
+        }
+    }
+}
+
+@media (width<900px) {
+    .multiple-data-set-line-chart {
+        .chart-header {
+            padding: 0.75rem 2%;
+            font-size: 0.85rem;
+        }
+
+        .chart-wrapper {
+            aspect-ratio: 2/0.6;
+
+            .chart {
+                width: 96%;
+
+                .tool-tip {
+                    font-size: 0.85rem;
+
+                    .tool-tip-inner {
+                        padding: 0.4rem;
+                    }
+                }
+            }
+        }
+
+        .chart-footer {
+            padding: 0.75rem 2%;
+            font-size: 0.7rem;
+
+            .chart-footer-item {
+                justify-content: flex-start;
+            }
+        }
+    }
+}
+
+@media (width<600px) {
+    .multiple-data-set-line-chart {
+        .chart-header {
+            padding: 0.5rem 1.5%;
+            font-size: 0.75rem;
+            .chart-color-info-div{
+                gap: 0.25rem;
+                .chart-color-info-div-item{
+                    gap: 0.1rem;
+                }
+            }
+        }
+
+        .chart-wrapper {
+            aspect-ratio: 2/0.6;
+
+            .chart {
+                width: 97%;
+
+                .dot {
+                    width: 1px;
+                    height: 1px;
+                }
+
+                .chart-line {
+                    height: 1px;
+                }
+
+                .tool-tip {
+                    font-size: 0.65rem;
+
+                    .tool-tip-inner {
+                        padding: 0.35rem;
+                    }
+                }
+            }
+        }
+
+        .chart-footer {
+            padding: 0.5rem 1.5%;
+            font-size: 0.55rem;
+        }
+    }
+}
+
+@media (width<480px) {
+    .multiple-data-set-line-chart {
+        .chart-header {
+            padding: 0.35rem 1.5%;
+            font-size: 0.5rem;
+        }
+
+        .chart-wrapper {
+            aspect-ratio: 2/0.75;
+        }
+
+        .chart-footer {
+            padding: 0.35rem 1.5%;
+            font-size: 0.45rem;
+        }
+    }
+}

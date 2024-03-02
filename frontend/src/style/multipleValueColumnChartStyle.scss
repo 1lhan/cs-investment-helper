@@ -1,0 +1,115 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+$bg-color-1: #1f2a48;
+$bg-hover: #405691;
+
+.multiple-value-column-chart {
+    @include flex(column, flex-start, center);
+    gap: 1%;
+    width: 100%;
+    color: #fff;
+    background-color: $bg-color-1;
+    border-radius: 0 0 4px 4px;
+
+    .chart-header {
+        @include flex(row, space-between, center);
+        padding: 0.75rem;
+        width: 100%;
+        border-radius: 4px 4px 0 0;
+
+        .chart-color-info-div {
+            @include flex(row, center, center);
+            gap: 1rem;
+
+            .chart-color-info-div-item {
+                @include flex(row, center, center);
+                gap: 0.25rem;
+
+                span:nth-of-type(1) {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    .chart-body {
+        @include flex(row, flex-start, flex-start);
+        gap: 1%;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1/0.25;
+        height: 100%;
+        padding: 0.75rem;
+
+        .value-wrapper {
+            @include flex(row, center, flex-end);
+            position: relative;
+            gap: 5%;
+            height: 100%;
+
+            .value {
+                border-radius: 4px;
+            }
+
+            &:hover .tool-tip {
+                @include flex(column, flex-start, center);
+            }
+
+            .tool-tip {
+                display: none;
+                gap: 0.25rem;
+                position: absolute;
+                top: calc(100% + 0.5rem);
+                padding: 0.5rem;
+                border-radius: 3px;
+                background: $bg-hover;
+                z-index: 2;
+
+                .tool-tip-item {
+                    @include flex(row, flex-start, center);
+                    gap: 0.5rem;
+                    width: 100%;
+                    white-space: nowrap;
+                    text-transform: capitalize;
+
+                    span:nth-of-type(1) {
+                        color: #dfdfdf;
+                    }
+
+                    span:nth-of-type(2) {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width:600px) {
+    .multiple-value-column-chart {
+        .chart-header {
+            padding: 0.5rem 1.5%;
+            font-size: 0.75rem;
+        }
+
+        .chart-body {
+            padding: 0.5rem 1.5%;
+            aspect-ratio: 1/0.35;
+
+            .tool-tip {
+                padding: 0.35rem;
+
+                .tool-tip-item {
+                    gap: 0.25rem;
+                }
+            }
+        }
+    }
+}

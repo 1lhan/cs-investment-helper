@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { signal } from '@preact/signals-react'
 
 import './style/style.css'
+import './style/MultipleDataSetLineChartStyle.css'
+import './style/MultipleValueColumnChartStyle.css'
 import Header from './components/Header'
 import DataControlCenter from './pages/DataControlCenter'
 import slice from './slice'
@@ -37,7 +39,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home/>
+                element: <Home />
             },
             {
                 path: '/major-items-price-changes',

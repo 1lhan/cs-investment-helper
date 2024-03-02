@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import CustomSelect from "../components/CustomSelect"
 import { batch, useSignal } from "@preact/signals-react"
 import Bubbles from "../components/Bubbles"
-import DoubleValueColumnChart from "../components/DoubleValueColumnChart"
+import MultipleValueColumnChart from "../components/MultipleValueColumnChart"
 import MultipleDataSetLineChart from "../components/MultipleDataSetLineChart"
 import { dynamicTitle } from "../utils"
 
@@ -18,8 +18,8 @@ export default function MajorAnalysisCenter() {
     const stickerCompareSectionData = useSignal(false) // array
     const capsuleData = useSignal(false) // array
     const totalPriceAndSaleAmountData = useSignal(false) // object
-    
-    dynamicTitle(window.location.pathname.slice(1).replaceAll('-',' '))
+
+    dynamicTitle(window.location.pathname.slice(1).replaceAll('-', ' '))
 
     const dataHandler = async () => {
         if (eventName == '-' || period == '-') return false
@@ -41,7 +41,7 @@ export default function MajorAnalysisCenter() {
         let _capsuleData = []
         let _stickerPriceChanges = {}
 
-        let sliceIndex1 = period == 'Last 30 Days' ? -30 : period == 'Last 60 Days' ? -60 : 3
+        let sliceIndex1 = period == 'Last 30 Days' ? -30 : period == 'Last 90 Days' ? -90 : 3
         let sliceIndex2 = period == 'Sale Period' ? data.stickers.Paper[0].priceHistory.findIndex(item => item[0] == dates['sale-end']) : data.stickers.Paper[0].priceHistory.length
 
         // _stickerCompareSectionData ve _totalPriceAndSaleAmountData hesaplanması
@@ -226,7 +226,7 @@ export default function MajorAnalysisCenter() {
         return (
             <div className="capsules-data-section">
                 <div className="double-value-column-chart-wrapper">
-                    <DoubleValueColumnChart title={'Capsules Sale Amount And Price'} valueKeys={['sale-amount', 'price']} data={capsuleData.value} toolTipKeys={['name', 'sale-amount', 'price']} />
+                    <MultipleValueColumnChart title={'Capsules Sale Amount And Price'} keys={['sale-amount', 'price']} data={capsuleData.value} toolTipKeys={['name', 'sale-amount', 'price']} colors={['#4B69FF', '#883AAC']} />
                 </div>
                 <div className="capsule-images">
                     {capsuleData.value.map((capsule, index) =>
@@ -245,7 +245,7 @@ export default function MajorAnalysisCenter() {
                 <h2><i className="fa-solid fa-magnifying-glass-chart" />Major Analysis Center</h2>
                 <div className="get-data-settings">
                     <CustomSelect id='eventName' title={'Choose Tournament'} state={eventName} width='10rem' options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} />
-                    <CustomSelect id='periods' title={'Choose Period'} state={period} width='10rem' options={['Sale Period', 'Last 30 Days', 'Last 60 Days']} />
+                    <CustomSelect id='periods' title={'Choose Period'} state={period} width='10rem' options={['Sale Period', 'Last 30 Days', 'Last 90 Days']} />
                     <button className="btn" onClick={() => dataHandler()}>Get Data</button>
                 </div>
             </div>
@@ -256,7 +256,7 @@ export default function MajorAnalysisCenter() {
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[1]],
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[2]],
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[3]]]}
-                        headerText={'Stickers Price Chart'} valueKey={'price'} horizontalAreaKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC', '#D32A9E', '#DE352D']}
+                        title={'Stickers Price Chart'} yKey={'price'} xKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC', '#D32A9E', '#DE352D']}
                         toolTipKeys={Object.keys(totalPriceAndSaleAmountData.value)} />
                 </div>}
                 {totalPriceAndSaleAmountData.value && <div style={{ width: '100%' }}>
@@ -264,7 +264,7 @@ export default function MajorAnalysisCenter() {
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[1]],
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[2]],
                     totalPriceAndSaleAmountData.value[Object.keys(totalPriceAndSaleAmountData.value)[3]]]}
-                        headerText={'Stickers Sale Amount Chart'} valueKey={'saleAmount'} horizontalAreaKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC', '#D32A9E', '#DE352D']}
+                        title={'Stickers Sale Amount Chart'} yKey={'saleAmount'} xKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC', '#D32A9E', '#DE352D']}
                         toolTipKeys={Object.keys(totalPriceAndSaleAmountData.value)} />
                 </div>}
                 {capsuleData.value && <CapsulesDataSection />}

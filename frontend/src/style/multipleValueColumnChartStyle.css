@@ -1,0 +1,112 @@
+.multiple-value-column-chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1%;
+  width: 100%;
+  color: #fff;
+  background-color: #1f2a48;
+  border-radius: 0 0 4px 4px;
+}
+.multiple-value-column-chart .chart-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+}
+.multiple-value-column-chart .chart-header .chart-color-info-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.multiple-value-column-chart .chart-header .chart-color-info-div .chart-color-info-div-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+.multiple-value-column-chart .chart-header .chart-color-info-div .chart-color-info-div-item span:nth-of-type(1) {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.multiple-value-column-chart .chart-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1%;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/0.25;
+  height: 100%;
+  padding: 0.75rem;
+}
+.multiple-value-column-chart .chart-body .value-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  gap: 5%;
+  height: 100%;
+}
+.multiple-value-column-chart .chart-body .value-wrapper .value {
+  border-radius: 4px;
+}
+.multiple-value-column-chart .chart-body .value-wrapper:hover .tool-tip {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.multiple-value-column-chart .chart-body .value-wrapper .tool-tip {
+  display: none;
+  gap: 0.25rem;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  padding: 0.5rem;
+  border-radius: 3px;
+  background: #405691;
+  z-index: 2;
+}
+.multiple-value-column-chart .chart-body .value-wrapper .tool-tip .tool-tip-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+.multiple-value-column-chart .chart-body .value-wrapper .tool-tip .tool-tip-item span:nth-of-type(1) {
+  color: #dfdfdf;
+}
+.multiple-value-column-chart .chart-body .value-wrapper .tool-tip .tool-tip-item span:nth-of-type(2) {
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .multiple-value-column-chart .chart-header {
+    padding: 0.5rem 1.5%;
+    font-size: 0.75rem;
+  }
+  .multiple-value-column-chart .chart-body {
+    padding: 0.5rem 1.5%;
+    aspect-ratio: 1/0.35;
+  }
+  .multiple-value-column-chart .chart-body .tool-tip {
+    padding: 0.35rem;
+  }
+  .multiple-value-column-chart .chart-body .tool-tip .tool-tip-item {
+    gap: 0.25rem;
+  }
+}/*# sourceMappingURL=multipleValueColumnChartStyle.css.map */
