@@ -7,8 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { signal } from '@preact/signals-react'
 
 import './style/style.css'
-import './style/MultipleDataSetLineChartStyle.css'
-import './style/MultipleValueColumnChartStyle.css'
+import './style/multipleDataSetLineChartStyle.css'
+import './style/multipleValueColumnChartStyle.css'
 import Header from './components/Header'
 import DataControlCenter from './pages/DataControlCenter'
 import slice from './slice'
