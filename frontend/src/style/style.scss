@@ -257,7 +257,6 @@ html {
         }
     }
 
-
     .form {
         @include flex(column, flex-start, center);
         width: 100%;
@@ -385,18 +384,6 @@ html {
                 span {
                     white-space: nowrap;
                 }
-            }
-
-            .tool-tip-from-right {
-                left: auto;
-                transform: translateX(0);
-                right: 0%;
-            }
-
-            .tool-tip-from-left {
-                transform: translateX(0);
-                left: 0;
-
             }
 
             .item-div-children,
@@ -1296,6 +1283,26 @@ header {
 }
 
 @media(max-width:1024px) {
+    html {
+        .template-style-wrapper {
+
+            .field-names,
+            .item-div,
+            .average-values {
+                .tool-tip-from-right {
+                    left: auto;
+                    transform: translateX(0);
+                    right: 0%;
+                }
+
+                .tool-tip-from-left {
+                    transform: translateX(0);
+                    left: 0;
+                }
+            }
+        }
+    }
+
     .major-analysis-center-page {
         section {
             gap: 1.5rem;

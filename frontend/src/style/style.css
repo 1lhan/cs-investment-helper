@@ -376,19 +376,6 @@ html .template-style-wrapper .item-div .tool-tip span,
 html .template-style-wrapper .average-values .tool-tip span {
   white-space: nowrap;
 }
-html .template-style-wrapper .field-names .tool-tip-from-right,
-html .template-style-wrapper .item-div .tool-tip-from-right,
-html .template-style-wrapper .average-values .tool-tip-from-right {
-  left: auto;
-  transform: translateX(0);
-  right: 0%;
-}
-html .template-style-wrapper .field-names .tool-tip-from-left,
-html .template-style-wrapper .item-div .tool-tip-from-left,
-html .template-style-wrapper .average-values .tool-tip-from-left {
-  transform: translateX(0);
-  left: 0;
-}
 html .template-style-wrapper .field-names .item-div-children,
 html .template-style-wrapper .field-names .field-names-item,
 html .template-style-wrapper .field-names .average-values-item,
@@ -1409,6 +1396,19 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
 }
 
 @media (max-width: 1024px) {
+  html .template-style-wrapper .field-names .tool-tip-from-right,
+  html .template-style-wrapper .item-div .tool-tip-from-right,
+  html .template-style-wrapper .average-values .tool-tip-from-right {
+    left: auto;
+    transform: translateX(0);
+    right: 0%;
+  }
+  html .template-style-wrapper .field-names .tool-tip-from-left,
+  html .template-style-wrapper .item-div .tool-tip-from-left,
+  html .template-style-wrapper .average-values .tool-tip-from-left {
+    transform: translateX(0);
+    left: 0;
+  }
   .major-analysis-center-page section {
     gap: 1.5rem;
   }

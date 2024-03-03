@@ -25,7 +25,7 @@ export default function OperationItemsPricesChanges() {
         })
 
         let getData = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/get-operation-items-price-changes-data/${eventName}/${itemType}`).then(res => res.json())
-        console.log(getData)
+        
         if (getData.success) {
             batch(() => {
                 isLoading.value = false
