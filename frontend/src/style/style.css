@@ -1110,7 +1110,7 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
 .investments-page .top-div .investment-stats .investment-stats-item .tool-tip {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0.2rem);
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -1386,8 +1386,26 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
+}
+.home-page .current-event-banner-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  background: #1f2a48;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+.home-page .current-event-banner-wrapper h1 {
+  color: #066edd;
+}
+.home-page .current-event-banner-wrapper .current-event-banner {
+  width: 50%;
+  border-radius: 4px;
 }
 
 @media (max-width: 1024px) {
@@ -1536,8 +1554,8 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   html body {
     font-size: 0.8rem;
   }
-  html ::-webkit-scrollbar {
-    width: 6px;
+  html body ::-webkit-scrollbar {
+    display: none;
   }
   html .form .form-header-div {
     padding: 0.5rem;

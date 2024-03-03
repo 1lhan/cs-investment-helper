@@ -216,22 +216,11 @@ router.post('/add-purchase-sale', async (req, res) => {
 
 router.post('/change-investment-visibility', async (req, res) => {
     const { userId, value } = req.body
-
     let user = await UserModel.findOne({ _id: userId })
     if (!user) return res.json({ success: false, msg: 'User could not found' })
 
-    let update = await UserModel.findOneAndUpdate({ _id: userId }, { $set: { 'accountSettings.investmentVisibility': value } }, { new: value })
-    return res.json({ success: !!update, user: update ? user : {} })
-})
-
-router.post('/update', async (req, res) => {
-    const { userId, data } = req.body
-    let update = await UserModel.findOneAndUpdate(
-        { _id: userId },
-        { $push: { investmentsValueHistory: { $each: data, $position: 0 } } },
-        { new: true }
-    )
-    console.log(update)
+    let update = await UserModel.findOneAndUpdate({ _id: userId }, { $set: { 'accountSettings.investmentVisibility': value } }, { new: true })
+    return res.json({ success: !!update, user: update ? update : {} })
 })
 
 module.exports = router

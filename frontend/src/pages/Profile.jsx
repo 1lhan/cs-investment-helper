@@ -21,7 +21,6 @@ export default function Profile({ user }) {
     const changeInvestmentVisibility = async (value) => {
         postingData.value = true
         let post = await usePostRequest('/change-investment-visibility', { userId: user.value._id, value })
-
         if (post.success) {
             batch(() => {
                 user.value = post.user
@@ -61,8 +60,13 @@ export default function Profile({ user }) {
                                     <hr />
                                     <div>
                                         <span>Last Investments Market Price Update Date</span>
-                                        <span>{user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate.slice(11, 16) + ' ' +
-                                            new Date(user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate).toISOString().slice(0, 10).split('-').reverse().join('.')}</span>
+                                        {new Date().getDate() != new Date(user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate).getDate() ||
+                                            ((new Date().getTime() - new Date(user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate).getTime()) / (1000 * 60 * 60 * 24)) >= 1 ?
+                                            <span>{new Date(user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate)
+                                                .toLocaleDateString(navigator.language, { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                                            :
+                                            <span>{new Date(user.value.accountInformations.lastInvestmentsMarketPriceUpdateDate).toString().slice(16,21)}</span>
+                                        }
                                         <span className="description-span">Investments market price updates every 30 minutes</span>
                                     </div>
                                 </>}

@@ -1008,7 +1008,7 @@ header {
                 .tool-tip {
                     display: none;
                     position: absolute;
-                    top: 100%;
+                    top: calc(100% + 0.2rem);
                     left: 50%;
                     transform: translateX(-50%);
                     white-space: nowrap;
@@ -1273,8 +1273,26 @@ header {
 }
 
 .home-page {
-    @include flex(column, flex-start, flex-start);
+    @include flex(column, flex-start, center);
     gap: 1rem;
+
+    .current-event-banner-wrapper {
+        @include flex(column, center, center);
+        gap: 1rem;
+        width: 100%;
+        background: $bg-color-1;
+        padding: 0.5rem;
+        border-radius: 4px;
+
+        h1 {
+            color: $button-bg;
+        }
+
+        .current-event-banner {
+            width: 50%;
+            border-radius: 4px;
+        }
+    }
 }
 
 @media(max-width:1024px) {
@@ -1457,11 +1475,12 @@ header {
     html {
         body {
             font-size: 0.8rem;
+
+            ::-webkit-scrollbar {
+                display: none;
+            }
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
 
         .form {
             .form-header-div {
