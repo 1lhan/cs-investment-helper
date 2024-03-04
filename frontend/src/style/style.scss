@@ -1460,6 +1460,20 @@ header {
         }
     }
 
+    .profile-page {
+        section {
+            .section-item {
+                .section-item-header {
+                    padding: 0.5rem 0.75rem;
+                }
+
+                .section-item-body {
+                    padding: 0.5rem 0.75rem;
+                }
+            }
+        }
+    }
+
     .data-control-center-page {
         section {
             @include flex(column, space-between, flex-start);

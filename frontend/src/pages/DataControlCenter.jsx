@@ -9,8 +9,8 @@ export default function DataControlCenter({ user }) {
     const selectedEvent2 = useSignal('-') // operation items price changes update event name state
     const selectedEvent3 = useSignal('-') // major items price history data update event name state
     const outputText = useSignal('')
-    
-    dynamicTitle(window.location.pathname.slice(1).replaceAll('-',' '))
+
+    dynamicTitle(window.location.pathname.slice(1).replaceAll('-', ' '))
 
     const getTypeOfSticker = (sticker) => {
         let stickerTypes = ['Paper', 'Glitter', 'Holo', 'Foil', 'Gold']
@@ -334,37 +334,37 @@ export default function DataControlCenter({ user }) {
         outputText.value += post.success ? `\n\n${eventName} items price history data update finished` : `\n\n${eventName} items price history data update failed`
     }
 
-    return (<>
-        {(user.value.username == 'froter' || user.value.username == 'admin') &&
-            <div className="data-control-center-page container">
-                <div className="top-div">
-                    <h2><i className="fa-solid fa-database" />Data Control Center</h2>
-                </div>
-                <section>
-                    <div className="settings-div">
-                        <div className="settings-div-item">
-                            <span>Major Items Price Changes Data</span>
-                            <CustomSelect id='selectedEvent1' title={'Choose Tournament'} state={selectedEvent1} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
-                            <button className="btn" onClick={() => updateMajorItemsPriceChangesData(selectedEvent1)}>Update</button>
-                        </div>
-                        <hr />
-                        <div className="settings-div-item">
-                            <span>Operation Items Price Changes Data</span>
-                            <CustomSelect id='selectedEvent2' title={'Choose Operation'} state={selectedEvent2} options={events.filter(item => item.eventType == 'operation').map(item => { return item.name })} width={'14rem'} />
-                            <button className="btn" onClick={() => updateOperationItemsPriceChangesData(selectedEvent2)}>Update</button>
-                        </div>
-                        <hr />
-                        <div className="settings-div-item">
-                            <span>Major Items Price History Data</span>
-                            <CustomSelect id='selectedEvent3' title={'Choose Tournament'} state={selectedEvent3} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
-                            <button className="btn" onClick={() => updateMajorItemsPriceHistoryData(selectedEvent3)}>Update</button>
-                        </div>
-                    </div>
-                    <div className="output-div">
-                        <h4 className="output-div-header"><i className="fa-solid fa-terminal" />Output</h4>
-                        <span className="output-text">{outputText}</span>
-                    </div>
-                </section>
+    return (
+        user.value.accountInformations.accountType == 'admin' &&
+        <div className="data-control-center-page container">
+            <div className="top-div">
+                <h2><i className="fa-solid fa-database" />Data Control Center</h2>
             </div>
-        }</>)
+            <section>
+                <div className="settings-div">
+                    <div className="settings-div-item">
+                        <span>Major Items Price Changes Data</span>
+                        <CustomSelect id='selectedEvent1' title={'Choose Tournament'} state={selectedEvent1} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
+                        <button className="btn" onClick={() => updateMajorItemsPriceChangesData(selectedEvent1)}>Update</button>
+                    </div>
+                    <hr />
+                    <div className="settings-div-item">
+                        <span>Operation Items Price Changes Data</span>
+                        <CustomSelect id='selectedEvent2' title={'Choose Operation'} state={selectedEvent2} options={events.filter(item => item.eventType == 'operation').map(item => { return item.name })} width={'14rem'} />
+                        <button className="btn" onClick={() => updateOperationItemsPriceChangesData(selectedEvent2)}>Update</button>
+                    </div>
+                    <hr />
+                    <div className="settings-div-item">
+                        <span>Major Items Price History Data</span>
+                        <CustomSelect id='selectedEvent3' title={'Choose Tournament'} state={selectedEvent3} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
+                        <button className="btn" onClick={() => updateMajorItemsPriceHistoryData(selectedEvent3)}>Update</button>
+                    </div>
+                </div>
+                <div className="output-div">
+                    <h4 className="output-div-header"><i className="fa-solid fa-terminal" />Output</h4>
+                    <span className="output-text">{outputText}</span>
+                </div>
+            </section>
+        </div>
+    )
 }
