@@ -1262,24 +1262,6 @@ header {
 .home-page {
     @include flex(column, flex-start, center);
     gap: 1rem;
-
-    .current-event-banner-wrapper {
-        @include flex(column, center, center);
-        gap: 1rem;
-        width: 100%;
-        background: $bg-color-1;
-        padding: 0.5rem;
-        border-radius: 4px;
-
-        h1 {
-            color: $button-bg;
-        }
-
-        .current-event-banner {
-            width: 50%;
-            border-radius: 4px;
-        }
-    }
 }
 
 @media(max-width:1024px) {

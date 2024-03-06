@@ -1376,24 +1376,6 @@ header .header-div nav .tools-btn .tools-btn-dropdown a:hover {
   align-items: center;
   gap: 1rem;
 }
-.home-page .current-event-banner-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  background: #1f2a48;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-.home-page .current-event-banner-wrapper h1 {
-  color: #066edd;
-}
-.home-page .current-event-banner-wrapper .current-event-banner {
-  width: 50%;
-  border-radius: 4px;
-}
 
 @media (max-width: 1024px) {
   html .template-style-wrapper .field-names .tool-tip-from-right,
