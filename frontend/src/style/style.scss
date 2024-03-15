@@ -438,6 +438,12 @@ html {
                 cursor: pointer;
             }
         }
+
+        .average-values{
+            .image-wrapper{
+                aspect-ratio: 0;
+            }
+        }
     }
 
     @keyframes rainbow {

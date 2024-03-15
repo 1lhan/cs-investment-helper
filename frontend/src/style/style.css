@@ -457,6 +457,9 @@ html .template-style-wrapper .field-names .field-names-item > span,
 html .template-style-wrapper .average-values .field-names-item > span {
   cursor: pointer;
 }
+html .template-style-wrapper .average-values .image-wrapper {
+  aspect-ratio: 0;
+}
 @keyframes rainbow {
   0% {
     background: #34d399;
