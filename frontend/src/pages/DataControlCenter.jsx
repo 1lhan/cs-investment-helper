@@ -176,7 +176,7 @@ export default function DataControlCenter({ user }) {
             }
         }
 
-        outputText.value += `${eventName} items price changes data update started`
+        outputText.value += `${eventName} items price changes data update has been started`
 
         // fiyat değişiklik verilerinin calculateMajorItemPriceChangeValues() fonksiyonu yardımıyla teker teker hesaplanması
         for (let i in eventObject.eventItems) {
@@ -192,7 +192,7 @@ export default function DataControlCenter({ user }) {
                 else majorItemsPriceChangesData[itemType].push(item)
             }
 
-            outputText.value += `\n\n${[itemType]} price changes data updated.`
+            outputText.value += `\n\n${[itemType]} price changes data has been updated.\n\n`
         }
 
         // event itemlarının ortalama değerlerinin hesaplanması
@@ -301,7 +301,7 @@ export default function DataControlCenter({ user }) {
         }
 
         let post = await usePostRequest('/update-operation-items-price-changes-data', operationItemsPriceChangesData)
-        outputText.value += post.success ? `\n\n${eventName} items price changes data update has been finished` : `\n\n${eventName} items price changes data update failed`
+        outputText.value += post.success ? `\n\n${eventName} items price changes data has been updated\n\n` : `\n\n${eventName} items price changes data update failed`
     }
 
     const updateMajorItemsPriceHistoryData = async (eventName) => {
@@ -310,7 +310,7 @@ export default function DataControlCenter({ user }) {
         let majorItemsPriceHistoryData = { name: eventName.value, stickers: {}, capsules: [] }
         stickerTypes.map(item => majorItemsPriceHistoryData.stickers[item] = [])
 
-        outputText.value += `${eventName} items price history data update started`
+        outputText.value += `${eventName} items price history data update has been started`
 
         for (let i in Object.keys(items)) {
             let itemType = Object.keys(items)[i]
@@ -331,7 +331,7 @@ export default function DataControlCenter({ user }) {
         }
 
         let post = await usePostRequest('/update-major-items-price-history-data', { lastUpdate: new Date(), ...majorItemsPriceHistoryData })
-        outputText.value += post.success ? `\n\n${eventName} items price history data update finished` : `\n\n${eventName} items price history data update failed`
+        outputText.value += post.success ? `\n\n${eventName} items price history data has been updated\n\n` : `\n\n${eventName} items price history data update has been failed\n\n`
     }
 
     return (

@@ -25,7 +25,7 @@ export default function OperationItemsPricesChanges() {
         })
 
         let getData = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/get-operation-items-price-changes-data/${eventName}/${itemType}`).then(res => res.json())
-        
+
         if (getData.success) {
             batch(() => {
                 isLoading.value = false
@@ -72,7 +72,9 @@ export default function OperationItemsPricesChanges() {
                     </div>
                 }
                 {Object.keys(averageValues.value).length > 0 && <div className="average-values">
-                    <span className="image" />
+                    <div className="image-wrapper">
+                        <span className="image" />
+                    </div>
                     <span className="average-values-item item-name">Average Values :</span>
                     <span className="average-values-item min-price-during-operation">
                         <span>{averageValues.value.minPriceDuringOperation}</span>

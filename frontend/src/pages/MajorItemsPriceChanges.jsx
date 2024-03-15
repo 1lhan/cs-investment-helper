@@ -96,7 +96,9 @@ export default function MajorItemsPricesChanges() {
                 </div>}
 
                 {Object.keys(averageValues.value).length > 0 && <div className="average-values">
-                    <span className="image" />
+                    <div className="image-wrapper">
+                        <span className="image" />
+                    </div>
                     <span className="average-values-item item-name">Average Values :</span>
                     <span className="average-values-item">
                         <span>{averageValues.value.priceBeforeSale}</span>
