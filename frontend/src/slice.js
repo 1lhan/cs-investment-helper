@@ -1,6 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const events = [
+    /*{
+        name: 'Copenhagen-2024', eventType: 'tournament', eventItem: '', eventItems: ['stickers', 'autographs', 'capsules', 'souvenir-packages'], stickerTypes: ['Paper', 'Glitter', 'Holo', 'Gold'],
+        stickers: ['FaZe Clan', 'Team Spirit', 'Team Vitality', 'MOUZ', 'Complexity Gaming', 'Virtus.pro', 'Natus Vincere', 'G2 Esports', 'Cloud9', 'Eternal Fire', 'ENCE', 'Apeks', 'HEROIC', '9Pandas', 'SAW', 'FURIA Esports',
+            'ECSTATIC', 'The MongolZ', 'Imperial Esports', 'paiN Gaming', 'Lynn Vision Gaming', 'AMKAL ESPORTS', 'KOI', 'Legacy'],
+        autographs: [],
+        capsules: [],
+        'souvenir-packages': ['Copenhagen 2024 Mirage Souvenir Package', 'Copenhagen 2024 Inferno Souvenir Package', 'Copenhagen 2024 Nuke Souvenir Package', 'Copenhagen 2024 Overpass Souvenir Package',
+            'Copenhagen 2024 Vertigo Souvenir Package', 'Copenhagen 2024 Ancient Souvenir Package', 'Copenhagen 2024 Anubis Souvenir Package'],
+        dates: {
+            release: null,
+            'tournament-start': 'Mar 17 2024',
+            'tournament-end': 'Mar 31 2024',
+            'sale-start': null,
+            'sale-end': null,
+            'min-price-after-sale': new Date().toString().slice(4, 15),
+            'highest-price': new Date().toString().slice(4, 15)
+        }
+    },*/
     {
         name: 'Paris-2023', eventType: 'tournament', eventItem: 'Sticker | BLAST.tv (Holo) | Paris 2023', eventItems: ['stickers', 'autographs', 'capsules', 'souvenir-packages'], stickerTypes: ['Paper', 'Glitter', 'Holo', 'Gold'],
         stickers: ['MOUZ', 'Apeks', 'Monte', '9INE', 'G2 Esports', 'Natus Vincere', 'Fnatic', 'forZe eSports', 'OG', 'paiN Gaming', 'GamerLegion', 'Team Liquid', 'FaZe Clan', 'ENCE', 'Grayhound Gaming', 'Complexity Gaming',

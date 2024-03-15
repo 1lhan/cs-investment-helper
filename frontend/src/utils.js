@@ -9,5 +9,5 @@ export const usePostRequest = async (url, requestBody) => {
 }
 
 export const dynamicTitle = (title) => {
-    document.title = title
+    document.title = "CSIH " + title
 }
