@@ -35,8 +35,8 @@ export default function Profile({ user }) {
             {user.value ?
                 <>
                     {user.value.investmentsValueHistory.length > 0 && <div className="line-chart-wrapper">
-                        <MultipleDataSetLineChart data={[user.value.investmentsValueHistory.slice().map(item => { return { date: item.date.slice(0, 10).split('-').reverse().join('.'), value: item.value } }),
-                        user.value.investmentsValueHistory.slice().map(item => { return { date: item.date.slice(0, 10).split('-').reverse().join('.'), value: item.cost } })]}
+                        <MultipleDataSetLineChart data={[user.value.investmentsValueHistory.slice().map(item => { return { date: new Date(item.date).toLocaleDateString(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }), value: item.value } }),
+                        user.value.investmentsValueHistory.slice().map(item => { return { date: new Date(item.date).toLocaleDateString(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }), value: item.cost } })]}
                             title={'Investments Value History Chart'} yKey={'value'} xKey={'date'} dataSliceOptions={[]} colors={['#4B69FF', '#883AAC']}
                             toolTipKeys={['value', 'cost']} />
                     </div>}

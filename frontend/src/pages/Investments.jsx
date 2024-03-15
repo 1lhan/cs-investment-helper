@@ -424,7 +424,7 @@ export default function Investments({ user }) {
                 }
             }
 
-            const myInterval = setInterval(updateInvestmentsMarketPrice, 3100)
+            const myInterval = setInterval(updateInvestmentsMarketPrice, 3150)
             return () => clearInterval(myInterval)
         }, [stopUpdateInvestmentsMarketPrice.value])
 
