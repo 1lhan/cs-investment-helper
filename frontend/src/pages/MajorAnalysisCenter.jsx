@@ -244,7 +244,8 @@ export default function MajorAnalysisCenter() {
             <div className="top-div">
                 <h2><i className="fa-solid fa-magnifying-glass-chart" />Major Analysis Center</h2>
                 <div className="get-data-settings">
-                    <CustomSelect id='eventName' title={'Choose Tournament'} state={eventName} width='10rem' options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} />
+                    <CustomSelect id='eventName' title={'Choose Tournament'} state={eventName} width='11rem'
+                        options={events.filter(item => item.eventType == 'tournament' && item.dates['sale-start'] != null).map(item => { return item.name })} />
                     <CustomSelect id='periods' title={'Choose Period'} state={period} width='10rem' options={['Sale Period', 'Last 30 Days', 'Last 90 Days']} />
                     <button className="btn" onClick={() => dataHandler()}>Get Data</button>
                 </div>

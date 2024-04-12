@@ -471,7 +471,7 @@ export default function Investments({ user }) {
                 <CustomSelect id={'itemType'} title={'Choose Item Type'} state={itemType} width={'12rem'}
                     options={['All', 'Capsule', 'Sticker', 'Gloves', 'Knife', 'Souvenir-Package', 'Case', 'Patch', 'Agent', 'Music-Kit', 'Pass', 'Pin', 'Graffiti', 'Skin']} />
                 <CustomSelect id={'stickerType'} title={'Choose Sticker Type'} state={stickerType} options={['All', 'Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']} width={'10rem'} />
-                <CustomSelect id={'eventName'} title={'Choose Event'} state={eventName} width={'10rem'}
+                <CustomSelect id={'eventName'} title={'Choose Event'} state={eventName} width={'11rem'}
                     options={['All', ...events.filter(item => item.eventType == 'tournament').map(item => { return item.name })]} />
                 <button className="clear-filters-btn" onClick={() => {
                     batch(() => {

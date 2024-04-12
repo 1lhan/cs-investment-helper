@@ -12,6 +12,8 @@ export default function DataControlCenter({ user }) {
 
     dynamicTitle(window.location.pathname.slice(1).replaceAll('-', ' '))
 
+    // Yeni majorların price history data'sı ilgili major'un sale-start tarihi belirlendikten sonra veri tabanına kaydedilir.
+
     const getTypeOfSticker = (sticker) => {
         let stickerTypes = ['Paper', 'Glitter', 'Holo', 'Foil', 'Gold']
         let stickerType = 'Paper'
@@ -106,10 +108,10 @@ export default function DataControlCenter({ user }) {
         let item = { name: itemName, priceBeforeSale: [0, []], minPriceDuringSale: [0, 0, []], highestPrice: [0, 0, 0, []] }
         let priceHistory = await getItemPriceHistoryArray(itemName, dates['release'])
 
-        let saleStartDateIndex = priceHistory.findIndex(item => item[0] == dates['sale-start'])
-        let saleEndDateIndex = dates['sale-end'] == null ? priceHistory.length - 1 : priceHistory.findIndex(item => item[0] == dates['sale-end'])
-        let highestPriceDateIndex = dates['highest-price'] == null ? priceHistory.length - 1 : priceHistory.findIndex(item => item[0] == dates['highest-price'])
-        let minPriceAfterSaleDateIndex = dates['min-price-after-sale'] == null ? priceHistory.length - 1 : priceHistory.findIndex(item => item[0] == dates['min-price-after-sale'])
+        let saleStartDateIndex = dates['sale-start'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['sale-start'])
+        let saleEndDateIndex = dates['sale-end'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['sale-end'])
+        let highestPriceDateIndex = dates['highest-price'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['highest-price'])
+        let minPriceAfterSaleDateIndex = dates['min-price-after-sale'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['min-price-after-sale'])
 
         let priceBeforeSaleArray = priceHistory.slice(0, saleStartDateIndex).filter(item => item[2] != 0)
         priceBeforeSaleArray = priceBeforeSaleArray.slice(priceBeforeSaleArray.length > 3 ? priceBeforeSaleArray.length - 3 : 0)
@@ -117,22 +119,24 @@ export default function DataControlCenter({ user }) {
         let priceBeforeSale = +(priceBeforeSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / priceBeforeSalePeriodSaleAmount).toFixed(2)
         item.priceBeforeSale = [priceBeforeSale, priceBeforeSaleArray]
 
-        let minPriceDuringSaleArray = priceHistory.slice(saleStartDateIndex, saleEndDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
-        let minPriceDuringSalePeriodSaleAmount = minPriceDuringSaleArray.reduce((t, c) => { return t + c[2] }, 0)
-        let minPriceDuringSale = +(minPriceDuringSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceDuringSalePeriodSaleAmount).toFixed(2)
-        item.minPriceDuringSale = [minPriceDuringSale, +(((minPriceDuringSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceDuringSaleArray]
+        if (dates['sale-start'] != null) {
+            let minPriceDuringSaleArray = priceHistory.slice(saleStartDateIndex, saleEndDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
+            let minPriceDuringSalePeriodSaleAmount = minPriceDuringSaleArray.reduce((t, c) => { return t + c[2] }, 0)
+            let minPriceDuringSale = +(minPriceDuringSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceDuringSalePeriodSaleAmount).toFixed(2)
+            item.minPriceDuringSale = [minPriceDuringSale, +(((minPriceDuringSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceDuringSaleArray]
 
-        let highestPriceArray = priceHistory.slice(saleStartDateIndex, highestPriceDateIndex).filter(item => item[2] != 0).sort((a, b) => b[1] - a[1]).slice(0, 3)
-        let highestPricePeriodSaleAmount = highestPriceArray.reduce((t, c) => { return t + c[2] }, 0)
-        let highestPrice = +(highestPriceArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / highestPricePeriodSaleAmount).toFixed(2)
-        item.highestPrice = [highestPrice, +(highestPrice / minPriceDuringSale).toFixed(2), 0, highestPriceArray]
+            let highestPriceArray = priceHistory.slice(saleStartDateIndex, highestPriceDateIndex).filter(item => item[2] != 0).sort((a, b) => b[1] - a[1]).slice(0, 3)
+            let highestPricePeriodSaleAmount = highestPriceArray.reduce((t, c) => { return t + c[2] }, 0)
+            let highestPrice = +(highestPriceArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / highestPricePeriodSaleAmount).toFixed(2)
+            item.highestPrice = [highestPrice, +(highestPrice / minPriceDuringSale).toFixed(2), 0, highestPriceArray]
 
-        if (dates['min-price-after-sale'] != null) {
-            let minPriceAfterSaleArray = priceHistory.slice(saleEndDateIndex, minPriceAfterSaleDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
-            let minPriceAfterSalePeriodSaleAmount = minPriceAfterSaleArray.reduce((t, c) => { return t + c[2] }, 0)
-            let minPriceAfterSale = +(minPriceAfterSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceAfterSalePeriodSaleAmount).toFixed(2)
-            item.minPriceAfterSale = [minPriceAfterSale, +(((minPriceAfterSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceAfterSaleArray]
-            item.highestPrice[2] = +(highestPrice / minPriceAfterSale).toFixed(2)
+            if (dates['min-price-after-sale'] != false) {
+                let minPriceAfterSaleArray = priceHistory.slice(saleEndDateIndex, minPriceAfterSaleDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
+                let minPriceAfterSalePeriodSaleAmount = minPriceAfterSaleArray.reduce((t, c) => { return t + c[2] }, 0)
+                let minPriceAfterSale = +(minPriceAfterSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceAfterSalePeriodSaleAmount).toFixed(2)
+                item.minPriceAfterSale = [minPriceAfterSale, +(((minPriceAfterSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceAfterSaleArray]
+                item.highestPrice[2] = +(highestPrice / minPriceAfterSale).toFixed(2)
+            }
         }
 
         return item
@@ -192,7 +196,7 @@ export default function DataControlCenter({ user }) {
                 else majorItemsPriceChangesData[itemType].push(item)
             }
 
-            outputText.value += `\n\n${[itemType]} price changes data has been updated.\n\n`
+            outputText.value += `\n\n${[itemType]} price changes data has been updated.`
         }
 
         // event itemlarının ortalama değerlerinin hesaplanması
@@ -210,7 +214,7 @@ export default function DataControlCenter({ user }) {
                 majorItemsPriceChangesData[itemType + 'AverageValues'].minPriceDuringSale = [avgMinPriceDuringSale, +(((avgMinPriceDuringSale / avgPriceBeforeSale) - 1) * 100).toFixed(0)]
                 majorItemsPriceChangesData[itemType + 'AverageValues'].highestPrice = [avgHighestPrice, +(avgHighestPrice / avgMinPriceDuringSale).toFixed(0)]
 
-                if (eventObject.dates['min-price-after-sale'] != null) {
+                if (eventObject.dates['min-price-after-sale'] != false && eventObject.dates['sale-end'] != null) {
                     let avgMinPriceAfterSale =
                         +(majorItemsPriceChangesData[itemType].reduce((t, c) => { return t + c.minPriceAfterSale[0] }, 0) / majorItemsPriceChangesData[itemType].length).toFixed(2)
                     majorItemsPriceChangesData[itemType + 'AverageValues'].minPriceAfterSale = [avgMinPriceAfterSale, +(((avgMinPriceAfterSale / avgPriceBeforeSale) - 1) * 100).toFixed(0)]
@@ -231,7 +235,7 @@ export default function DataControlCenter({ user }) {
                     majorItemsPriceChangesData[itemType + 'AverageValues'][stickerType].minPriceDuringSale = [avgMinPriceDuringSale, +(((avgMinPriceDuringSale / avgPriceBeforeSale) - 1) * 100).toFixed(0)]
                     majorItemsPriceChangesData[itemType + 'AverageValues'][stickerType].highestPrice = [avgHighestPrice, +(avgHighestPrice / avgMinPriceDuringSale).toFixed(2)]
 
-                    if (eventObject.dates['min-price-after-sale'] != null) {
+                    if (eventObject.dates['min-price-after-sale'] != false && eventObject.dates['sale-end'] != null) {
                         let avgMinPriceAfterSale =
                             +(majorItemsPriceChangesData[itemType][stickerType].reduce((t, c) => { return t + c.minPriceAfterSale[0] }, 0) / majorItemsPriceChangesData[itemType][stickerType].length).toFixed(2)
                         majorItemsPriceChangesData[itemType + 'AverageValues'][stickerType].minPriceAfterSale = [avgMinPriceAfterSale, +(((avgMinPriceAfterSale / avgPriceBeforeSale) - 1) * 100).toFixed(0)]
@@ -251,8 +255,8 @@ export default function DataControlCenter({ user }) {
         let item = { name: itemName, minPriceDuringOperation: [0, []], highestPrice: [0, 0, []] }
         let priceHistory = await getItemPriceHistoryArray(itemName, dates['release'])
 
-        let operationEndDateIndex = priceHistory.findIndex(item => item[0] == dates['end'])
-        let highestPriceIndex = priceHistory.findIndex(item => item[0] == dates['highest-price'])
+        let operationEndDateIndex = dates['end'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['end'])
+        let highestPriceIndex = dates['highest-price'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['highest-price'])
 
         let minPriceDuringOperationArray = priceHistory.slice(0, operationEndDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
         let minPriceDuringOperationPeriodSaleAmount = minPriceDuringOperationArray.reduce((t, c) => { return t + c[2] }, 0)
@@ -315,11 +319,11 @@ export default function DataControlCenter({ user }) {
         for (let i in Object.keys(items)) {
             let itemType = Object.keys(items)[i]
             outputText.value += `\n\n${itemType} price history data updating...`
-
+            
             for (let j in items[itemType]) {
                 let itemName = items[itemType][j]
                 let priceHistory = await getItemPriceHistoryArray(itemName, itemType == 'stickers' ? dates['release'] : dates['sale-start'])
-
+                
                 if (itemType == 'stickers') {
                     let priceBeforeSaleArray = priceHistory.slice(0, priceHistory.findIndex(item => item[0] == dates['sale-start'])).filter(item => item[2] != 0).slice(-3)
                     priceHistory = priceBeforeSaleArray.concat(priceHistory.slice(priceHistory.findIndex(item => item[0] == dates['sale-start'])))
@@ -344,7 +348,7 @@ export default function DataControlCenter({ user }) {
                 <div className="settings-div">
                     <div className="settings-div-item">
                         <span>Major Items Price Changes Data</span>
-                        <CustomSelect id='selectedEvent1' title={'Choose Tournament'} state={selectedEvent1} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
+                        <CustomSelect id='selectedEvent1' title={'Choose Tournament'} state={selectedEvent1} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'11rem'} />
                         <button className="btn" onClick={() => updateMajorItemsPriceChangesData(selectedEvent1)}>Update</button>
                     </div>
                     <hr />
@@ -356,7 +360,7 @@ export default function DataControlCenter({ user }) {
                     <hr />
                     <div className="settings-div-item">
                         <span>Major Items Price History Data</span>
-                        <CustomSelect id='selectedEvent3' title={'Choose Tournament'} state={selectedEvent3} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'10rem'} />
+                        <CustomSelect id='selectedEvent3' title={'Choose Tournament'} state={selectedEvent3} options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })} width={'11rem'} />
                         <button className="btn" onClick={() => updateMajorItemsPriceHistoryData(selectedEvent3)}>Update</button>
                     </div>
                 </div>

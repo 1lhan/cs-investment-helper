@@ -1,24 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const events = [
-    /*{
-        name: 'Copenhagen-2024', eventType: 'tournament', eventItem: '', eventItems: ['stickers', 'autographs', 'capsules', 'souvenir-packages'], stickerTypes: ['Paper', 'Glitter', 'Holo', 'Gold'],
-        stickers: ['FaZe Clan', 'Team Spirit', 'Team Vitality', 'MOUZ', 'Complexity Gaming', 'Virtus.pro', 'Natus Vincere', 'G2 Esports', 'Cloud9', 'Eternal Fire', 'ENCE', 'Apeks', 'HEROIC', '9Pandas', 'SAW', 'FURIA Esports',
-            'ECSTATIC', 'The MongolZ', 'Imperial Esports', 'paiN Gaming', 'Lynn Vision Gaming', 'AMKAL ESPORTS', 'KOI', 'Legacy'],
-        autographs: [],
-        capsules: [],
+    {
+        name: 'Copenhagen-2024', eventType: 'tournament', eventItem: 'Sticker | PGL (Holo) | Copenhagen 2024', eventItems: ['stickers', 'autographs', 'capsules', 'souvenir-packages'],
+        stickerTypes: ['Paper', 'Glitter', 'Holo', 'Gold'],
+        stickers: ['Natus Vincere', 'Virtus.pro', 'G2 Esports', 'FaZe Clan', 'Team Spirit', 'Vitality', 'MOUZ', 'Complexity Gaming', 'Cloud9', 'ENCE', 'FURIA', 'Heroic', 'Eternal Fire', 'Apeks', 'GamerLegion', 'SAW',
+            'paiN Gaming', 'Imperial Esports', 'The MongolZ', 'AMKAL ESPORTS', 'ECSTATIC', 'KOI', 'Legacy', 'Lynn Vision', 'PGL'],
+        autographs: ["jL", "Aleksib", "b1t", "iM", "w0nderful", "fame", "FL1T", "Jame", "mir", "n0rb3r7", "HooXi", "huNter-", "m0NESY", "nexa", "NiKo", "broky", "frozen", "karrigan", "rain", "ropz", "chopper", "donk", "magixx",
+            "sh1ro", "zont1x", "apEX", "FlameZ", "mezii", "Spinx", "ZywOo", "Brollan", "Jimpphat", "siuhy", "torzsi", "xertioN", "hallzerk", "EliGE", "floppy", "Grim", "JT", "Ax1Le", "Boombl4", "electronic", "Hobbit", "Perfecto",
+            "Goofy", "Kylar", "Dycha", "gla1ve", "hades", "arT", "chelo", "FalleN", "KSCERATO", "yuurih", "kyxsan", "NertZ", "nicoodoz", "sjuush", "TeSeS", "Calyx", "MAJ3R", "Wicadia", "woxic", "XANTARES", "nawwk", "CacaNito",
+            "jkaem", "sense", "STYKO", "acoR", "isak", "Keoz", "Snax", "volt", "arrozdoce", "ewjerkz", "MUTiRiS", "roman", "story", "biguzera", "kauez", "lux", "n1ssim", "NQZ", "decenty", "felps", "HEN1", "noway", "VINI", "910",
+            "bLitz", "mzinho", "Senzu", "Techno4K", "Forester", "ICY", "Krad", "NickelBack", "TRAVIS", "kraghen", "Nodios", "Patti", "Queenix", "salazar", "adamS", "dav1g", "JUST", "mopoz", "stadodo", "b4rtiN", "coldzera", "dumau",
+            "latto", "NEKiZ", "EmiliaQAQ", "Jee", "Starry", "westmelon", "z4KR"],
+        capsules: ['Copenhagen 2024 Legends Sticker Capsule', 'Copenhagen 2024 Challengers Sticker Capsule', 'Copenhagen 2024 Contenders Sticker Capsule', 'Copenhagen 2024 Legends Autograph Capsule',
+            'Copenhagen 2024 Challengers Autograph Capsule', 'Copenhagen 2024 Contenders Autograph Capsule', 'Copenhagen 2024 Champions Autograph Capsule'],
         'souvenir-packages': ['Copenhagen 2024 Mirage Souvenir Package', 'Copenhagen 2024 Inferno Souvenir Package', 'Copenhagen 2024 Nuke Souvenir Package', 'Copenhagen 2024 Overpass Souvenir Package',
             'Copenhagen 2024 Vertigo Souvenir Package', 'Copenhagen 2024 Ancient Souvenir Package', 'Copenhagen 2024 Anubis Souvenir Package'],
         dates: {
-            release: null,
+            release: 'Mar 21 2024',
             'tournament-start': 'Mar 17 2024',
             'tournament-end': 'Mar 31 2024',
             'sale-start': null,
             'sale-end': null,
-            'min-price-after-sale': new Date().toString().slice(4, 15),
-            'highest-price': new Date().toString().slice(4, 15)
+            'min-price-after-sale': false,
+            'highest-price': null
         }
-    },*/
+    },
     {
         name: 'Paris-2023', eventType: 'tournament', eventItem: 'Sticker | BLAST.tv (Holo) | Paris 2023', eventItems: ['stickers', 'autographs', 'capsules', 'souvenir-packages'], stickerTypes: ['Paper', 'Glitter', 'Holo', 'Gold'],
         stickers: ['MOUZ', 'Apeks', 'Monte', '9INE', 'G2 Esports', 'Natus Vincere', 'Fnatic', 'forZe eSports', 'OG', 'paiN Gaming', 'GamerLegion', 'Team Liquid', 'FaZe Clan', 'ENCE', 'Grayhound Gaming', 'Complexity Gaming',
@@ -39,8 +46,8 @@ const events = [
             'tournament-end': 'May 21 2023',
             'sale-start': 'Jun 23 2023',
             'sale-end': 'Oct 06 2023',
-            'min-price-after-sale': new Date().toString().slice(4, 15),
-            'highest-price': new Date().toString().slice(4, 15)
+            'min-price-after-sale': null,
+            'highest-price': null
         },
         specificItems: { autographs: ['Sticker | niko  | Paris 2023', 'Sticker | niko (Glitter)  | Paris 2023', 'Sticker | niko (Holo)  | Paris 2023', 'Sticker | niko (Gold)  | Paris 2023'] }
     },
@@ -64,7 +71,7 @@ const events = [
             'tournament-end': 'Nov 13 2022',
             'sale-start': 'Dec 14 2022',
             'sale-end': 'Feb 22 2023',
-            'min-price-after-sale': null,
+            'min-price-after-sale': false,
             'highest-price': 'Aug 01 2023'
         }
     },

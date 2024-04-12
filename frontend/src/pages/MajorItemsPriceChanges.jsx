@@ -31,7 +31,7 @@ export default function MajorItemsPricesChanges() {
         if (getData.success) {
             batch(() => {
                 isLoading.value = false
-                getMinPriceAfterSale.value = events.find(item => item.name == eventName).dates['min-price-after-sale'] == null ? false : true
+                getMinPriceAfterSale.value = events.find(item => item.name == eventName).dates['min-price-after-sale'] != false ? true : false
                 data.value = getData[itemType]
                 averageValues.value = getData[itemType + 'AverageValues']
             })
@@ -59,7 +59,7 @@ export default function MajorItemsPricesChanges() {
             <div className="top-div">
                 <h2><i className="fa-solid fa-table-list" />Major Items Price Changes</h2>
                 <div className="get-data-settings">
-                    <CustomSelect id='eventName' title={'Choose Tournament'} state={eventName} width='10rem' options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })}
+                    <CustomSelect id='eventName' title={'Choose Tournament'} state={eventName} width='11rem' options={events.filter(item => item.eventType == 'tournament').map(item => { return item.name })}
                         func={() => { itemType.value = '-'; stickerType.value = '-' }}
                     />
                     <CustomSelect id='itemType' title={'Choose Item Type'} state={itemType} width='12rem' options={eventName.value == '-' ? [] : events.find(item => item.name == eventName).eventItems}
