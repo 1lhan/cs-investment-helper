@@ -159,7 +159,7 @@ const events = [
             'tournament-end': 'Nov 07 2021',
             'sale-start': 'Nov 30 2021',
             'sale-end': 'Jan 18 2022',
-            'min-price-after-sale': null,
+            'min-price-after-sale': false,
             'highest-price': 'Aug 01 2023'
         }
     },
