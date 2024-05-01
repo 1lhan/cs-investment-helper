@@ -18,7 +18,7 @@ export default function MajorItemsPricesChanges() {
     dynamicTitle(window.location.pathname.slice(1).replaceAll('-', ' '))
 
     const getMajorItemsPriceChangesData = async () => {
-        if (eventName == '-' || itemType == '-' || (eventName != '-' && (itemType == 'stickers' || itemType == 'autographs') && stickerType == '-')) return false
+        if (eventName == '-' || itemType == '-' || (eventName != '-' && (itemType == 'stickers' || itemType == 'autographs') && stickerType == '-') || (itemType == 'patches' && stickerType == '-')) return false
         batch(() => {
             sortValue.value = -1
             data.value = []

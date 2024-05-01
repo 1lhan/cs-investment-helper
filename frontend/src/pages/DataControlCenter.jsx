@@ -83,8 +83,8 @@ export default function DataControlCenter({ user }) {
         let item = { name: itemName, prices: JSON.parse(JSON.stringify(dates)) }
         let priceHistory = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/get-price-history/' + itemName).then(res => res.json())
 
-        if (priceHistory || priceHistory.length <= 0) priceHistory = priceHistory.prices
-        else return outputText.value += `\n\nerror 429`
+        if (!priceHistory || priceHistory.length == 0) return { success: false, msg: 'error 429' }
+        else priceHistory = priceHistory.prices
 
         // priceHistory array'ini(steam get price history datası) for ile dönerek priceHistory'nin j'inci elemanının tarihi, belirlenen tarih aralığındaysa(priceHistoryArrayStartDate - today) item.prices array'inin ilgili
         // array elemanının 1. index'ine fiyat, 2. index'ine satış sayısı verisi eklenir.
@@ -106,36 +106,47 @@ export default function DataControlCenter({ user }) {
         let { dates } = events.find(item => item.name == eventName)
 
         let item = { name: itemName, priceBeforeSale: [0, []], minPriceDuringSale: [0, 0, []], highestPrice: [0, 0, 0, []] }
-        let priceHistory = await getItemPriceHistoryArray(itemName, dates['release'])
+        let priceHistory = await getItemPriceHistoryArray(itemName, dates['release']) // itemin yayınlanma tarihinden bugüne kadarki bütün satış verilerini çeker. [[date, price, sale amount],...]
+        if (priceHistory.success == false) return { success: false, msg: 'error 429' }
 
         let saleStartDateIndex = dates['sale-start'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['sale-start'])
+        // saleStartDateIndex değeri; eğer indirimler başlamamışsa priceHistory array'inin length değerine eşitlenir ve priceBeforeSale değeri olarak son 3 günün fiyat ortalaması hesaplanır.
         let saleEndDateIndex = dates['sale-end'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['sale-end'])
         let highestPriceDateIndex = dates['highest-price'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['highest-price'])
         let minPriceAfterSaleDateIndex = dates['min-price-after-sale'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['min-price-after-sale'])
 
-        let priceBeforeSaleArray = priceHistory.slice(0, saleStartDateIndex).filter(item => item[2] != 0)
-        priceBeforeSaleArray = priceBeforeSaleArray.slice(priceBeforeSaleArray.length > 3 ? priceBeforeSaleArray.length - 3 : 0)
+        let priceBeforeSaleArray = priceHistory.slice(0, saleStartDateIndex).filter(item => item[2] != 0).slice(-3)
         let priceBeforeSalePeriodSaleAmount = priceBeforeSaleArray.reduce((t, c) => { return t + c[2] }, 0)
         let priceBeforeSale = +(priceBeforeSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / priceBeforeSalePeriodSaleAmount).toFixed(2)
         item.priceBeforeSale = [priceBeforeSale, priceBeforeSaleArray]
 
         if (dates['sale-start'] != null) {
             let minPriceDuringSaleArray = priceHistory.slice(saleStartDateIndex, saleEndDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
-            let minPriceDuringSalePeriodSaleAmount = minPriceDuringSaleArray.reduce((t, c) => { return t + c[2] }, 0)
-            let minPriceDuringSale = +(minPriceDuringSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceDuringSalePeriodSaleAmount).toFixed(2)
-            item.minPriceDuringSale = [minPriceDuringSale, +(((minPriceDuringSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceDuringSaleArray]
+            // itemin priceHistory array'inde indirim başlangıcından indirimin sonuna kadar olan kısmını alır, satış gerçekleşmeyen günleri filter ile siler, fiyat bakımından küçükten büyüğe sıralar, slice ile ilk 3 veriyi alır.
+            // Böylece indirim döneminde itemin en düşük fiyata sahip olduğu 3 gün alınmış olur.
+            let minPriceDuringSalePeriodSaleAmount = minPriceDuringSaleArray.reduce((t, c) => { return t + c[2] }, 0) // minPriceDuringSaleArray'indeki toplam satış sayısını hesaplar.
+            if (minPriceDuringSalePeriodSaleAmount != 0) {
+                let minPriceDuringSale = +(minPriceDuringSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceDuringSalePeriodSaleAmount).toFixed(2)
+                // minPriceDuringSaleArray'deki verilerin fiyat * satış sayısı şeklinde toplamı / toplam satış sayısı. Böylece indirim dönemindeki en düşük fiyatın gerçekleştiği 3 günün fiyat ortalaması hesaplanır.
+                item.minPriceDuringSale = [minPriceDuringSale, +(((minPriceDuringSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceDuringSaleArray]
+                // 1) itemin indirim döneminde en düşük fiyata sahip olduğu 3 günün fiyat ortalaması.
+                // 2) itemin indirim dönemindeki en düşük fiyata sahip olduğu 3 günün ortalama fiyatının, indirim öncesi fiyatına göre yüzde kaç değiştiğini hesaplar.
+                // 3) itemin indirim döneminde en düşük fiyata sahip olduğu 3 günün verilerinin olduğu array.
+            }
 
-            let highestPriceArray = priceHistory.slice(saleStartDateIndex, highestPriceDateIndex).filter(item => item[2] != 0).sort((a, b) => b[1] - a[1]).slice(0, 3)
-            let highestPricePeriodSaleAmount = highestPriceArray.reduce((t, c) => { return t + c[2] }, 0)
-            let highestPrice = +(highestPriceArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / highestPricePeriodSaleAmount).toFixed(2)
-            item.highestPrice = [highestPrice, +(highestPrice / minPriceDuringSale).toFixed(2), 0, highestPriceArray]
+            if (minPriceDuringSalePeriodSaleAmount != 0) {
+                let highestPriceArray = priceHistory.slice(saleStartDateIndex, highestPriceDateIndex).filter(item => item[2] != 0).sort((a, b) => b[1] - a[1]).slice(0, 3)
+                let highestPricePeriodSaleAmount = highestPriceArray.reduce((t, c) => { return t + c[2] }, 0)
+                let highestPrice = +(highestPriceArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / highestPricePeriodSaleAmount).toFixed(2)
+                item.highestPrice = [highestPrice, +(highestPrice / item.minPriceDuringSale[0]).toFixed(2), 0, highestPriceArray]
+            }
 
             if (dates['min-price-after-sale'] != false) {
                 let minPriceAfterSaleArray = priceHistory.slice(saleEndDateIndex, minPriceAfterSaleDateIndex).filter(item => item[2] != 0).sort((a, b) => a[1] - b[1]).slice(0, 3)
                 let minPriceAfterSalePeriodSaleAmount = minPriceAfterSaleArray.reduce((t, c) => { return t + c[2] }, 0)
                 let minPriceAfterSale = +(minPriceAfterSaleArray.reduce((t, c) => { return t + (c[1] * c[2]) }, 0) / minPriceAfterSalePeriodSaleAmount).toFixed(2)
                 item.minPriceAfterSale = [minPriceAfterSale, +(((minPriceAfterSale / priceBeforeSale) - 1) * 100).toFixed(0), minPriceAfterSaleArray]
-                item.highestPrice[2] = +(highestPrice / minPriceAfterSale).toFixed(2)
+                item.highestPrice[2] = +(item.highestPrice[0] / minPriceAfterSale).toFixed(2)
             }
         }
 
@@ -189,10 +200,12 @@ export default function DataControlCenter({ user }) {
 
             for (let j in items[itemType]) {
                 let item = await calculateMajorItemPriceChangeValues(items[itemType][j], eventName)
-
-                if (itemType == 'stickers' || itemType == 'autographs' || itemType == 'patches') {
-                    majorItemsPriceChangesData[itemType][getTypeOfSticker(item.name)].push(item)
+                if (item.success == false) {
+                    outputText.value += `\n\nerror 429`
+                    return false
                 }
+
+                if (itemType == 'stickers' || itemType == 'autographs' || itemType == 'patches') majorItemsPriceChangesData[itemType][getTypeOfSticker(item.name)].push(item)
                 else majorItemsPriceChangesData[itemType].push(item)
             }
 
@@ -249,11 +262,46 @@ export default function DataControlCenter({ user }) {
         outputText.value += update.success ? `\n\n${eventName} items price changes data update finished` : `\n\n${eventName} items price changes data update failed`
     }
 
+    const updateMajorItemsPriceHistoryData = async (eventName) => {
+        let { capsules, stickerTypes, dates } = events.find(item => item.name == eventName)
+        let items = { stickers: convertStickers(eventName.value, 'stickers'), capsules }
+        let majorItemsPriceHistoryData = { name: eventName.value, stickers: {}, capsules: [] }
+        stickerTypes.map(item => majorItemsPriceHistoryData.stickers[item] = [])
+
+        outputText.value += `${eventName} items price history data update has been started`
+
+        for (let i in Object.keys(items)) {
+            let itemType = Object.keys(items)[i]
+            outputText.value += `\n\n${itemType} price history data updating...`
+
+            for (let j in items[itemType]) {
+                let itemName = items[itemType][j]
+                let priceHistory = await getItemPriceHistoryArray(itemName, itemType == 'stickers' ? dates['release'] : dates['sale-start'])
+                if (priceHistory.success == false) {
+                    outputText.value += `\n\nerror 429`
+                    return false
+                }
+
+                if (itemType == 'stickers') {
+                    let priceBeforeSaleArray = priceHistory.slice(0, priceHistory.findIndex(item => item[0] == dates['sale-start'])).filter(item => item[2] != 0).slice(-3)
+                    priceHistory = priceBeforeSaleArray.concat(priceHistory.slice(priceHistory.findIndex(item => item[0] == dates['sale-start'])))
+                    majorItemsPriceHistoryData[itemType][getTypeOfSticker(itemName)].push({ name: itemName, priceHistory })
+                }
+                else majorItemsPriceHistoryData[itemType].push({ name: itemName, priceHistory })
+            }
+            outputText.value += `\n\n${itemType} price history data updated.`
+        }
+
+        let post = await usePostRequest('/update-major-items-price-history-data', { lastUpdate: new Date(), ...majorItemsPriceHistoryData })
+        outputText.value += post.success ? `\n\n${eventName} items price history data has been updated\n\n` : `\n\n${eventName} items price history data update has been failed\n\n`
+    }
+
     const calculateOperationItemPriceChangesValues = async (itemName, eventName) => {
         let { dates } = events.find(item => item.name == eventName)
 
         let item = { name: itemName, minPriceDuringOperation: [0, []], highestPrice: [0, 0, []] }
         let priceHistory = await getItemPriceHistoryArray(itemName, dates['release'])
+        if (priceHistory.success == false) return { success: false, msg: 'error 429' }
 
         let operationEndDateIndex = dates['end'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['end'])
         let highestPriceIndex = dates['highest-price'] == null ? priceHistory.length : priceHistory.findIndex(item => item[0] == dates['highest-price'])
@@ -289,6 +337,10 @@ export default function DataControlCenter({ user }) {
             for (let j in items[itemType]) {
                 let itemName = items[itemType][j]
                 let item = await calculateOperationItemPriceChangesValues(itemName, eventName)
+                if (priceHistory.success == false) {
+                    outputText.value += `\n\nerror 429`
+                    return false
+                }
                 operationItemsPriceChangesData[itemType].push(item)
             }
             outputText.value += `\n\n${itemType} price changes data updated.`
@@ -306,36 +358,6 @@ export default function DataControlCenter({ user }) {
 
         let post = await usePostRequest('/update-operation-items-price-changes-data', operationItemsPriceChangesData)
         outputText.value += post.success ? `\n\n${eventName} items price changes data has been updated\n\n` : `\n\n${eventName} items price changes data update failed`
-    }
-
-    const updateMajorItemsPriceHistoryData = async (eventName) => {
-        let { capsules, stickerTypes, dates } = events.find(item => item.name == eventName)
-        let items = { stickers: convertStickers(eventName.value, 'stickers'), capsules }
-        let majorItemsPriceHistoryData = { name: eventName.value, stickers: {}, capsules: [] }
-        stickerTypes.map(item => majorItemsPriceHistoryData.stickers[item] = [])
-
-        outputText.value += `${eventName} items price history data update has been started`
-
-        for (let i in Object.keys(items)) {
-            let itemType = Object.keys(items)[i]
-            outputText.value += `\n\n${itemType} price history data updating...`
-            
-            for (let j in items[itemType]) {
-                let itemName = items[itemType][j]
-                let priceHistory = await getItemPriceHistoryArray(itemName, itemType == 'stickers' ? dates['release'] : dates['sale-start'])
-                
-                if (itemType == 'stickers') {
-                    let priceBeforeSaleArray = priceHistory.slice(0, priceHistory.findIndex(item => item[0] == dates['sale-start'])).filter(item => item[2] != 0).slice(-3)
-                    priceHistory = priceBeforeSaleArray.concat(priceHistory.slice(priceHistory.findIndex(item => item[0] == dates['sale-start'])))
-                    majorItemsPriceHistoryData[itemType][getTypeOfSticker(itemName)].push({ name: itemName, priceHistory })
-                }
-                else majorItemsPriceHistoryData[itemType].push({ name: itemName, priceHistory })
-            }
-            outputText.value += `\n\n${itemType} price history data updated.`
-        }
-
-        let post = await usePostRequest('/update-major-items-price-history-data', { lastUpdate: new Date(), ...majorItemsPriceHistoryData })
-        outputText.value += post.success ? `\n\n${eventName} items price history data has been updated\n\n` : `\n\n${eventName} items price history data update has been failed\n\n`
     }
 
     return (

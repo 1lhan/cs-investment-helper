@@ -20,7 +20,7 @@ const events = [
             release: 'Mar 21 2024',
             'tournament-start': 'Mar 17 2024',
             'tournament-end': 'Mar 31 2024',
-            'sale-start': null,
+            'sale-start': 'Apr 26 2024',
             'sale-end': null,
             'min-price-after-sale': false,
             'highest-price': null

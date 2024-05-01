@@ -52,6 +52,21 @@ const itemTagHandler = (itemName) => {
     return tags
 }
 
+const calculateSteamFee = (price) => {
+    if (price <= 0.21) return price - 0.02
+    else if (price > 0.21 && price <= 0.32) return price - 0.03
+    else if (price > 0.32 && price <= 0.43) return price - 0.04
+    else if (price > 0.43 && price <= 0.45) return 0.39
+    else if (price > 0.45 && price <= 0.55) return price - 0.06
+    else if (price > 0.55 && price <= 0.66) return price - 0.07
+    else if (price == 0.67) return price - 0.08
+    else if (price > 0.67 && price <= 0.78) return price - 0.09
+    else if (price > 0.78 && price <= 0.89) return price - 0.1
+    else if (price == 0.9) return price - 0.11
+    else if (price > 0.9 && price <= 1.01) return price - 0.12
+    else return +(price * 0.8697).toFixed(2)
+}
+
 router.get('/get-user/:username', async (req, res) => {
     let user = await UserModel.findOne({ username: req.params.username })
     return res.json({ success: !!user, user: user ? user : {}, msg: !user ? 'User could not found' : '' })
@@ -194,7 +209,7 @@ router.post('/add-purchase-sale', async (req, res) => {
         let _price = price.includes(',') ? +price.replaceAll(',', '.') : +price
         let newQuantity = item.quantity - +quantity
         let worth = (_price - +item.buyPrice) * +quantity
-        let netWorth = ((_price * +quantity) * 0.8697) - (item.buyPrice * quantity)
+        let netWorth = (calculateSteamFee(_price) * quantity) - (item.buyPrice * quantity)
         let currentWorth = item.totalWorth
         currentWorth[0] += worth
         currentWorth[1] += netWorth

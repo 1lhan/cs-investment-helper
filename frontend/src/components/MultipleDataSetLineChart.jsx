@@ -19,7 +19,8 @@ export default function MultipleDataSetLineChart({ data, title, yKey, xKey, tool
 
         for (let i in _lineChartData.data) {
             _lineChartData.data[i].map((item, index) => {
-                item.distanceFromBottom = ((item[yKey] - _lineChartData.verticalPoints[i].bottom) / (_lineChartData.verticalPoints[i].top - _lineChartData.verticalPoints[i].bottom)) * 100
+                if (_lineChartData.verticalPoints[i].top - _lineChartData.verticalPoints[i].bottom == 0) item.distanceFromBottom = 50
+                else item.distanceFromBottom = ((item[yKey] - _lineChartData.verticalPoints[i].bottom) / (_lineChartData.verticalPoints[i].top - _lineChartData.verticalPoints[i].bottom)) * 100
                 item.distanceFromLeft = ((100 / _lineChartData.data[i].length) * index) + ((100 / _lineChartData.data[i].length) * 0.5)
             })
         }
@@ -122,8 +123,8 @@ export default function MultipleDataSetLineChart({ data, title, yKey, xKey, tool
                     )}
                     {lineChartData.value && lineChartData.value.data[0].map((_, index) =>
                         <div className="chart-value-columns" style={{ width: (100 / lineChartData.value.data[0].length) + '%' }} key={index}
-                            onMouseOver={(e) => { toolTip.value = index; onHoverValueColumn(index) }}
-                            onMouseLeave={(e) => { toolTip.value = -1; onMouseLeaveValueColumn(index) }} >
+                            onMouseOver={() => { toolTip.value = index; onHoverValueColumn(index) }}
+                            onMouseLeave={() => { toolTip.value = -1; onMouseLeaveValueColumn(index) }} >
                             <span className="line-for-x-keys" style={{ display: ((index % Math.floor(lineChartData.value.data[0].length / 5) == 0)) ? 'block' : 'none' }} />
                         </div>
                     )}

@@ -42,7 +42,8 @@ export default function MajorAnalysisCenter() {
         let _stickerPriceChanges = {}
 
         let sliceIndex1 = period == 'Last 30 Days' ? -30 : period == 'Last 90 Days' ? -90 : 3
-        let sliceIndex2 = period == 'Sale Period' ? data.stickers.Paper[0].priceHistory.findIndex(item => item[0] == dates['sale-end']) : data.stickers.Paper[0].priceHistory.length
+        let sliceIndex2 = period == 'Sale Period' ? (dates['sale-end'] == null ? data.stickers.Paper[0].priceHistory.length : data.stickers.Paper[0].priceHistory.findIndex(item => item[0] == dates['sale-end']))
+            : data.stickers.Paper[0].priceHistory.length
 
         // _stickerCompareSectionData ve _totalPriceAndSaleAmountData hesaplanması
         for (let i in Object.keys(data.stickers)) {
