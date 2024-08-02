@@ -259,7 +259,7 @@ export default function DataControlCenter({ user }) {
         }
 
         let update = await usePostRequest('/update-major-items-price-changes-data', { name: eventName, lastUpdate: new Date(), ...majorItemsPriceChangesData })
-        outputText.value += update.success ? `\n\n${eventName} items price changes data update finished` : `\n\n${eventName} items price changes data update failed`
+        outputText.value += update.success ? `\n\n${eventName} items price changes data update finished\n\n` : `\n\n${eventName} items price changes data update failed\n\n`
     }
 
     const updateMajorItemsPriceHistoryData = async (eventName) => {
