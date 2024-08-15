@@ -21,7 +21,7 @@ const events = [
             'tournament-start': 'Mar 17 2024',
             'tournament-end': 'Mar 31 2024',
             'sale-start': 'Apr 26 2024',
-            'sale-end': null,
+            'sale-end': 'Aug 14 2024',
             'min-price-after-sale': false,
             'highest-price': null
         }
