@@ -82,6 +82,7 @@ export default function DataControlCenter({ user }) {
 
         let item = { name: itemName, prices: JSON.parse(JSON.stringify(dates)) }
         let priceHistory = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/get-price-history/' + itemName).then(res => res.json())
+        console.log(priceHistory)
 
         if (!priceHistory || priceHistory.length == 0) return { success: false, msg: 'error 429' }
         else priceHistory = priceHistory.prices
@@ -277,6 +278,9 @@ export default function DataControlCenter({ user }) {
             for (let j in items[itemType]) {
                 let itemName = items[itemType][j]
                 let priceHistory = await getItemPriceHistoryArray(itemName, itemType == 'stickers' ? dates['release'] : dates['sale-start'])
+                console.log(itemName)
+                console.log(priceHistory)
+                console.log(j)
                 if (priceHistory.success == false) {
                     outputText.value += `\n\nerror 429`
                     return false
