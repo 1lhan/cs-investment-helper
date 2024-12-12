@@ -2,6 +2,7 @@ CS Investment Helper is a platform that allows users to register their CS2 items
 making it easier to monitor and manage their investments growth.
 
 Market Values & Investment Analysis Tools
+
 Event Items Price Changes: Track the price changes of tournament items over time, including their profitability during different periods.
 
 Major Analysis: View graphical representations of tournament item prices and market data to understand trends and patterns.
