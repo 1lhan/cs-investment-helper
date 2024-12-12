@@ -1,0 +1,647 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+@mixin blur {
+    background: rgba(15, 22, 37, 0.75);
+    backdrop-filter: blur(15px);
+}
+
+// z-indexes
+// table image - 2
+// table, table tooltip - 3
+// tooltip - 4
+// custom select - 6
+// header dropdowns - 7
+// modal-backdrop - 8
+
+$header-bg: #152038;
+$body-bg: #0f1625;
+$bg-primary: #222a3d; // custom select border, date input border
+$bg-primary-light: rgba(34, 42, 61, 0.5); // input bg, custom select bg
+$bg-primary-light-25: rgba(34, 42, 61, 0.25); // form bg
+$border-bg: #263347;
+$hover-bg: #2c3241; // hover bg, tool-tip border, dropdown border
+$blue: #066edd;
+$light-blue: rgba(6, 110, 221, 0.2);
+$green: #34d399;
+$light-green: rgba(52, 211, 153, 0.35);
+$red: #ff6c6c;
+$light-red: rgba(255, 108, 108, 0.35);
+$orange: #fb923c;
+$gray: #d4d4d4;
+$site-primary-color: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(6, 110, 221, 1) 0%, rgba(0, 212, 255, 1) 100%);
+$transparent-bg: rgba(0, 0, 0, 0.2);
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: "Nunito", sans-serif;
+}
+
+html {
+    font-size: 0.95rem;
+
+    ::-webkit-scrollbar {
+        position: relative;
+        right: 0;
+        background: none;
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $blue;
+    }
+
+    button {
+        all: unset;
+        cursor: pointer;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    body {
+        background: $body-bg;
+    }
+
+    .container {
+        @include flex(column, flex-start, stretch);
+        position: relative;
+        gap: 1rem;
+        width: 100%;
+        max-width: 1500px;
+        height: 100%;
+        min-height: calc(100vh - 4rem);
+        margin: 0 auto;
+        padding: 1rem 0.5rem;
+
+        header {
+            @include flex(row, space-between, center);
+            gap: 0.5rem;
+        }
+    }
+
+    .page-name {
+        @include flex(row, center, center);
+        gap: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 1.15rem;
+        background: $bg-primary-light;
+
+        span {
+            font-weight: 600;
+        }
+    }
+
+    .icon-wrapper {
+        background: $light-blue;
+        border-radius: 0.25rem;
+
+        i {
+            padding: 0.6rem;
+            background: $site-primary-color;
+            background-clip: text;
+            color: transparent;
+        }
+    }
+
+    .btn {
+        @include flex(row, center, center);
+        gap: 0.5rem;
+        background: $blue;
+        padding: 0.65rem 1rem;
+        border: 0;
+        outline: 0;
+        border-radius: 0.25rem;
+        cursor: pointer;
+
+        &:hover {
+            box-shadow: 0 0 8px 3px rgba(6, 110, 221, 0.5);
+        }
+    }
+
+    .btn-secondary {
+        @include flex(row, center, center);
+        gap: 0.5rem;
+        background: $bg-primary-light;
+        border: 1px solid $border-bg;
+        padding: 0.65rem 1rem;
+        border-radius: 0.25rem;
+        outline: 0;
+        cursor: pointer;
+
+        &:hover {
+            background: $hover-bg;
+        }
+    }
+
+    .fa-solid.fa-xmark {
+        position: relative;
+        right: -0.5rem;
+        padding: 0.5rem;
+        margin-left: auto;
+        font-size: 1.25rem;
+        cursor: pointer;
+
+        &:hover {
+            color: $blue;
+        }
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: $green;
+        z-index: 8;
+        background: $transparent-bg;
+
+        .modal-container {
+            @include flex(row, center, center);
+            position: relative;
+            width: calc(100%);
+            max-width: calc(1500px);
+            height: calc(100% - 6rem);
+            margin: 5rem auto 0 auto;
+        }
+    }
+
+    .page-msg-box {
+        @include flex(row, center, center);
+        width: calc(100% - 1rem);
+        max-width: 1500px;
+        padding: 1rem;
+        margin: 1rem auto;
+        background: $bg-primary;
+        color: $orange;
+        border-radius: 0.25rem;
+    }
+
+    input {
+        padding: 0.75rem 0.5rem;
+        width: 100%;
+        border: 0;
+        border-radius: 0.25rem;
+        outline: 0;
+        background: $bg-primary-light;
+        border: 1px solid $border-bg;
+
+        &:focus {
+            border-color: $blue;
+        }
+
+        &:hover {
+            background: $bg-primary;
+        }
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="date"] {
+        &::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+    }
+}
+
+.loading {
+    @include flex(row, center, center);
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem 0;
+
+    @keyframes bubble-animation {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .bubble {
+        width: 1rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: $blue;
+        animation: bubble-animation ease infinite 0.75s;
+
+        &:nth-of-type(2) {
+            animation-delay: 0.1s;
+        }
+
+        &:nth-of-type(3) {
+            animation-delay: 0.2s;
+        }
+    }
+}
+
+.tool-tip {
+    @include blur;
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem;
+    border: 1px solid $border-bg;
+    border-radius: 0.25rem;
+    z-index: 4;
+
+    .arrow {
+        @include blur;
+        position: absolute;
+        width: 0.65rem;
+        aspect-ratio: 1;
+        bottom: 100%;
+        left: 50%;
+        transform: translate(-50%, 50%) rotate(45deg);
+        border-top: 1px solid $border-bg;
+        border-left: 1px solid $border-bg;
+    }
+
+    .tool-tip-body {
+        @include flex(column, flex-start, stretch);
+        gap: 0.25rem;
+
+        div {
+            @include flex(row, space-between, center);
+            gap: 0.5rem;
+
+            span:nth-of-type(1) {
+                gap: 0.5rem;
+            }
+        }
+
+        span {
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+    }
+}
+
+.custom-select {
+    position: relative;
+    user-select: none;
+
+    input[type="checkbox"] {
+        display: none;
+
+        &:checked {
+            ~.options {
+                @include flex(column, flex-start, stretch);
+            }
+
+            ~label {
+                i {
+                    transform: rotate(180deg)
+                }
+            }
+        }
+    }
+
+    label {
+        @include flex(row, space-between, center);
+        position: relative;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid $border-bg;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        background: $bg-primary-light;
+
+        .state-value {
+            position: absolute;
+            white-space: nowrap;
+            text-transform: capitalize;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        i {
+            transition: 0.4s;
+        }
+
+        .title {
+            position: absolute;
+            bottom: 100%;
+            left: 5%;
+            transform: translateY(25%);
+            background: transparent;
+            font-size: 0.9rem;
+        }
+
+        &:hover {
+            background: $hover-bg;
+        }
+    }
+
+    .options {
+        @include blur;
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.25rem);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        border-radius: 0.25rem;
+        border: 1px solid $border-bg;
+        overflow: hidden;
+        z-index: 6;
+
+        button {
+            font-size: 0.9rem;
+            border: 0;
+            background: transparent;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            text-transform: capitalize;
+            text-align: center;
+
+            &:hover {
+                background: $hover-bg;
+            }
+
+            &:disabled {
+                color: $blue;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.table {
+    @include flex(column, flex-start, stretch);
+    gap: 3px;
+
+    .row {
+        @include flex(row, flex-start, stretch);
+        width: 100%;
+        min-width: fit-content;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        background: $bg-primary;
+
+        .cell {
+            @include flex(column, flex-start, stretch);
+            position: relative;
+            flex: 1;
+
+            .cell-inner {
+                @include flex(row, center, center);
+                flex-wrap: wrap;
+                width: 100%;
+                height: 100%;
+                gap: 0.25rem;
+
+                span {
+                    text-transform: capitalize;
+                    text-align: center;
+                }
+
+                &:hover+.tool-tip {
+                    @include flex(column, flex-start, stretch);
+                }
+            }
+
+            .tool-tip {
+                gap: 0.25rem;
+                z-index: 3;
+                top: 100%;
+
+                .arrow {
+                    display: none;
+                }
+            }
+        }
+
+        .button {
+            flex: none;
+            width: auto;
+
+            i {
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+
+            .fa-trash-can:hover {
+                color: $red;
+            }
+        }
+
+        .id {
+            flex: none;
+            width: 1.75rem;
+        }
+
+        .image {
+            flex: none;
+            width: 4rem;
+            aspect-ratio: 1.33/1;
+            z-index: 2;
+
+            &:hover img {
+                transform: scale(2);
+            }
+
+            img {
+                width: 100%;
+                transition: 0.4s all;
+            }
+        }
+
+        .name,
+        .eventName {
+            flex: 2;
+            min-width: 20rem;
+
+            .cell-inner {
+                justify-content: flex-start;
+
+                span {
+                    text-align: start;
+                }
+            }
+        }
+    }
+
+    .table-header,
+    .addition-result-row {
+        background: $header-bg;
+        user-select: none;
+
+        .image {
+            aspect-ratio: 0;
+        }
+
+        .button {
+            visibility: hidden;
+
+            i {
+                padding: 0 0.5rem;
+            }
+        }
+    }
+
+    .table-body {
+        @include flex(column, flex-start, stretch);
+        gap: 3px;
+    }
+}
+
+.form {
+    @include flex(column, flex-start, stretch);
+    gap: 1.5rem;
+    padding: 1rem;
+    background: $bg-primary-light-25;
+    border-radius: 0.5rem;
+
+    .form-header {
+        @include flex(row, space-between, center);
+    }
+
+    .form-body {
+        @include flex(column, flex-start, stretch);
+        gap: 1rem;
+
+        .fields-group {
+            @include flex(column, flex-start, stretch);
+            gap: 1rem;
+
+            .fields-group-item {
+                @include flex(column, flex-start, stretch);
+                gap: 0.5rem;
+
+                span {
+                    text-transform: capitalize;
+                }
+
+                .input-wrapper {
+                    position: relative;
+
+                    input[type="checkbox"] {
+                        display: none;
+
+                        &:checked {
+                            ~label:nth-of-type(1) {
+                                display: none;
+                            }
+
+                            ~label:nth-of-type(2) {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    label {
+                        position: absolute;
+                        top: 50%;
+                        right: 0.75rem;
+                        transform: translateY(-50%);
+
+                        &:nth-of-type(2) {
+                            display: none;
+                        }
+
+                        .fa-eye,
+                        .fa-eye-slash {
+                            font-size: 1.05rem;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+
+        .row {
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            .fields-group-item {
+                flex: 1;
+            }
+        }
+    }
+
+    .form-msg {
+        color: $red;
+        text-align: center;
+    }
+}
+
+.column-chart {
+    @include flex(column, flex-start, stretch);
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: $bg-primary;
+
+    .chart-header {
+        @include flex(row, space-between, center);
+
+        .color-info-box {
+            @include flex(row, center, center);
+            gap: 0.5rem;
+
+            div {
+                @include flex(row, center, flex-start);
+                gap: 0.25rem;
+                line-height: 0.5rem;
+
+                .color {
+                    width: 0.5rem;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    .chart-body {
+        @include flex(row, center, stretch);
+        aspect-ratio: 1/0.5;
+        gap: 0.75rem;
+
+        .chart-body-item {
+            @include flex(row, center, flex-end);
+            position: relative;
+            flex: 1;
+            gap: 0.3rem;
+
+            &:hover .tool-tip {
+                @include flex(column, flex-start, stretch);
+            }
+
+            .column {
+                flex: 1;
+                border-radius: 0.25rem;
+            }
+        }
+    }
+}

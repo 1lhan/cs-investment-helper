@@ -1,0 +1,161 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+$bg-primary: #222a3d;
+
+$color1: #4B69FF;
+$color2: #883AAC;
+$color3: #D32A9E;
+$color4: #DE352D;
+
+.line-chart {
+    @include flex(column, flex-start, stretch);
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: $bg-primary;
+    z-index: 3;
+
+    .color1 {
+        background: $color1;
+    }
+
+    .color2 {
+        background: $color2;
+    }
+
+    .color3 {
+        background: $color3;
+    }
+
+    .color4 {
+        background: $color4;
+    }
+
+    .chart-header {
+        @include flex(row, space-between, center);
+
+        >span {
+            text-transform: capitalize;
+        }
+
+        .color-informations {
+            @include flex(row, center, center);
+            gap: 1rem;
+
+            div {
+                @include flex(row, center, flex-start);
+                gap: 0.5rem;
+                line-height: 0.5rem;
+                align-items: center;
+
+                .color {
+                    width: 6px;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    .chart-body {
+        @include flex(row, space-between, stretch);
+
+        .chart {
+            @include flex(row, flex-start, stretch);
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/0.3;
+
+            .column {
+                @include flex(row, center, flex-end);
+                position: relative;
+                flex: 1;
+                z-index: 1;
+
+                &:hover {
+                    .column-inner .dot {
+                        transform: scale(3) translateY(25%);
+                    }
+
+                    .column-dashed-line {
+                        display: block;
+                    }
+
+                    .tool-tip {
+                        @include flex(column, flex-start, stretch);
+                    }
+                }
+
+                .column-inner {
+                    @include flex(row, center, center);
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+
+                    .dot {
+                        width: 2px;
+                        aspect-ratio: 1;
+                        position: absolute;
+                        left: calc(50% - 1px);
+                        bottom: 100%;
+                        transform: translateY(50%);
+                        border-radius: 50%;
+                    }
+
+                    .line {
+                        height: 2px;
+                        position: absolute;
+                        bottom: calc(100%);
+                        left: calc(50%);
+                        transform-origin: bottom left;
+                    }
+                }
+
+                .column-dashed-line {
+                    display: none;
+                    height: 100%;
+                    border: 1px dashed rgba(74, 87, 117, 0.4);
+                }
+            }
+
+            .vertical-back-lines,
+            .horizontal-back-lines {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+
+                span {
+                    background: rgba(74, 87, 117, 0.4);
+                }
+            }
+
+            .vertical-back-lines {
+                @include flex(row, space-between, stretch);
+
+                span {
+                    width: 1px;
+                }
+            }
+
+            .horizontal-back-lines {
+                @include flex(column, space-between, stretch);
+
+                span {
+                    height: 1px;
+                }
+            }
+        }
+    }
+
+    .chart-footer {
+        @include flex(row, space-between, center);
+    }
+}
