@@ -305,7 +305,7 @@ router.post('/update-investments-market-price', async (req, res) => {
                     reject(new Error(itemMarketPrice.msg))
                 }
                 else {
-                    console.log(`${itemIndex + 1}/${user.investments.length}`)
+                    //console.log(`${itemIndex + 1}/${user.investments.length}`)
 
                     user.investments[itemIndex].marketPrice = itemMarketPrice.price
                     itemIndex++
