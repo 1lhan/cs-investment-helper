@@ -11,7 +11,7 @@ Sticker Application Numbers: Monitor the price, stock, and application numbers o
 
 Events: View the dates of past events along with the start and end dates of specific periods.
 
-https://csinvestmenthelper.netlify.app/investments
+https://csinvestmenthelper.netlify.app
 
 ![1](https://github.com/user-attachments/assets/984dc2eb-a159-4801-a04a-0c8cd7f4ae13)
 ![2](https://github.com/user-attachments/assets/f73ae6be-3483-486f-987d-8017b24bb80e)
