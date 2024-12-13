@@ -7,19 +7,16 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json({ limit: '25mb' }))
 
-const allowedOrigins = [process.env.ORIGIN];
+const allowedOrigins = [process.env.ALLOWED_ORIGIN];
 
 const corsOptions = {
     origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true); // İzin ver
-        } else {
-            callback(new Error('Not allowed by CORS')); // Erişim reddedildi
-        }
+        if (allowedOrigins.includes(origin) || !origin) callback(null, true)
+        else callback(new Error('Not allowed by CORS'))
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // İzin verilen HTTP metodları
-    allowedHeaders: ['Content-Type', 'Authorization'], // İzin verilen başlıklar
-    credentials: true, // Credential paylaşımına izin ver (örn. Cookie)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 };
 
 app.use(cors(corsOptions));
