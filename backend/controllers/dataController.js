@@ -4,6 +4,7 @@ const eventItemModel = require('../models/eventItemModel')
 const stickerApplicationNumbers = require('../models/stickerApplicationNumbers')
 const { events } = require('../events')
 const puppeteer = require('puppeteer')
+const { authenticateToken } = require('./utils')
 
 const getStockData = async (_url) => {
     const browser = await puppeteer.launch({ headless: true/*, defaultViewport: { width: 1920, height: 1080, }*/ })
@@ -158,7 +159,7 @@ const getItemPriceHistory = async (itemName, releaseDate) => {
     }
 }
 
-router.post('/update-event-item', async (req, res) => {
+router.post('/update-event-item', authenticateToken, async (req, res) => {
     const { eventName, type, variant } = req.body
 
     let event = events.find(item => item.name == eventName)
@@ -188,7 +189,7 @@ router.post('/update-event-item', async (req, res) => {
     }
 })
 
-router.post('/update-sticker-application-numbers', async (req, res) => {
+router.post('/update-sticker-application-numbers', authenticateToken, async (req, res) => {
     const { eventName, variant, formValues } = req.body
 
     const event = events.find(event => event.name == eventName)

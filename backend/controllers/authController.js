@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const userModel = require('../models/userModel')
+const { authenticateToken } = require('./utils')
 
 router.post('/signup', async (req, res) => {
     const { username, password, email } = req.body;
@@ -58,7 +59,7 @@ router.post('/login', async (req, res) => {
     return res.json({ success: true, user, token: _jwt })
 })
 
-router.post('/auto-login', async (req, res) => {
+router.post('/auto-login', authenticateToken, async (req, res) => {
     try {
         const token = req.body.token.slice(6, req.body.token.length)
         if (!token) return res.json({ success: false })
@@ -72,7 +73,7 @@ router.post('/auto-login', async (req, res) => {
     catch (error) { return res.json({ success: false }) }
 })
 
-router.post('/change-password', async (req, res) => {
+router.post('/change-password', authenticateToken, async (req, res) => {
     const { userId, currentPassword, newPassword } = req.body
 
     try {

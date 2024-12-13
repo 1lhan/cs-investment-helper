@@ -19,7 +19,7 @@ export default function Profile({ user }) {
             else if (username.length < 3) updateUserInformationsFormMsg.value = 'Username must be at least 3 characters long.'
             else if (email.length < 15) updateUserInformationsFormMsg.value = 'Email must be at least 3 characters long.'
             else {
-                const response = await usePostRequest('/update-user-informations', { userId: user.value._id, username, email })
+                const response = await usePostRequest('/update-user-informations', { userId: user.value._id, username, email, token: document.cookie })
                 if (!response.success) return updateUserInformationsFormMsg.value = response.msg
 
                 e.target.reset()
@@ -57,7 +57,7 @@ export default function Profile({ user }) {
             else if (newPassword != newPasswordAgain) changePasswordFormMsg.value = 'New passwords do not match.'
             else if (currentPassword == newPassword) changePasswordFormMsg.value = 'Current password and new password cannot be the same.'
             else {
-                const response = await usePostRequest('/change-password', { userId: user.value._id, currentPassword, newPassword })
+                const response = await usePostRequest('/change-password', { userId: user.value._id, currentPassword, newPassword, token: document.cookie })
                 if (!response.success) return changePasswordFormMsg.value = response.msg
 
                 e.target.reset()
@@ -97,7 +97,7 @@ export default function Profile({ user }) {
             const userConfirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
             if (!userConfirmed) return;
 
-            const response = await usePostRequest('/delete-account', { userId: user.value._id })
+            const response = await usePostRequest('/delete-account', { userId: user.value._id, token: document.cookie })
             if (!response.success) return accountDeleteMsg.value = response.msg
 
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';

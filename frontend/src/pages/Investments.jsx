@@ -78,7 +78,7 @@ export default function Investments({ user, blue, green, red }) {
             document.getElementById('confirm-csv-file-btn').disabled = true
             addInvestmentFromCsvFileMsg.value = `This process will take approximately ${convertMilliseconds(tableData.value.length * 3200)}.`
 
-            const response = await usePostRequest('/add-investment', { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: tableData.value })
+            const response = await usePostRequest('/add-investment', { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: tableData.value, token: document.cookie })
             if (!response.success) return addInvestmentFromCsvFileMsg.value = response.msg
 
             batch(() => {
@@ -105,7 +105,7 @@ export default function Investments({ user, blue, green, red }) {
                 buyPrice = buyPrice.includes(',') ? +buyPrice.replaceAll(',', '.') : +buyPrice
 
                 const response = await usePostRequest('/add-investment',
-                    { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: [{ name, date: date || null, totalCost: buyPrice * +quantity, quantity: +quantity }] })
+                    { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: [{ name, date: date || null, totalCost: buyPrice * +quantity, quantity: +quantity, token: document.cookie }] })
                 if (!response.success) return addInvestmentFormMsg.value = response.msg
 
                 e.target.reset()
@@ -175,7 +175,7 @@ export default function Investments({ user, blue, green, red }) {
                         {addInvestmentMethod.value == "manually" &&
                             <div className="form-wrapper">
                                 <div className="form-wrapper">
-                                    <Form title="Add Investment" submitFunction={addInvestmentManually}formMsgState={addInvestmentFormMsg} submitBtnInnerText="Add Investment"
+                                    <Form title="Add Investment" submitFunction={addInvestmentManually} formMsgState={addInvestmentFormMsg} submitBtnInnerText="Add Investment"
                                         fields={[{ align: 'column', fields: [{ name: 'name', type: 'text' }, { name: 'buyPrice', type: 'number' }, { name: 'quantity', type: 'number' }, { name: 'date', type: 'date' }] }]} />
                                 </div>
                             </div>
@@ -217,7 +217,8 @@ export default function Investments({ user, blue, green, red }) {
             else {
                 price = price.includes(',') ? +price.replaceAll(',', '.') : +price
 
-                const response = await usePostRequest('/save-transaction', { userId: user.value._id, itemId: investmentItemDetails.value._id, timezoneOffSet: new Date().getTimezoneOffset(), price, date, quantity, transactionType })
+                const response = await usePostRequest('/save-transaction', 
+                    { userId: user.value._id, itemId: investmentItemDetails.value._id, timezoneOffSet: new Date().getTimezoneOffset(), price, date, quantity, transactionType, token: document.cookie })
                 if (!response.success) return handleTransactionFormMsg.value = response.msg
 
                 e.target.reset()
@@ -234,7 +235,7 @@ export default function Investments({ user, blue, green, red }) {
             if (!investmentItemDetails.value.lastUpdate) return alert('There is no last update data for this investment item.')
             if (!confirm('Are you sure you want to undo the last update?')) return;
 
-            const response = await usePostRequest('/undo-last-update', { userId: user.value._id, itemId: investmentItemDetails.value._id })
+            const response = await usePostRequest('/undo-last-update', { userId: user.value._id, itemId: investmentItemDetails.value._id, token: document.cookie })
             if (!response.success) return alert(response.msg)
 
             batch(() => {
@@ -247,7 +248,7 @@ export default function Investments({ user, blue, green, red }) {
         const deleteInvestmentItem = async () => {
             if (!confirm(`Are you sure you want to delete the investment item? \n${investmentItemDetails.value.name}`)) return;
 
-            const response = await usePostRequest('/delete-investment-item', { userId: user.value._id, itemId: investmentItemDetails.value._id })
+            const response = await usePostRequest('/delete-investment-item', { userId: user.value._id, itemId: investmentItemDetails.value._id, token: document.cookie })
             if (!response.success) return alert(response.msg)
 
             batch(() => {
