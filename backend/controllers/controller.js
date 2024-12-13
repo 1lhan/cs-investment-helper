@@ -111,7 +111,7 @@ router.get('/get-sticker-application-numbers/:eventName/:variant', async (req, r
 
 // Investment Operations
 
-router.post('/add-investment',authenticateToken, async (req, res) => {
+router.post('/add-investment', authenticateToken, async (req, res) => {
     const { userId, timezoneOffSet, items } = req.body
 
     let user = await getUser(userId)
@@ -162,7 +162,7 @@ router.post('/add-investment',authenticateToken, async (req, res) => {
     }
 })
 
-router.post('/save-transaction',authenticateToken, async (req, res) => {
+router.post('/save-transaction', authenticateToken, async (req, res) => {
     const { userId, itemId, timezoneOffSet, price, quantity, date, transactionType } = req.body;
 
     let user = await getUser(userId)
@@ -196,7 +196,7 @@ router.post('/save-transaction',authenticateToken, async (req, res) => {
     }
 })
 
-router.post('/undo-last-update',authenticateToken, async (req, res) => {
+router.post('/undo-last-update', authenticateToken, async (req, res) => {
     const { userId, itemId } = req.body
 
     let user = await getUser(userId)
@@ -231,7 +231,7 @@ router.post('/undo-last-update',authenticateToken, async (req, res) => {
     }
 })
 
-router.post('/delete-investment-item',authenticateToken, async (req, res) => {
+router.post('/delete-investment-item', authenticateToken, async (req, res) => {
     const { userId, itemId } = req.body
 
     let user = await getUser(userId)
@@ -257,8 +257,8 @@ router.post('/delete-investment-item',authenticateToken, async (req, res) => {
 
 // Investment Market Price Update Operations
 
-router.get('/permission-to-update-investments-market-price/:userId',authenticateToken, async (req, res) => {
-    let user = await getUser(req.params.userId)
+router.post('/permission-to-update-investments-market-price', authenticateToken, async (req, res) => {
+    let user = await getUser(req.body.userId)
     if (!user.success) return res.json(user)
     user = user.user
 
@@ -269,7 +269,7 @@ router.get('/permission-to-update-investments-market-price/:userId',authenticate
     return res.json({ success: true, result: lastUpdateDateCheck && (!isUpdating || (isUpdating && updateStartDateCheck)) })
 })
 
-router.post('/update-investments-market-price',authenticateToken, async (req, res) => {
+router.post('/update-investments-market-price', authenticateToken, async (req, res) => {
     const { userId, date } = req.body
 
     let user = await getUser(userId)
@@ -363,7 +363,7 @@ router.post('/update-investments-market-price',authenticateToken, async (req, re
 
 // User Operations
 
-router.post('/update-user-informations',authenticateToken, async (req, res) => {
+router.post('/update-user-informations', authenticateToken, async (req, res) => {
     const { userId, username, email } = req.body
 
     let user = await getUser(userId)
@@ -380,7 +380,7 @@ router.post('/update-user-informations',authenticateToken, async (req, res) => {
     }
 })
 
-router.post('/delete-account',authenticateToken, async (req, res) => {
+router.post('/delete-account', authenticateToken, async (req, res) => {
     const { userId } = req.body
 
     let user = await getUser(userId)

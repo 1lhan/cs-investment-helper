@@ -35,14 +35,14 @@ export default function Header({ user }) {
         if (!lastUpdateDateCheck || (isUpdating && !updateStartDateCheck)) return;
 
         try {
-            const permission = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/permission-to-update-investments-market-price/' + user.value._id).then(res => res.json())
+            const permission = await usePostRequest('/permission-to-update-investments-market-price', { userId: user.value._id, token: document.cookie })
             if (!permission.result || !permission.success) return;
         }
         catch (error) { return console.log(error) }
-
+        
         try {
             const date = new Intl.DateTimeFormat(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date())
-            const response = await usePostRequest('/update-investments-market-price', { userId: user.value._id, date })
+            const response = await usePostRequest('/update-investments-market-price', { userId: user.value._id, date, token: document.cookie })
 
             if (response.success) user.value = response.user
         }
