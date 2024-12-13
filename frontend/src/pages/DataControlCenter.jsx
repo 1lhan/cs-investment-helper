@@ -29,7 +29,7 @@ export default function DataControlCenter({ user }) {
         let _event = events.find(event => event.name == eventName.value)
         let itemTypes = Object.keys(_event.items)
 
-        output.value = [...output.value, { msg: `${eventName.value} items data have been updating...` }]
+        output.value = [...output.value, { msg: `${eventName.value} item data is being updated...` }]
 
         for (let i in itemTypes) {
             let type = itemTypes[i]
@@ -39,22 +39,22 @@ export default function DataControlCenter({ user }) {
 
                 for (let j in variants) {
                     let variant = variants[j]
-                    output.value = [...output.value, { msg: `${type} ${variant} updating...` }]
+                    output.value = [...output.value, { msg: `Updating ${type} ${variant}...` }]
 
                     let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant })
-                    output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? (`${type} ${variant} updated.`) : (response.msg || `${response.msg} (${type} ${variant})`) }]
+                    output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? (`${type} ${variant} has been updated.`) : (response.msg || `${response.msg} (${type} ${variant})`) }]
                     if (!response.success) return;
                 }
             }
             else {
-                output.value = [...output.value, { msg: `${type} updating...` }]
+                output.value = [...output.value, { msg: `Updating ${type}...` }]
 
                 let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant: null })
-                output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? `${type} updated.` : (response.msg || `${response.msg} (${type})`) }]
+                output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? `${type} has been updated.` : (response.msg || `${response.msg} (${type})`) }]
                 if (!response.success) return;
             }
         }
-        output.value = [...output.value, { success: true, msg: `${eventName.value} items data have been updated.` }]
+        output.value = [...output.value, { success: true, msg: `All item data for ${eventName.value} has been updated successfully.` }]
     }
 
     const StickerApplicationNumbersForm = () => {
