@@ -105,7 +105,7 @@ export default function Investments({ user, blue, green, red }) {
                 buyPrice = buyPrice.includes(',') ? +buyPrice.replaceAll(',', '.') : +buyPrice
 
                 const response = await usePostRequest('/add-investment',
-                    { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: [{ name, date: date || null, totalCost: buyPrice * +quantity, quantity: +quantity, token: document.cookie }] })
+                    { userId: user.value._id, timezoneOffSet: new Date().getTimezoneOffset(), items: [{ name, date: date || null, totalCost: buyPrice * +quantity, quantity: +quantity }], token: document.cookie })
                 if (!response.success) return addInvestmentFormMsg.value = response.msg
 
                 e.target.reset()
