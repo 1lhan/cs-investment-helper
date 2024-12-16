@@ -294,24 +294,25 @@ router.post('/update-investments-market-price', authenticateToken, async (req, r
     }
 
     let itemIndex = 0;
+    const investmentItems = user.investments.filter(item => item.quantity > 0)
 
     const updateItemsMarketPrices = new Promise((resolve, reject) => {
         const interval = setInterval(async () => {
-            if (itemIndex == user.investments.length) {
+            if (itemIndex == investmentItems.length) {
                 clearInterval(interval);
                 resolve()
             }
             else {
-                const itemMarketPrice = await getItemMarketPrice(user.investments[itemIndex].name)
+                const itemMarketPrice = await getItemMarketPrice(investmentItems[itemIndex].name)
 
                 if (!itemMarketPrice.success) {
                     clearInterval(interval);
                     reject(new Error(itemMarketPrice.msg))
                 }
                 else {
-                    //console.log(`${itemIndex + 1}/${user.investments.length}`)
+                    //console.log(`${itemIndex + 1}/${investmentItems.length}`)
 
-                    user.investments[itemIndex].marketPrice = itemMarketPrice.price
+                    user.investments.find(item => item._id == investmentItems[itemIndex]._id).marketPrice = itemMarketPrice.price
                     itemIndex++
                 }
             }
