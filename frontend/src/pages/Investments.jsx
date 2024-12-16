@@ -27,7 +27,7 @@ export default function Investments({ user, blue, green, red }) {
             return item;
         }).filter(item => filterValues.value.filter(filter => filter != 'Any').every(filters => item.tags.includes(filters))).sort((a, b) => { return b.x - a.x }) : []
     )
-
+    console.log(investments.value)
     const changeBodyOverflow = (value) => document.querySelector('body').style.overflow = value
 
     const AddInvestmentSection = () => {
@@ -217,7 +217,7 @@ export default function Investments({ user, blue, green, red }) {
             else {
                 price = price.includes(',') ? +price.replaceAll(',', '.') : +price
 
-                const response = await usePostRequest('/save-transaction', 
+                const response = await usePostRequest('/save-transaction',
                     { userId: user.value._id, itemId: investmentItemDetails.value._id, timezoneOffSet: new Date().getTimezoneOffset(), price, date, quantity, transactionType, token: document.cookie })
                 if (!response.success) return handleTransactionFormMsg.value = response.msg
 
@@ -284,9 +284,20 @@ export default function Investments({ user, blue, green, red }) {
                                 <span>Initial Purchase Date</span>
                                 <span>{new Intl.DateTimeFormat(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(investmentItemDetails.value.initialPurchaseDate))}</span>
                             </div>
+                            {investmentItemDetails.value.soldQuantity > 0 &&
+                                <>
+                                    <div>
+                                        <span>Total Sales</span>
+                                        <span>{investmentItemDetails.value.totalSales}</span>
+                                    </div>
+                                    <div>
+                                        <span>Sold Quantity</span>
+                                        <span>{investmentItemDetails.value.soldQuantity}</span>
+                                    </div>
+                                </>
+                            }
                             <span className="divider" />
                         </div>
-
 
                         {investmentItemDetails.value.lastUpdate &&
                             <div className="investment-item-details">
@@ -297,14 +308,14 @@ export default function Investments({ user, blue, green, red }) {
                                 <div>
                                     <span>{investmentItemDetails.value.lastUpdate.totalCost ? 'Last Update Buy Price' : 'Last Update Sold Price'}</span>
                                     <span>
-                                        {formatNumber(investmentItemDetails.value.lastUpdate.totalCost / investmentItemDetails.value.lastUpdate.quantity)
-                                            ||
+                                        {investmentItemDetails.value.lastUpdate.totalCost ? formatNumber(investmentItemDetails.value.lastUpdate.totalCost / investmentItemDetails.value.lastUpdate.quantity)
+                                            :
                                             formatNumber(investmentItemDetails.value.lastUpdate.totalSales / investmentItemDetails.value.lastUpdate.soldQuantity)}
                                     </span>
                                 </div>
                                 <div>
                                     <span>{investmentItemDetails.value.lastUpdate.totalCost ? 'Last Update Quantity' : 'Last Update Sold Quantity'}</span>
-                                    <span>{formatNumber(investmentItemDetails.value.lastUpdate.quantity) || formatNumber(investmentItemDetails.value.lastUpdate.soldQuantity)}</span>
+                                    <span>{investmentItemDetails.value.lastUpdate.totalCost ? formatNumber(investmentItemDetails.value.lastUpdate.quantity) : formatNumber(investmentItemDetails.value.lastUpdate.soldQuantity)}</span>
                                 </div>
 
                                 <span className="divider" />

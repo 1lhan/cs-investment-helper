@@ -41,7 +41,7 @@ export default function DataControlCenter({ user }) {
                     let variant = variants[j]
                     output.value = [...output.value, { msg: `Updating ${type} ${variant}...` }]
 
-                    let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant })
+                    let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant, token: document.cookie })
                     output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? (`${type} ${variant} has been updated.`) : (response.msg || `${response.msg} (${type} ${variant})`) }]
                     if (!response.success) return;
                 }
@@ -49,7 +49,7 @@ export default function DataControlCenter({ user }) {
             else {
                 output.value = [...output.value, { msg: `Updating ${type}...` }]
 
-                let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant: null })
+                let response = await usePostRequest('/update-event-item', { eventName: _event.name, type, variant: null, token: document.cookie })
                 output.value = [...output.value.slice(0, -1), { success: response.success, msg: response.success ? `${type} has been updated.` : (response.msg || `${response.msg} (${type})`) }]
                 if (!response.success) return;
             }
@@ -65,7 +65,7 @@ export default function DataControlCenter({ user }) {
         const updateStickerApplicationNumbers = async (e) => {
             let formValues = Object.fromEntries(new FormData(e.target).entries())
 
-            const response = await usePostRequest('/update-sticker-application-numbers', { eventName: tournamentName.value, variant: variant.value, formValues })
+            const response = await usePostRequest('/update-sticker-application-numbers', { eventName: tournamentName.value, variant: variant.value, formValues, token: document.cookie })
             if (!response.success) return formMsg.value = response.msg
 
             e.target.reset()
@@ -89,8 +89,8 @@ export default function DataControlCenter({ user }) {
                                 </div>
                                 <span>Update Sticker Application Numbers</span>
                             </div>
-                            <CustomSelect id="tournament-name" title="Tournament Name" state={tournamentName} options={events.filter(event => event.type == 'tournament').map(item => { return item.name })}/>
-                            <CustomSelect id="sticker-variant" title="Sticker Variant" state={variant} options={['Glitter', 'Holo']}/>
+                            <CustomSelect id="tournament-name" title="Tournament Name" state={tournamentName} options={events.filter(event => event.type == 'tournament').map(item => { return item.name })} />
+                            <CustomSelect id="sticker-variant" title="Sticker Variant" state={variant} options={['Glitter', 'Holo']} />
                             <i className="fa-solid fa-xmark" onClick={() => showStickerApplicationNumbersForm.value = false} />
                         </div>
                         {(tournamentName.value != 'Any' && variant.value != 'Any') &&

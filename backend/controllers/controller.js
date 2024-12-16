@@ -184,6 +184,8 @@ router.post('/save-transaction', authenticateToken, async (req, res) => {
         else {
             item.totalSales += +price * +quantity
             item.soldQuantity += +quantity
+            item.totalCost -= (+item.totalCost / +item.quantity) * +quantity
+            item.quantity -= +quantity
             item.lastUpdate = { date: date ? new Date(date) : _date, totalSales: +price * +quantity, soldQuantity: +quantity }
         }
 
@@ -218,6 +220,7 @@ router.post('/undo-last-update', authenticateToken, async (req, res) => {
     else {
         investmentItem.totalSales -= investmentItemLastUpdateObj.totalSales
         investmentItem.soldQuantity -= investmentItemLastUpdateObj.soldQuantity
+        investmentItem.quantity += investmentItemLastUpdateObj.soldQuantity
     }
     investmentItem.lastUpdate = null
 

@@ -117,17 +117,20 @@ const getItemPriceHistory = async (itemName, releaseDate) => {
             const data = await response.json()
 
             if (!response.ok) {
-                console.error('Fetch error details (getItemPriceHistory()): ', { status: response.status, itemName, releaseDate })
-
                 if (response.status == 400) { isProcessDone = true; return { success: false, msg: 'Invalid cookie.' } }
                 else if (response.status == 500) { isProcessDone = true; return { success: false, msg: `The item name is incorrect or the item has no listings. (${itemName})` } }
                 else if (response.status == 429) {
                     if (retries == 4) { isProcessDone = true; return { success: false, msg: 'Too many request.' } } // If 5 attempts are made for an item and it still returns null, the function will terminate and return an error.
                     else {
                         retries++
-                        await new Promise(resolve => setTimeout(resolve, 1000 * 15));
+                        await new Promise(resolve => setTimeout(resolve, 1000 * 30));
                         continue;
                     }
+                }
+                else {
+                    console.error('Fetch error details (getItemPriceHistory()): ', { status: response.status, itemName, releaseDate })
+                    isProcessDone = true
+                    return { success: false, msg: 'An unknown error occurred while fetching item price history.' }
                 }
             }
 
