@@ -431,11 +431,11 @@ export default function Investments({ user, blue, green, red }) {
             { fields: [{ name: 'image', type: 'image', path: 'name' }] },
             { fields: [{ name: 'name', type: 'text', sortable: true }] },
             { fields: [{ name: 'quantity', type: 'number', sortable: true }] },
-            { fields: [{ name: 'buyPrice', type: 'number', sortable: true }] },
+            { fields: [{ name: 'avgCost', type: 'number', sortable: true }] },
             { fields: [{ name: 'marketPrice', type: 'number', sortable: true }] },
             { fields: [{ name: 'worth', type: 'number', sortable: true, highlightBaseline: 0 }] },
             { fields: [{ name: 'x', type: 'number', template: '_rx', sortable: true, highlightBaseline: 1 }] },
-            { fields: [{ name: 'totalCost', type: 'number', sortable: true }] },
+            { fields: [{ name: 'currentTotalCost', type: 'number', sortable: true }] },
             { fields: [{ name: 'totalMarketValue', type: 'number', sortable: true }] },
             { fields: [{ name: 'button', type: 'button', className: 'fa-solid fa-ellipsis-vertical', onClick: onClickThreeDotBtn }] }
         ]

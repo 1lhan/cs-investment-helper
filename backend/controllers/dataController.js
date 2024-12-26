@@ -59,7 +59,7 @@ const getStockData = async (_url) => {
         }
     }
     await browser.close()
-
+    console.log(result)
     return result
 }
 

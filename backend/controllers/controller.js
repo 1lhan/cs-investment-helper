@@ -358,8 +358,6 @@ router.post('/update-investments-market-price', authenticateToken, async (req, r
         if (save) return res.json({ success: true, user })
     }
     catch (error) {
-        user.investmentsMarketPriceUpdateStatus.isUpdating = false;
-
         console.error((error.message || 'An error occurred while saving user.') + ' (/update-investments-market-price)')
         return res.json({ success: false, msg: 'An error occurred while updating investments market price.' });
     }

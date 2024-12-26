@@ -28,7 +28,7 @@ export default function StickerApplicationNumbers({ green, red }) {
 
             const responsedData = await response.json()
             if (!responsedData.success) return pageMsg.value = response.msg
-
+            console.log(responsedData)
             _data = responsedData.data
         }
         catch (error) { return pageMsg.value = error.message || 'An error occurred while fetching sticker application numbers.' }
@@ -112,7 +112,7 @@ export default function StickerApplicationNumbers({ green, red }) {
     const Filters = () => {
         return (
             <div className="filters">
-                <CustomSelect id="event-name" title="Event Name" state={eventName} options={['Copenhagen 2024', 'Paris 2023']} />
+                <CustomSelect id="event-name" title="Event Name" state={eventName} options={['Shanghai 2024', 'Copenhagen 2024', 'Paris 2023']} />
                 <CustomSelect id="variant" title="Variant" state={variant} options={['Glitter', 'Holo']} />
                 <button className="btn" onClick={() => fetchStickerApplicationNumbers()}><i className="fa-solid fa-magnifying-glass" /></button>
             </div>
