@@ -12,7 +12,7 @@ import Events from './pages/Events'
 import InvestmentStats from './pages/InvestmentStats'
 import DataControlCenter from './pages/DataControlCenter'
 import StickerApplicationNumbers from './pages/StickerApplicationNumbers'
-import Signup from './pages/SignUp'
+import Signup from './pages/Signup'
 import Profile from './pages/Profile'
 import MajorAnalysis from './pages/MajorAnalysis'
 
