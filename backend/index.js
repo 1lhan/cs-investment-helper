@@ -7,7 +7,7 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json({ limit: '25mb' }))
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = [process.env.ALLOWED_ORIGIN];
 
 const corsOptions = {
     origin: (origin, callback) => {
