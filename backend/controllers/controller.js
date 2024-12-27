@@ -243,8 +243,6 @@ router.post('/update-investment-market-prices', authenticateToken, async (req, r
         const interval = setInterval(async () => {
             const item = investments[itemIndex]
 
-            console.log(`${itemIndex + 1} / ${investments.length}`)
-
             const itemMarketPrice = await getItemMarketPrice(item.name)
             if (!itemMarketPrice.success) { clearInterval(interval); return reject(new Error(itemMarketPrice.msg)) }
 
