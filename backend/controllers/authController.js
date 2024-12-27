@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const userModel = require('../models/userModel')
-const { authenticateToken } = require('./utils')
+const { authenticateToken } = require('../utils')
 
 router.post('/signup', async (req, res) => {
     const { username, password, email } = req.body;

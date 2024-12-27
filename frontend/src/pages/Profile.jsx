@@ -1,7 +1,8 @@
-import { batch, useSignal } from '@preact/signals-react'
-import Form from '../components/Form'
-import { usePostRequest } from '../utils'
-import { useNavigate } from 'react-router-dom'
+import { batch, useSignal } from '@preact/signals-react';
+import { formatDate, usePostRequest } from '../utils';
+import { useNavigate } from 'react-router-dom';
+import HeaderWithIcon from '../components/HeaderWithIcon';
+import Form from '../components/Form';
 
 export default function Profile({ user }) {
     const showUpdateUserInformationsModal = useSignal(false)
@@ -19,7 +20,7 @@ export default function Profile({ user }) {
             else if (username.length < 3) updateUserInformationsFormMsg.value = 'Username must be at least 3 characters long.'
             else if (email.length < 15) updateUserInformationsFormMsg.value = 'Email must be at least 3 characters long.'
             else {
-                const response = await usePostRequest('/update-user-informations', { userId: user.value._id, username, email, token: document.cookie })
+                const response = await usePostRequest('update-user-informations', { userId: user.value._id, token: document.cookie, username, email })
                 if (!response.success) return updateUserInformationsFormMsg.value = response.msg
 
                 e.target.reset()
@@ -31,15 +32,16 @@ export default function Profile({ user }) {
             }
         }
 
-        if (!showUpdateUserInformationsModal.value) return;
+        if (!showUpdateUserInformationsModal.value) return null
 
         return (
             <div className="modal-backdrop">
-                <div className="modal-container">
-                    <div className="update-user-informations-modal">
-                        <Form title="Update User Informations" submitFunction={updateUserInformations} onClickCloseBtn={() => showUpdateUserInformationsModal.value = false} formMsgState={updateUserInformationsFormMsg}
+                <div className="modal-container container">
+                    <div className="update-user-informations-modal modal">
+                        <Form title="Update User Informations" submitFunction={updateUserInformations}
+                            onClickCloseBtn={() => batch(() => { showUpdateUserInformationsModal.value = false; updateUserInformationsFormMsg.value = null })} formMsgState={updateUserInformationsFormMsg}
                             submitBtnInnerText="Update User Informations"
-                            fields={[{ align: "column", fields: [{ name: "username", type: "text", defaultValue: user.value.username }, { name: "email", type: "email", defaultValue: user.value.email }] }]} />
+                            fields={[{ align: 'column', fields: [{ name: 'username', type: 'text', defaultValue: user.value.username }, { name: 'email', type: 'email', defaultValue: user.value.email }] }]} />
                     </div>
                 </div>
             </div>
@@ -57,7 +59,7 @@ export default function Profile({ user }) {
             else if (newPassword != newPasswordAgain) changePasswordFormMsg.value = 'New passwords do not match.'
             else if (currentPassword == newPassword) changePasswordFormMsg.value = 'Current password and new password cannot be the same.'
             else {
-                const response = await usePostRequest('/change-password', { userId: user.value._id, currentPassword, newPassword, token: document.cookie })
+                const response = await usePostRequest('change-password', { userId: user.value._id, currentPassword, newPassword, token: document.cookie })
                 if (!response.success) return changePasswordFormMsg.value = response.msg
 
                 e.target.reset()
@@ -69,14 +71,15 @@ export default function Profile({ user }) {
             }
         }
 
-        if (!showChangePasswordModal.value) return;
+        if (!showChangePasswordModal.value) return null
 
         return (
             <div className="modal-backdrop">
-                <div className="modal-container">
-                    <div className="change-password-modal">
-                        <Form title="Change Password" submitFunction={changePassword} onClickCloseBtn={() => showChangePasswordModal.value = false} formMsgState={changePasswordFormMsg} submitBtnInnerText="Change Password"
-                            fields={[{ align: "column", fields: [{ name: "currentPassword", type: "password" }, { name: "newPassword", type: "password" }, { name: "newPasswordAgain", type: "password" }] }]} />
+                <div className="modal-container container">
+                    <div className="change-password-modal modal">
+                        <Form title="Change Password" submitFunction={changePassword} onClickCloseBtn={() => batch(() => { showChangePasswordModal.value = false; changePasswordFormMsg.value = null })}
+                            formMsgState={changePasswordFormMsg} submitBtnInnerText="Change Password"
+                            fields={[{ align: 'column', fields: [{ name: 'currentPassword', type: 'password' }, { name: 'newPassword', type: 'password' }, { name: 'newPasswordAgain', type: 'password' }] }]} />
                     </div>
                 </div>
             </div>
@@ -97,7 +100,7 @@ export default function Profile({ user }) {
             const userConfirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
             if (!userConfirmed) return;
 
-            const response = await usePostRequest('/delete-account', { userId: user.value._id, token: document.cookie })
+            const response = await usePostRequest('delete-account', { userId: user.value._id, token: document.cookie })
             if (!response.success) return accountDeleteMsg.value = response.msg
 
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -106,29 +109,23 @@ export default function Profile({ user }) {
             navigate('/')
         }
 
-        if (!showDeleteAccountModal.value) return;
+        if (!showDeleteAccountModal.value) return null
 
-        const DeleteAccountFormMsg = () => {
-            return accountDeleteMsg.value && <span className="form-msg">{accountDeleteMsg.value}</span>
-        }
+        const DeleteAccountFormMsg = () => accountDeleteMsg.value && <span className="form-msg">{accountDeleteMsg.value}</span>
 
         return (
             <div className="modal-backdrop">
-                <div className="modal-container">
-                    <div className="delete-account-modal">
-                        <form className="form" onSubmit={deleteAccount}>
+                <div className="modal-container container">
+                    <div className="delete-account-modal modal">
+                        <form onSubmit={deleteAccount}>
                             <div className="form-header">
-                                <div className="icon-wrapper">
-                                    <i className="fa-solid fa-user-xmark" />
-                                </div>
-                                <span>Delete Account</span>
-                                <i className="fa-solid fa-xmark" onClick={() => batch(() => { showDeleteAccountModal.value = false; accountDeleteMsg.value = null })} />
+                                <HeaderWithIcon title="Delete Account" iconClass="fa-solid fa-user-xmark" size="medium" />
+                                <i className="close-btn fa-solid fa-xmark" onClick={() => batch(() => { showDeleteAccountModal.value = false; accountDeleteMsg.value = null })} />
                             </div>
                             <div className="form-body">
                                 <span className="form-prompt">To delete your account, please type your name in the input field.</span>
                                 <div className="fields-group">
                                     <div className="fields-group-item">
-                                        <span>Username</span>
                                         <input name="username" type="text" />
                                     </div>
                                 </div>
@@ -142,46 +139,30 @@ export default function Profile({ user }) {
         )
     }
 
-    if (!user.value) return <span className="page-msg-box">Please log in to view profile</span>
+    if (!user.value) return <span className="msg-box" style={{ margin: '1rem auto' }}>Please log in to view profile</span>
 
     return (
         <div className="profile-page container">
             <header>
-                <div className="page-name">
-                    <div className="icon-wrapper">
-                        <i className="fa-regular fa-user" />
-                    </div>
-                    <span>Profile</span>
-                </div>
+                <HeaderWithIcon title="Profile" iconClass="fa-regular fa-user" />
             </header>
             <section>
-                {user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate &&
-                    <div className="section-item">
-                        <div className="section-item-header">
-                            <div className="icon-wrapper">
-                                <i className="fa-regular fa-clock" />
-                            </div>
-                            <span>Investments Market Price Last Update Date</span>
-                        </div>
-                        <div className="section-item-body">
-                            <div>
-                                <span>
-                                    {user.value.investmentsMarketPriceUpdateStatus.isUpdating ? "Updating..." :
-                                        new Intl.DateTimeFormat(navigator.language, { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })
-                                            .format(new Date(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate))}
-                                </span>
-                            </div>
+                <div className="section-item">
+                    <div className="section-item-header">
+                        <HeaderWithIcon title="Investments Market Price Last Update Date" iconClass="fa-regular fa-clock" size="medium" />
+                    </div>
+                    <div className="section-item-body">
+                        <div>
+                            <span>
+                                {user.value.investmentsMarketPriceUpdateStatus.isUpdating ? "Updating..." : formatDate(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate, { hour: "2-digit", minute: "2-digit" })}
+                            </span>
                         </div>
                     </div>
-                }
-
-                <div className="section-item user-informations">
+                </div>
+                <div className="section-item">
                     <div className="section-item-header">
-                        <div className="icon-wrapper">
-                            <i className="fa-solid fa-circle-info" />
-                        </div>
-                        <span>User Informations</span>
-                        <button className="show-update-user-informations-modal-btn" onClick={() => showUpdateUserInformationsModal.value = true}><i className="fa-regular fa-pen-to-square" /></button>
+                        <HeaderWithIcon title="User Informations" iconClass="fa-solid fa-circle-info" size="medium" />
+                        <i className="fa-regular fa-pen-to-square" onClick={() => showUpdateUserInformationsModal.value = true} />
                     </div>
                     <div className="section-item-body">
                         <div>
@@ -194,11 +175,10 @@ export default function Profile({ user }) {
                         </div>
                         <div>
                             <span>Membership Date</span>
-                            <span>{new Intl.DateTimeFormat(navigator.language, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(user.value.membershipDate))}</span>
+                            <span>{formatDate(user.value.membershipDate)}</span>
                         </div>
                     </div>
                 </div>
-
                 <div className="buttons">
                     <button className="btn-secondary change-password-btn" onClick={() => showChangePasswordModal.value = true}>
                         <i className="fa-solid fa-key" />
@@ -211,8 +191,8 @@ export default function Profile({ user }) {
                 </div>
             </section>
             <UpdateUserInformationsModal />
-            <DeleteAccountModal />
             <ChangePasswordModal />
+            <DeleteAccountModal />
         </div>
     )
 }

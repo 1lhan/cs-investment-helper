@@ -1,5 +1,5 @@
-import { NavLink, useNavigate } from "react-router-dom"
-import { usePostRequest } from "../utils";
+import { NavLink, useNavigate } from "react-router-dom";
+import { formatDate, usePostRequest } from "../utils";
 
 export default function Header({ user }) {
     const navigate = useNavigate()
@@ -25,8 +25,8 @@ export default function Header({ user }) {
         }
     }
 
-    const updateInvestmentsMarketPrice = async () => {
-        if (!user.value || user.value.investments.length == 0) return;
+    const updateInvestmentMarketPrices = async () => {
+        if (!user.value || user.value.investments.length == 0 || user.value.investments.filter(item => item.quantity > 0).length == 0) return;
 
         const lastUpdateDateCheck = new Date() - new Date(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 30)
         const updateStartDateCheck = new Date() - new Date(user.value.investmentsMarketPriceUpdateStatus.updateStartDate) > (3200 * user.value.investments.length) + (1000 * 10)
@@ -34,79 +34,52 @@ export default function Header({ user }) {
 
         if (!lastUpdateDateCheck || (isUpdating && !updateStartDateCheck)) return;
 
-        try {
-            const permission = await usePostRequest('/permission-to-update-investments-market-price', { userId: user.value._id, token: document.cookie })
-            if (!permission.result || !permission.success) return;
-        }
-        catch (error) { return console.log(error) }
-        
-        try {
-            const date = new Intl.DateTimeFormat(navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date())
-            const response = await usePostRequest('/update-investments-market-price', { userId: user.value._id, date, token: document.cookie })
-
-            if (response.success) user.value = response.user
-        }
-        catch (error) { console.error("An error occurred while updating investments:", error) }
+        const response = await usePostRequest('update-investment-market-prices', { userId: user.value._id, token: document.cookie, date: formatDate(new Date()) })
     }
-    updateInvestmentsMarketPrice()
-
-    const hideHeaderMenuAfterPageChange = () => {
-        if (document.getElementById("header-menu-cb")) document.getElementById("header-menu-cb").checked = false
-    }
+    updateInvestmentMarketPrices()
 
     return (
         <header className="header">
             <div className="container">
                 <NavLink className="home-page-btn">CS Investment Helper</NavLink>
 
-                <label className="header-menu-btn-label" htmlFor="header-menu-cb">
-                    <i className="fa-solid fa-bars" />
-                </label>
-
-                <input id="header-menu-cb" type="checkbox" />
-
-                <div className="header-group">
-                    <i className="fa-solid fa-xmark" onClick={() => hideHeaderMenuAfterPageChange()} />
-                    <NavLink className="to-investments-page-btn" to="/investments" onClick={() => hideHeaderMenuAfterPageChange()}>
+                <div className="header-content">
+                    <NavLink className="header-btn" to="/investments">
                         <i className="fa-solid fa-hand-holding-dollar" />
                         <span>Investments</span>
                     </NavLink>
 
-                    {user.value?.accountType == "admin" &&
-                        <NavLink className="to-data-control-center-page-btn" to="/data-control-center" onClick={() => hideHeaderMenuAfterPageChange()}>
+                    {user.value?.accountType == 'admin' &&
+                        <NavLink className="header-btn" to="/data-control-center">
                             <i className="fa-solid fa-database" />
                             <span>Data Control Center</span>
                         </NavLink>
                     }
 
-                    <span className="divider" />
-
-                    <div className="tools-btn-container">
-                        <button>
+                    <div className="tools-btn-wrapper">
+                        <div className="tools-btn header-btn">
                             <i className="fa-solid fa-screwdriver-wrench" />
                             <span>Tools</span>
-                        </button>
+                        </div>
                         <div className="dropdown">
-                            {headerToolsPages.map((item, index) =>
-                                <NavLink className="dropdown-item" to={`/${item[1]}`} onClick={() => hideHeaderMenuAfterPageChange()} key={index}>
-                                    <i className={item[0]} />
-                                    <span>{item[1].replaceAll('-', ' ')}</span>
+                            {headerToolsPages.map((page, pageIndex) =>
+                                <NavLink className="dropdown-item" to={'/' + page[1]} key={pageIndex}>
+                                    <i className={page[0]} />
+                                    <span>{page[1].replaceAll('-', ' ')}</span>
                                 </NavLink>
                             )}
                         </div>
                     </div>
 
-                    <span className="divider" />
-
-                    {user.value ?
+                    {!user.value ? <NavLink className="to-login-page-btn" to="/login">Log in</NavLink> :
                         <div className="user-menu">
-                            <label className="username" htmlFor="user-menu-dropdown-cb">{user.value.username}</label>
+                            <label htmlFor="user-menu-dropdown-cb">{user.value.username}</label>
                             <input id="user-menu-dropdown-cb" type="checkbox" />
                             <div className="dropdown">
-                                {userMenuDropdownPages.map((item, index) =>
-                                    <NavLink className="dropdown-item" to={item[1]} onClick={() => { document.getElementById("user-menu-dropdown-cb").checked = false; hideHeaderMenuAfterPageChange() }} key={index}>
-                                        <i className={item[0]} />
-                                        <span>{item[1].replaceAll('-', ' ')}</span>
+                                {userMenuDropdownPages.map((page, pageIndex) =>
+                                    <NavLink className="dropdown-item" to={page[1]} onClick={() => document.getElementById('user-menu-dropdown-cb').checked = false} key={pageIndex}>
+                                        <i className={page[0]} />
+                                        <span>{page[1].replaceAll('-', ' ')}</span>
                                     </NavLink>
                                 )}
                                 <button className="dropdown-item" onClick={() => logout()}>
@@ -115,8 +88,6 @@ export default function Header({ user }) {
                                 </button>
                             </div>
                         </div>
-                        :
-                        <NavLink className="to-login-page-btn" to="/login" onClick={() => hideHeaderMenuAfterPageChange()}>Log in</NavLink>
                     }
                 </div>
             </div>

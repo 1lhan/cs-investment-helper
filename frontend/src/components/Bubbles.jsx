@@ -1,6 +1,6 @@
-export default function Loading() {
+export default function Bubbles() {
     return (
-        <div className="loading">
+        <div className="bubbles">
             <span className="bubble" />
             <span className="bubble" />
             <span className="bubble" />

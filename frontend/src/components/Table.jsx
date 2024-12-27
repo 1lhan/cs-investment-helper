@@ -1,130 +1,135 @@
-import { useComputed } from "@preact/signals-react"
-import ToolTip from "./ToolTip";
+import { useComputed } from '@preact/signals-react'
+import { NavLink } from 'react-router-dom'
+import { formatDate, splitCamelCase } from '../utils'
+import ToolTip from './ToolTip'
 
-export default function Table({ data, sortState, calculate, fields }) {
-    const blue = '#066edd'
-    const green = '#34d399';
-    const red = '#ff6c6c';
+export default function Table({ data, sortState, calculate, columns }) {
+    const renderField = (field, dataItem, fieldIndex, dataItemIndex) => {
+        const { label, type, path, template, dateFormatOptions, className, onClick, highlightBaseline } = field
+        const fieldKey = path || label
+        let innerText = dataItem[fieldKey]
 
-    const additionResultRow = useComputed(() => {
-        if (calculate) {
-            let result = {}
-            fields.map(({ fields }, _) =>
-                fields.map(({ name, path, calculate }, _) => {
-                    if (calculate == "addition") result[path || name] = +(data.value.reduce((t, c) => { return t + c[path || name] }, 0)).toFixed(2)
-                    else if (calculate == "average") result[path || name] = +(data.value.reduce((t, c) => { return t + c[path || name] }, 0) / data.value.length).toFixed(0)
-                })
-            )
-            return result;
-        }
-    })
-
-    const insideCellRenderHandler = (field, dataItem, fieldIndex, dataItemIndex) => {
-        let { name, type, path, template, dateFormat, className, onClick, highlightBaseline } = field
-        let innerText = dataItem[path || name]
-
-        if (innerText == null && type != 'button') return;
-
+        if (innerText == null && type != 'button' && type != 'link') return null
         if (type == 'number') innerText = new Intl.NumberFormat(navigator.language, { maximumFractionDigits: 2 }).format(innerText).replaceAll(',', '.')
-        if (type == 'date') innerText = new Intl.DateTimeFormat(navigator.language, {
-            day: '2-digit', month: '2-digit', year: 'numeric', hour: dateFormat == 1 ? undefined : '2-digit', minute: dateFormat == 1 ? undefined : '2-digit', timeZone: dateFormat == 1 ? undefined : 'UTC'
-        }).format(new Date(innerText))
+        if (type == 'date') innerText = formatDate(new Date(innerText), dateFormatOptions)
         if (template) innerText = template.replace('_r', innerText)
 
-        if (type == 'image') return <img src={`https://api.steamapis.com/image/item/730/${innerText}`} key={fieldIndex} />
-        else if (type == 'array') return dataItem[path || name].map(item => item.join(', '))
+        if (type == 'image') return <img src={'https://api.steamapis.com/image/item/730/' + innerText} alt={innerText} key={fieldIndex} />
         else if (type == 'button') return <i className={className} onClick={() => onClick(dataItemIndex)} key={fieldIndex} />
-        else return <span key={fieldIndex} style={{ ...(highlightBaseline != null && { color: dataItem[path || name] > highlightBaseline ? green : dataItem[path || name] == highlightBaseline ? '' : red }) }}>{innerText}</span>
+        else if (type == 'link') return <NavLink to={'https://steamcommunity.com/market/listings/730/' + innerText} target="_blank" key={fieldIndex}><i className="fa-brands fa-steam" /></NavLink>
+        else return <span className={highlightBaseline != null ? (dataItem[fieldKey] > highlightBaseline ? 'green' : dataItem[fieldKey] == highlightBaseline ? '' : 'red') : ''} key={fieldIndex}>{innerText}</span>
     }
 
-    const sortHandler = (_name, _type) => {
-        sortState.value = { name: _name, value: sortState.value.name == _name ? !sortState.value.value : true }
-        let sortedData = data.value.slice()
+    const handleSort = (field, type) => {
+        sortState.value = { field, isAscending: sortState.value.field == field ? !sortState.value.isAscending : false }
 
-        if (_name == 'id' || _type == 'number') {
-            sortedData.sort((a, b) => {
-                if (['diff4'].includes(_name)) {
-                    if (a[_name] == null) return 1
-                    if (b[_name] == null) return -1
-                }
-                return sortState.value.value ? a[_name] - b[_name] : b[_name] - a[_name]
-            })
+        const compare = (a, b, key, isAscending) => {
+            if (a[key] == null) return 1;
+            if (b[key] == null) return -1;
+
+            const multiplier = isAscending ? 1 : -1;
+            if (type == 'number' || field == 'id') return (a[key] - b[key]) * multiplier;
+            if (type == 'date') return (new Date(a[key]) - new Date(b[key])) * multiplier;
+            if (type == 'text') return a[key].localeCompare(b[key]) * multiplier;
+
+            return 0;
         }
-        else if (_type == 'date') sortedData.sort((a, b) => { return sortState.value.value ? new Date(a[_name]) - new Date(b[_name]) : new Date(b[_name]) - new Date(a[_name]) })
-        else if (_type == 'text') sortedData.sort((a, b) => { return sortState.value.value ? a[_name].localeCompare(b[_name]) : b[_name].localeCompare(a[_name]) })
 
-        data.value = sortedData;
+        data.value = [...data.value].sort((a, b) => compare(a, b, field, sortState.value.isAscending))
+    }
+
+    const headerField = (label, type, path, sortable, className, fieldIndex) => {
+        const fieldKey = path || label
+
+        if (label == 'button' || label == 'market-page') return <i className={className} key={fieldIndex} />
+        else return <span
+            className={sortable && (sortState.value.field == fieldKey ? 'blue' : '')}
+            style={{ cursor: sortable && 'pointer' }}
+            onClick={() => sortable && handleSort(fieldKey, type)}
+            key={fieldIndex}
+        >
+            {splitCamelCase(label)}
+        </span>
+    }
+
+    const calculateRowValues = useComputed(() => {
+        if (!calculate) return null;
+
+        let result = {}
+
+        for (let i in columns) {
+            let fields = columns[i].fields
+
+            for (let j in fields) {
+                let { label, path, calculate, toFixed } = fields[j]
+                let fieldKey = path || label
+
+                if (calculate == 'addition') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0)).toFixed(2)
+                else if (calculate == 'average') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0) / data.value.length).toFixed(toFixed)
+            }
+        }
+
+        return result
+    })
+
+    const ToolTipWrapper = ({ content }) => {
+        if (!content) return null;
+        return <ToolTip content={content} joinString=", " />
     }
 
     return (
         <div className="table">
-            <div className="table-header row">
-                {fields.map(({ groupName, fields }, cellIndex) =>
-                    <div className={`cell ${fields[0].name}`} key={cellIndex}>
-                        {groupName && <div className="cell-inner"><span>{groupName}</span></div>}
-                        <div className="cell-inner">
-                            {fields.map(({ name, type, path, sortable, className }, fieldIndex) =>
-                                <span
-                                    style={{ cursor: sortable ? 'pointer' : '', ...(sortable && { color: sortState.value.name == (path || name) && blue }) }}
-                                    onClick={() => sortable && sortHandler(path || name, type)}
-                                    key={fieldIndex}
-                                >
-                                    {name == "button" ? <i className={className} /> : name.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                                </span>
-                            )}
+            <div className="table-header">
+                <div className="row">
+                    {columns.map(({ columnGroupName, fields }, columnIndex) =>
+                        <div className={`cell ${fields[0].label}`} key={columnIndex}>
+                            {columnGroupName && <span className="column-group-name">{columnGroupName}</span>}
+                            <div className="fields-container">
+                                {fields.map(({ label, type, path, sortable, className }, fieldIndex) => headerField(label, type, path, sortable, className, fieldIndex))}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
             <div className="table-body">
                 {data.value.map((dataItem, dataItemIndex) =>
                     <div className="row" key={dataItemIndex}>
-                        {fields.map(({ toolTip, fields }, cellIndex) =>
-                            <div className={`cell ${fields[0].name}`} key={cellIndex}>
-                                <div className="cell-inner">
-                                    {fields.map((field, fieldIndex) => insideCellRenderHandler(field, dataItem, fieldIndex, dataItemIndex))}
+                        {columns.map(({ fields, toolTip }, columnIndex) =>
+                            <div className={`cell ${fields[0].label}`} key={columnIndex}>
+                                <div className="fields-container">
+                                    {fields.map((field, fieldIndex) => renderField(field, dataItem, fieldIndex, dataItemIndex))}
                                 </div>
-                                {(toolTip && dataItem[fields[0].path || fields[0].name]) && <ToolTip content={insideCellRenderHandler(toolTip, dataItem)} />}
+                                <ToolTipWrapper content={toolTip ? dataItem[toolTip.path] : null} />
                             </div>
                         )}
                     </div>
                 )}
 
                 {calculate &&
-                    <div className="row addition-result-row">
-                        {fields.map(({ fields }, cellIndex) =>
-                            <div className={`cell ${fields[0].name}`} key={cellIndex}>
-                                <div className="cell-inner">
-                                    {fields.map((field, fieldIndex) => insideCellRenderHandler(field, additionResultRow.value, fieldIndex))}
+                    <div className="calculate-result-row">
+                        <div className=" row">
+                            {columns.map(({ fields }, columnIndex) =>
+                                <div className={`cell ${fields[0].label}`} key={columnIndex}>
+                                    <div className="fields-container">
+                                        {fields.map((field, fieldIndex) => renderField(field, calculateRowValues.value, fieldIndex))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 }
             </div>
         </div>
     )
 }
+
 /*
-const sortValue = useSignal({ name: 'id', value: true }) // if it is true that is mean low to high
-<Table data={_events} sortState={sortValue} calculate={false}
-    fields={[
-        { fields: [{ name: 'image', type: 'image', path: 'eventImage' }] },
-        { fields: [{ name: 'eventName', type: 'text', path: 'name' }] },
-        { fields: [{ name: 'x', type: 'number', sortable: true, highlightValue: true, highlightBaseline: 0, calculate:"average" }] },
-        {
-            toolTip: { type: 'date', dateFormat: 2, path: 'releaseDate', template: 'UTC: _r' },
-            fields: [{ name: 'releaseDate', type: 'date', dateFormat: 1, sortable: true }]
-        },
-        { fields: [{ name: 'button', type: 'button', className: "fa-regular fa-trash-can", onClick: (index) => deleteItemFromTable(index) }] },
-        {
-            groupName: "price", fieds: [
-                { name: variants.value[0], type: "number", path: "priceVariant0" },
-                { name: variants.value[1], type: "number", path: "priceVariant1" },
-                { name: variants.value[2], type: "number", path: "priceVariant2" },
-                { name: variants.value[3], type: "number", path: "priceVariant3" }
-            ]
-        },
-    ]}
-/>
+<Table data={ } sortState={ } calculation={ } columns={[
+    { fields: [{ label: 'image', type: 'image', path: 'name' }] },
+    { fields: [{ label: 'market-page', type: 'link', className: 'fa-brands fa-steam', path: 'name' }] },
+    { fields: [{ label: 'quantity', type: 'number', sortable: true, calculate: 'addition' }] },
+    { fields: [{ label: 'button', type: 'button', className: 'fa-solid fa-ellipsis-vertical', onClick: showInvestmentItemDetails }] }
+]} />
+
+const { label, type, path, template, dateFormatOptions, className, onClick, highlightBaseline, toFixed } = field
 */

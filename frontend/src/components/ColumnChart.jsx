@@ -1,6 +1,6 @@
-import { useComputed, useSignal } from "@preact/signals-react"
-import { calculateYAxisValues } from "../utils"
-import ToolTip from "./ToolTip"
+import { useComputed, useSignal } from '@preact/signals-react'
+import { calculateYAxisValues } from '../utils'
+import ToolTip from './ToolTip'
 
 export default function ColumnChart({ title, data, xKey, yKeys }) {
     const yAxisValues = useComputed(() => {
@@ -13,7 +13,7 @@ export default function ColumnChart({ title, data, xKey, yKeys }) {
     const ToolTipWrapper = () => {
         return (
             <>
-                {toolTipValue.value != -1 && <ToolTip content={Object.entries(data.value[toolTipValue.value])} />}
+                {toolTipValue.value != -1 && <ToolTip content={Object.entries(data.value[toolTipValue.value])} joinString=": "/>}
             </>
         )
     }

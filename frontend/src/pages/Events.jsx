@@ -1,76 +1,47 @@
-import { useSignal } from '@preact/signals-react'
-import Table from '../components/Table'
-import { events } from '../events'
+import { useSignal } from "@preact/signals-react";
+import { events } from "../events";
+import HeaderWithIcon from "../components/HeaderWithIcon";
+import Table from "../components/Table";
 
 export default function Events() {
-    const calculateDayDifference = (date1, date2) => (date1.setHours(0, 0, 0, 0) - date2.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24);
+    const calculateDayDifference = (date1, date2) => (date1.setHours(0, 0, 0, 0) - date2.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)
 
     const formattedEvents = events.map(event => {
         if (event.type == 'tournament') {
-            if (event.tournamentStartDate) {
-                event.diff1 = calculateDayDifference(event.tournamentStartDate, event.releaseDate)
-                if (event.tournamentEndDate) event.diff2 = calculateDayDifference(event.tournamentEndDate, event.tournamentStartDate)
-                if (event.saleStartDate) event.diff3 = calculateDayDifference(event.saleStartDate, event.tournamentEndDate)
-            }
-            if (event.endDate) event.diff4 = calculateDayDifference(event.endDate, event.saleStartDate)
+            if (event.tournamentStartDate) event.releaseToTournamentStartDays = calculateDayDifference(event.tournamentStartDate, event.releaseDate)
+            if (event.tournamentEndDate) event.tournamentDuration = calculateDayDifference(event.tournamentEndDate, event.tournamentStartDate)
+            if (event.saleStartDate && event.tournamentEndDate) event.tournamentEndToSaleStartDays = calculateDayDifference(event.saleStartDate, event.tournamentEndDate)
+            if (event.endDate) event.saleDuration = calculateDayDifference(event.endDate, event.saleStartDate)
         }
-        event.diff5 = calculateDayDifference(event.endDate || new Date(), event.releaseDate)
+
+        event.eventDuration = calculateDayDifference(event.endDate || new Date(), event.releaseDate)
+
         return event
     })
-
+    
     const eventsSignal = useSignal(formattedEvents)
-    const sortValue = useSignal({ name: 'releaseDate', value: false })
-
-    const TableSection = () => {
-        return (
-            <>
-                {eventsSignal.value && <Table data={eventsSignal} sortState={sortValue}
-                    fields={[
-                        { fields: [{ name: 'image', type: 'image', path: 'eventImage' }] },
-                        { fields: [{ name: 'eventName', type: 'text', path: 'name' }] },
-                        {
-                            toolTip: { type: 'date', dateFormat: 2, path: 'releaseDate', template: 'UTC: _r' },
-                            fields: [{ name: 'releaseDate', type: 'date', dateFormat: 1, sortable: true }]
-                        },
-                        { fields: [{ name: '-', type: 'number', path: 'diff1' }] },
-                        {
-                            toolTip: { type: 'date', dateFormat: 2, path: 'tournamentStartDate', template: 'UTC: _r' },
-                            fields: [{ name: 'tournamentStartDate', type: 'date', dateFormat: 1 }]
-                        },
-                        { fields: [{ name: '-', type: 'number', path: 'diff2' }] },
-                        {
-                            toolTip: { type: 'date', dateFormat: 2, path: 'tournamentEndDate', template: 'UTC: _r' },
-                            fields: [{ name: 'tournamentEndDate', type: 'date', dateFormat: 1 }]
-                        },
-                        { fields: [{ name: '-', type: 'number', path: 'diff3' }] },
-                        {
-                            toolTip: { type: 'date', dateFormat: 2, path: 'saleStartDate', template: 'UTC: _r' },
-                            fields: [{ name: 'saleStartDate', type: 'date', dateFormat: 1 }]
-                        },
-                        { fields: [{ name: '-', type: 'number', path: 'diff4', sortable: true }] },
-                        {
-                            toolTip: { type: 'date', dateFormat: 2, path: 'endDate', template: 'UTC: _r' },
-                            fields: [{ name: 'endDate', type: 'date', dateFormat: 1 }]
-                        },
-                        { fields: [{ name: '+', type: 'number', path: 'diff5', sortable: true }] }
-                    ]}
-                />}
-            </>
-        )
-    }
+    const sortState = useSignal({ field: 'releaseDate', isAscending: false })
 
     return (
         <div className="events-page container">
             <header>
-                <div className="page-name">
-                    <div className="icon-wrapper">
-                        <i className="fa-solid fa-calendar-days" />
-                    </div>
-                    <span>Events</span>
-                </div>
+                <HeaderWithIcon title="Events" iconClass="fa-solid fa-calendar-days" />
             </header>
             <section>
-                <TableSection />
+                <Table data={eventsSignal} sortState={sortState} columns={[
+                    { fields: [{ label: 'image', type: 'image', path: 'eventImage' }] },
+                    { fields: [{ label: 'name', type: 'text' }] },
+                    { fields: [{ label: 'releaseDate', type: 'date', sortable: true }] },
+                    { fields: [{ label: '-', type: 'number', path: 'releaseToTournamentStartDays', sortable: true }] },
+                    { fields: [{ label: 'tournamentStartDate', type: 'date', sortable: true }] },
+                    { fields: [{ label: '-', type: 'number', path: 'tournamentDuration', sortable: true }] },
+                    { fields: [{ label: 'tournamentEndDate', type: 'date', sortable: true }] },
+                    { fields: [{ label: '-', type: 'number', path: 'tournamentEndToSaleStartDays', sortable: true }] },
+                    { fields: [{ label: 'saleStartDate', type: 'date', sortable: true }] },
+                    { fields: [{ label: '-', type: 'number', path: 'saleDuration', sortable: true }] },
+                    { fields: [{ label: 'endDate', type: 'date', sortable: true }] },
+                    { fields: [{ label: '+', type: 'number', path: 'eventDuration', sortable: true }] },
+                ]} />
             </section>
         </div>
     )

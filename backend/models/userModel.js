@@ -30,15 +30,20 @@ const userSchema = mongoose.Schema({
     },
     investments: [
         {
-            name: { type: String, required: true },
+            name: { type: String, required: true, trim: true },
             initialPurchaseDate: { type: Date, required: true, default: new Date() },
-            totalCost: { type: Number, required: true },
+            avgCost: { type: Number, required: true },
             quantity: { type: Number, required: true },
+            currentTotalCost: { type: Number, required: true },
+            totalCost: { type: Number, required: true },
             marketPrice: { type: Number, required: false },
-            totalSales: { type: Number, required: true, default: 0 },
-            soldQuantity: { type: Number, required: true, default: 0 },
+            avgSalePrice: { type: Number, required: false },
+            soldQuantity: { type: Number, required: false },
+            totalSales: { type: Number, required: false },
+            salesProfit: { type: Number, required: false },
+            netSalesProfit: { type: Number, required: false },
             lastUpdate: { type: Object, required: false, default: null },
-            tags: { type: Array, required: false }
+            tags: { type: [String], required: true }
         }
     ],
     investmentsMarketPriceUpdateStatus: {

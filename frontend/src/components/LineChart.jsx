@@ -1,7 +1,7 @@
-import { useSignal } from "@preact/signals-react"
-import { useEffect } from "react"
-import { calculateYAxisValues } from "../utils"
-import ToolTip from "./ToolTip"
+import { useSignal } from '@preact/signals-react'
+import { useEffect } from 'react'
+import { calculateYAxisValues } from '../utils'
+import ToolTip from './ToolTip'
 
 export default function LineChart({ id, xKey, yKeys, data, keyNames, useSameYAxisValues }) {
     const chartStyleValues = useSignal(null)
@@ -82,7 +82,7 @@ export default function LineChart({ id, xKey, yKeys, data, keyNames, useSameYAxi
                                 </div>
                             })}
                             <div className="column-dashed-line" />
-                            <ToolTip content={data[columnIndex].slice(0, keyNames.length).map((item, index) => [keyNames[index], item])} />
+                            <ToolTip content={data[columnIndex].slice(0, keyNames.length).map((item, index) => [keyNames[index], item])} joinString=": " />
                         </div>
                     )}
 

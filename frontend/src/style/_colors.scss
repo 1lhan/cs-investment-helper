@@ -1,0 +1,29 @@
+$header-bg: #152038; // header-bg table-header-bg
+$body-bg: #0f1625;
+$bg-primary: #222a3d; // table row, modal-img, btn-secondary-hover-bg, input-hover-bg, page msg box bg - custom select border, date input border
+$bg-primary-light: rgba(34, 42, 61, 0.5); // input bg, HeaderWithIcon bg - custom select bg
+$bg-primary-light-25: rgba(34, 42, 61, 0.25); // btn-secondary-bg, form bg
+$border-bg: #263347; // border-color, divider-bg
+$hover-bg: #2c3241; // custom select dropdown button hover bg - hover bg, tool-tip border, dropdown border
+$blue: #066edd; // input-focus-border-color
+$light-blue: rgba(6, 110, 221, 0.2);
+$green: #34d399;
+$light-green: rgba(52, 211, 153, 0.35);
+$red: #ff6c6c; // form-msg-color
+$light-red: rgba(255, 108, 108, 0.35);
+$orange: #fb923c;
+$gray: #d4d4d4;
+$site-primary-color: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(6, 110, 221, 1) 0%, rgba(0, 212, 255, 1) 100%);
+$transparent-bg: rgba(0, 0, 0, 0.2); // modal-backdrop
+
+/*
+z-indexes:
+
+table img: 2
+line chart: 3
+tool tip: 4
+custom select: 6
+dropdown: 7
+header dropdown: 8
+modal-backdrop: 9
+*/

@@ -1,54 +1,63 @@
-export default function Form({ title, submitFunction, onClickCloseBtn, fields, formMsgState, submitBtnInnerText }) {
+import { useRef } from "react"
+import { splitCamelCase } from "../utils"
+import Bubbles from "./Bubbles"
+
+export default function Form({ title, submitFunction, onClickCloseBtn, formMsgState, submitBtnInnerText, fields }) {
+    const submitBtn = useRef(null)
+
     const _onSubmit = async (e) => {
         e.preventDefault()
-        submitFunction(e)
+        submitBtn.current.disabled = true
+        await submitFunction(e)
+        if (submitBtn.current) submitBtn.current.disabled = false
     }
 
-    const fieldsGroupItemInputRenderHandler = (field) => {
-        const { name, type, defaultValue } = field
+    const renderField = (field) => {
+        const { name, type, defaultValue, isStepAllowed } = field
+        const inputProps = { name, type, defaultValue: defaultValue || '', ...(type == 'number' && isStepAllowed && { step: '0.001' }) }
 
-        if (['text', 'email', 'date'].includes(type)) return <input name={name} type={type} defaultValue={defaultValue || ''} />
-        else if (type == 'number') return <input name={name} type={type} defaultValue={defaultValue || ''} step={'0.0001'} />
-        else if (type == 'password') return <div className="input-wrapper">
-            <input name={name} type={type} />
-            <input id={`${name}-cb`} type="checkbox" onChange={(e) => document.querySelector(`input[name="${name}"]`).type = e.target.checked ? 'text' : 'password'} />
-            <label htmlFor={`${name}-cb`}>
-                <i className="fa-regular fa-eye" />
-            </label>
-            <label htmlFor={`${name}-cb`}>
-                <i className="fa-regular fa-eye-slash" />
-            </label>
-        </div>
+        if (['text', 'email', 'date', 'number'].includes(type)) return <input {...inputProps} />
+        else if (type == 'password') {
+            return <div className="input-wrapper">
+                <input {...inputProps} />
+                <input id={`${name}-cb`} type="checkbox" onChange={(e) => document.querySelector(`input[name="${name}"]`).type = e.target.checked ? 'text' : 'password'} />
+                <label htmlFor={`${name}-cb`}>
+                    <i className="fa-regular fa-eye" />
+                </label>
+                <label htmlFor={`${name}-cb`}>
+                    <i className="fa-regular fa-eye-slash" />
+                </label>
+            </div>
+        }
     }
 
-    const FormMsg = () => {
-        return (
-            <>
-                {formMsgState.value && <span className="form-msg">{formMsgState}</span>}
-            </>
-        )
-    }
+    const FormMsg = () => (formMsgState?.value && <span className="form-msg">{formMsgState.value}</span>)
 
     return (
-        <form className="form" onSubmit={_onSubmit}>
-            {title && <div className="form-header" style={{ ...(!onClickCloseBtn) && { justifyContent: 'center' } }}>
-                <h2>{title}</h2>
-                {onClickCloseBtn && <i className="fa-solid fa-xmark" onClick={() => onClickCloseBtn()} />}
-            </div>}
+        <form onSubmit={_onSubmit}>
+            {title &&
+                <div className="form-header" style={onClickCloseBtn ? undefined : { justifyContent: 'center' }}>
+                    <span className="title">{title}</span>
+                    {onClickCloseBtn && <i className="close-btn fa-solid fa-xmark" onClick={() => onClickCloseBtn()} />}
+                </div>
+            }
             <div className="form-body">
                 {fields.map(({ align, fields }, fieldsGroupIndex) =>
                     <div className={"fields-group" + (align ? ` ${align}` : '')} key={fieldsGroupIndex}>
                         {fields.map((field, fieldIndex) =>
                             <div className="fields-group-item" key={fieldIndex}>
-                                <span>{field.name.replace(/([a-z])([A-Z])/g, '$1 $2')}</span>
-                                {fieldsGroupItemInputRenderHandler(field)}
+                                <span>{splitCamelCase(field.name)}</span>
+                                {renderField(field)}
                             </div>
                         )}
                     </div>
                 )}
             </div>
             <FormMsg />
-            <button className="btn" type="submit">{submitBtnInnerText}</button>
+            <button ref={submitBtn} className="btn" type="submit">
+                <span>{submitBtnInnerText}</span>
+                <Bubbles />
+            </button>
         </form>
     )
 }

@@ -1,0 +1,493 @@
+@use '_colors' as c;
+
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+@mixin blur {
+    background: rgba(15, 22, 37, 0.75);
+    backdrop-filter: blur(15px);
+}
+
+.table {
+    @include flex(column, flex-start, stretch);
+    width: 100%;
+    gap: 3px;
+    overflow-x: auto;
+
+    .row {
+        @include flex(row, flex-start, stretch);
+        min-width: fit-content;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        background: c.$bg-primary;
+
+        .cell {
+            @include flex(column, flex-start, stretch);
+            position: relative;
+            flex-wrap: wrap;
+            flex: 1;
+
+            .fields-container {
+                @include flex(row, center, center);
+                flex: 1;
+                height: 100%;
+                gap: 0.25rem;
+                text-align: center;
+                user-select: none;
+
+                &:hover+.tool-tip {
+                    display: block;
+                }
+
+                span {
+                    @include flex(row, center, center);
+                    text-transform: capitalize;
+                }
+            }
+
+            .column-group-name {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .id {
+            flex: none;
+            width: 1.75rem;
+        }
+
+        .image {
+            flex: none;
+            width: 4rem;
+            aspect-ratio: 1.333/1;
+            z-index: 2;
+
+            &:hover img {
+                transform: scale(2);
+            }
+
+            img {
+                width: 100%;
+                transition: 0.4s all;
+            }
+        }
+
+        .name {
+            flex: 2;
+            min-width: 15rem;
+            max-width: 30rem;
+
+            .fields-container {
+                justify-content: flex-start;
+            }
+
+            span {
+                text-align: start;
+            }
+        }
+
+        .button,
+        .market-page {
+            flex: none;
+            width: auto;
+
+            i {
+                padding: 0.5rem;
+                cursor: pointer;
+
+                &:hover {
+                    color: c.$blue;
+                }
+            }
+        }
+    }
+
+    .table-body {
+        @include flex(column, flex-start, stretch);
+        gap: 3px;
+    }
+
+    .table-header,
+    .calculate-result-row {
+        .row {
+            background: c.$header-bg;
+            user-select: none;
+
+            .image {
+                aspect-ratio: 0;
+            }
+
+            .button,
+            .market-page {
+                visibility: hidden;
+
+                i {
+                    padding: 0 0.5rem;
+                }
+            }
+        }
+    }
+}
+
+form {
+    @include flex(column, flex-start, stretch);
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem;
+    background: c.$bg-primary-light-25;
+    border-radius: 0.5rem;
+
+    .form-header {
+        @include flex(row, space-between, center);
+
+        .title {
+            font-size: 1.2rem;
+        }
+    }
+
+    .form-body {
+        @include flex(column, flex-start, stretch);
+        gap: 1rem;
+
+        .fields-group {
+            @include flex(column, flex-start, stretch);
+            gap: 1rem;
+
+            .fields-group-item {
+                @include flex(column, flex-start, stretch);
+                gap: 0.5rem;
+
+                span {
+                    text-transform: capitalize;
+                }
+
+                .input-wrapper {
+                    position: relative;
+
+                    input[type="checkbox"] {
+                        display: none;
+
+                        &:checked {
+                            ~label:nth-of-type(1) {
+                                display: none;
+                            }
+
+                            ~label:nth-of-type(2) {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    label {
+                        position: absolute;
+                        top: 50%;
+                        right: 0.75rem;
+                        transform: translateY(-50%);
+
+                        &:nth-of-type(2) {
+                            display: none;
+                        }
+
+                        .fa-eye,
+                        .fa-eye-slash {
+                            font-size: 1.05rem;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+
+        .row {
+            flex-direction: row;
+            align-items: flex-end;
+            flex-wrap: wrap;
+
+            .fields-group-item {
+                flex: 1;
+            }
+        }
+    }
+
+    .form-msg {
+        color: c.$red;
+        text-align: center;
+    }
+
+    .btn {
+        position: relative;
+
+        .bubbles {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+        }
+
+        &:disabled {
+            background: c.$bg-primary;
+
+            &:hover {
+                box-shadow: unset;
+            }
+
+            >span {
+                visibility: hidden;
+            }
+
+            .bubbles {
+                display: flex;
+            }
+        }
+    }
+}
+
+.header-with-icon {
+    @include flex(row, flex-start, center);
+    gap: 1rem;
+    padding: 0.5rem;
+    font-size: 1.15rem;
+    border-radius: 0.5rem;
+    background: c.$bg-primary-light;
+
+    span {
+        font-weight: 700;
+    }
+
+    .icon-background {
+        background: c.$light-blue;
+        border-radius: 0.25rem;
+
+        i {
+            padding: 0.6rem;
+            background: c.$site-primary-color;
+            background-clip: text;
+            color: transparent;
+        }
+    }
+
+    &.medium {
+        gap: 0.75rem;
+        padding: 0.4rem;
+        font-size: 1rem;
+        border-radius: 0.4rem;
+
+        span {
+            font-weight: 600;
+        }
+
+        .icon-background {
+            border-radius: 0.2rem;
+
+            i {
+                padding: 0.45rem;
+            }
+        }
+    }
+}
+
+.bubbles {
+    @include flex(row, space-evenly, center);
+    width: 100%;
+    height: 100%;
+
+    @keyframes bubble-animation {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .bubble {
+        width: 10%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: c.$blue;
+        animation: bubble-animation ease infinite 0.75s;
+    }
+
+    .bubble:nth-of-type(2) {
+        animation-delay: 0.1s;
+    }
+
+    .bubble:nth-of-type(3) {
+        animation-delay: 0.2s;
+    }
+}
+
+.custom-select {
+    position: relative;
+    z-index: 6;
+    user-select: none;
+
+    input[type='checkbox'] {
+        display: none;
+
+        &:checked {
+            ~.options {
+                @include flex(column, flex-start, stretch);
+            }
+
+            ~label i {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    label {
+        @include flex(row, space-between, center);
+        position: relative;
+        gap: 1rem;
+        padding: 0.6rem 0.75rem;
+        background: c.$bg-primary-light;
+        border: 1px solid c.$border-bg;
+        border-radius: 0.25rem;
+        cursor: pointer;
+
+        &:hover {
+            background: c.$bg-primary;
+        }
+
+        .title {
+            position: absolute;
+            bottom: 100%;
+            left: 5%;
+            transform: translateY(40%);
+            font-size: 0.9rem;
+        }
+
+        .state-value {
+            position: absolute;
+            white-space: nowrap;
+            text-transform: capitalize;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        i {
+            transition: 0.4s;
+        }
+    }
+
+    .options {
+        @include blur;
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.25rem);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        border: 1px solid c.$border-bg;
+        border-radius: 0.25rem;
+        overflow: hidden;
+
+        button {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            text-align: center;
+            text-transform: capitalize;
+
+            &:hover {
+                background: c.$hover-bg
+            }
+
+            &:disabled {
+                color: c.$blue;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.tool-tip {
+    display: none;
+    @include blur;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem;
+    border: 1px solid c.$border-bg;
+    border-radius: 0.25rem;
+    z-index: 4;
+
+    .content {
+        @include flex(column, flex-start, stretch);
+        gap: 0.24rem;
+
+        span {
+            white-space: nowrap;
+            text-transform: capitalize;
+        }
+    }
+}
+
+.column-chart {
+    @include flex(column, flex-start, stretch);
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: c.$bg-primary;
+
+    .chart-header {
+        @include flex(row, space-between, center);
+
+        .color-info-box {
+            @include flex(row, center, center);
+            gap: 0.5rem;
+
+            div {
+                @include flex(row, center, flex-start);
+                gap: 0.25rem;
+                line-height: 0.5rem;
+
+                .color {
+                    width: 0.5rem;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+
+    .chart-body {
+        @include flex(row, center, stretch);
+        aspect-ratio: 1/0.5;
+        gap: 0.75rem;
+
+        .chart-body-item {
+            @include flex(row, center, flex-end);
+            position: relative;
+            flex: 1;
+            gap: 0.3rem;
+
+            &:hover .tool-tip {
+                @include flex(column, flex-start, stretch);
+            }
+
+            .column {
+                flex: 1;
+                border-radius: 0.25rem;
+            }
+        }
+    }
+}

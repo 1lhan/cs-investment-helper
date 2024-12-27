@@ -1,8 +1,44 @@
+import Big from "big.js"
 import { events } from "./events"
+
+export const splitCamelCase = str => str.replace(/([a-z])([A-Z])/g, '$1 $2')
+
+export const monthDiff = (date1, date2) => Math.round((date2.getFullYear() - date1.getFullYear()) * 12 + date2.getMonth() - date1.getMonth() + (date2.getDate() - date1.getDate()) / 30)
+
+export const big = (value) => new Big(value)
+
+export const formatDate = (date, options = {}) => {
+    const dateObj = date instanceof Date ? date : new Date(date)
+
+    const defaultOptions = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: undefined,
+        minute: undefined,
+        timeZone: undefined
+    }
+
+    const mergedOptions = { ...defaultOptions, ...options }
+
+    return new Intl.DateTimeFormat(navigator.language, mergedOptions).format(dateObj)
+}
+
+export const useGetRequest = async (endpoint) => {
+    try {
+        const response = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/' + endpoint)
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+
+        const data = await response.json()
+        return data
+    }
+    catch (error) { return { success: false, msg: "An error occurred while processing your request."/*, error: error.message || error.toString()*/ } }
+}
 
 export const usePostRequest = async (endpoint, requestBody) => {
     try {
-        const response = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + endpoint, {
+        const response = await fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/' + endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestBody)
@@ -13,43 +49,29 @@ export const usePostRequest = async (endpoint, requestBody) => {
         const data = await response.json()
         return data
     }
-    catch (error) { return { success: false, msg: "An error occurred while processing your request." } }
+    catch (error) { return { success: false, msg: "An error occurred while processing your request."/*, error: error.message || error.toString()*/ } }
 }
 
-export const itemNameConverter = (arr, itemType, eventName, variant) => {
-    let templates = {
-        sticker: 'Sticker | _itemName | _eventName',
-        souvenirPackage: '_eventName _itemName Souvenir Package',
-        patch: 'Patch | _itemName',
-        graffiti: 'Sealed Graffiti | _itemName',
-        charm: 'Charm | _itemName'
+export const calculateDateFilterIndex = (date, item, _eventName, dateType, period) => {
+    if (!period) {
+        const index = item.findIndex(item => item[0] == new Date(date).toDateString().slice(4))
+        return index != -1 ? index : (dateType == 'start' ? 0 : undefined)
     }
-
-    const graffitiColors = [
-        'Wire Blue', 'Desert Amber', 'SWAT Blue', 'Battle Green', 'Violent Violet', 'Tiger Orange', 'Princess Pink', 'Jungle Green', 'Frog Green', 'Dust Brown',
-        'Monster Purple', 'Bazooka Pink', 'Monarch Blue', 'Blood Red', 'Cash Green', 'Brick Red', 'Tracer Yellow', 'Shark White', 'War Pig Pink'
-    ]
-
-    let event = events.find(event => event.name == eventName)
-    let result = []
-
-    if (itemType == 'sticker' || itemType == 'autograph') {
-        result = arr.map(item => { return templates.sticker.replace('_itemName', !variant || variant == 'Paper' ? item : `${item} (${variant})`).replace(' | _eventName', event.type == 'tournament' ? ` | ${eventName}` : '') })
-
-        if (eventName == 'Paris 2023' && itemType == 'autograph') result.push(variant == 'Paper' ? event.specificItems[itemType][0] : event.specificItems[itemType].find(item => item.includes(variant)))
-
-        if (itemType == 'autograph' && event.championAutograph) {
-            result = result.concat(event.championAutograph.map(item => {
-                return templates.sticker.replace('_itemName', variant == 'Paper' ? `${item} (Champion)` : `${item} (${variant}, Champion)`).replace('_eventName', eventName)
-            }))
+    else {
+        if (period == '1 Year After Release') return dateType == 'start' ? 0 : 365
+        else if (period == '2 Years After Release') return dateType == 'start' ? 365 : 730
+        else if (period == 'Sale Period') {
+            const event = events.find(event => event.name == _eventName)
+            return item.findIndex(item => item[0] == new Date(dateType == 'start' ? event.saleStartDate : event.endDate).toDateString().slice(4))
         }
+        else if (period == 'First Month Of Sale') {
+            const event = events.find(event => event.name == _eventName)
+            const firstDayIndex = item.findIndex(item => item[0] == new Date(event.saleStartDate).toDateString().slice(4))
+            return dateType == 'start' ? firstDayIndex : firstDayIndex + 30
+        }
+        else if (period == 'Last Month') return dateType == 'start' ? -30 : undefined
+        else if (period == 'Last 3 Months') return dateType == 'start' ? -90 : undefined
     }
-    else if (itemType == 'souvenirPackage') result = arr.map(item => { return templates.souvenirPackage.replace('_itemName', item).replace('_eventName', eventName) })
-    else if (itemType == 'patch') result = arr.map(item => { return templates.patch.replace('_itemName', !variant || variant == 'Paper' ? item : `${item} (${variant})`) + (event.type == 'tournament' ? ` | ${eventName}` : '') })
-    else if (itemType == 'graffiti') result = arr.map(item => { return graffitiColors.map(color => { return `${templates.graffiti.replace('_itemName', item)} (${color})` }) }).flat()
-    else if (itemType == 'charm') result = arr.map(item => { return templates.charm.replace('_itemName', item) })
-
-    return result
 }
 
 export const calculateYAxisValues = (data, yKey, numIntervals) => {
@@ -85,4 +107,35 @@ export const calculateYAxisValues = (data, yKey, numIntervals) => {
     }
 
     return yAxisValues.reverse()
+}
+
+export const formatItemNames = (event, type, variant) => {
+    // _ir: item name replace, _er: event name replace
+    const templates = {
+        Sticker: 'Sticker | _ir | _er',
+        'Souvenir Package': '_er _ir Souvenir Package',
+        Patch: 'Patch | _ir',
+        Charm: 'Charm | _ir'
+    }
+
+    const eventName = event.name
+    const items = event.items[type]
+    let result = []
+
+    if (type == 'Sticker' || type == 'Autograph') {
+        result = items.map(item => { return templates.Sticker.replace('_ir', !variant || variant == 'Paper' ? item : `${item} (${variant})`).replace(' | _er', event.type == 'tournament' ? ` | ${eventName}` : '') })
+
+        if (eventName == 'Paris 2023' && type == 'Autograph') result.push(variant == 'Paper' ? event.specificItems[type][0] : event.specificItems[type].find(item => item.includes(variant)))
+
+        if (type == 'Autograph' && event.championAutograph) {
+            result = result.concat(event.championAutograph.map(item => {
+                return templates.Sticker.replace('_ir', variant == 'Paper' ? `${item} (Champion)` : `${item} (${variant}, Champion)`).replace('_er', eventName)
+            }))
+        }
+    }
+    else if (type == 'Souvenir Package') result = items.map(item => { return templates['Souvenir Package'].replace('_ir', item).replace('_er', eventName) })
+    else if (type == 'Patch') result = items.map(item => { return templates.Patch.replace('_ir', !variant || variant == 'Paper' ? item : `${item} (${variant})`) + (event.type == 'tournament' ? ` | ${eventName}` : '') })
+    else if (type == 'Charm') result = items.map(item => { return templates.Charm.replace('_ir', item) })
+
+    return result
 }

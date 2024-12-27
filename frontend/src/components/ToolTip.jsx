@@ -1,25 +1,21 @@
-export default function ToolTip({ content }) {
+export default function ToolTip({ content, hideArrow = true, joinString }) {
+    const formattedContent = Array.isArray(content) && content.map(item => item.join(joinString))
 
     return (
         <div className="tool-tip">
-            <span className="arrow" />
-            <div className="tool-tip-body">
+            {!hideArrow && <span className="arrow" />}
+            <div className="content">
                 {Array.isArray(content) ?
-                    content.map((item, index) => {
-                        return Array.isArray(item) ?
-                            <div key={index}>
-                                <span>{item[0]}</span>
-                                <span>{item[0] == "volume" ? item[1].toLocaleString(navigator.language) : item[1]}</span>
-                            </div>
-                            :
-                            <span key={index}>{item}</span>
-                    })
+                    formattedContent.map((item, index) =>
+                        <span key={index}>{item}</span>
+                    )
                     :
                     <span>{content}</span>
                 }
             </div>
         </div>
+
     )
 }
 
-// <ToolTip content="" />
+// <ToolTip content={ } hideArrow={ } joinString="" />

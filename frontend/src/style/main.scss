@@ -1,0 +1,785 @@
+@use '_colors' as c;
+@import '_componentStyles';
+@import '_commonStyles';
+@import '_lineChartStyle';
+
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+.header {
+    width: 100%;
+    height: 4rem;
+    background: c.$header-bg;
+
+    .container {
+        @include flex(row, space-between, center);
+        height: 100%;
+        min-height: unset;
+        gap: 2rem;
+
+        .home-page-btn {
+            background: c.$site-primary-color;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .header-content {
+            @include flex(row, flex-start, center);
+            flex: 1;
+            gap: 2rem;
+
+            .header-btn {
+                @include flex(row, center, center);
+                gap: 0.5rem;
+                padding: 0.5rem;
+
+                &:hover {
+
+                    span,
+                    i {
+                        color: c.$blue;
+                    }
+                }
+            }
+
+            .tools-btn-wrapper {
+                position: relative;
+
+                &:hover {
+                    cursor: pointer;
+
+                    .dropdown {
+                        @include flex(column, flex-start, stretch);
+                    }
+                }
+
+                .dropdown {
+                    z-index: 8;
+                }
+            }
+
+            .user-menu {
+                position: relative;
+                margin-left: auto;
+
+                label {
+                    padding: 0.5rem;
+                    color: c.$blue;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+
+                input[type='checkbox'] {
+                    display: none;
+
+                    &:checked+.dropdown {
+                        @include flex(column, flex-start, stretch);
+                    }
+                }
+
+                .dropdown {
+                    top: calc(100% + 0.5rem);
+                    left: 100%;
+                    transform: translateX(-100%);
+
+                    button {
+
+                        span,
+                        i {
+                            color: c.$red;
+                        }
+                    }
+                }
+            }
+
+            .to-login-page-btn {
+                color: c.$blue;
+                margin-left: auto;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+.investments-page {
+    header {
+        justify-content: flex-end;
+
+        .investment-stats {
+            @include flex(row, center, center);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-right: auto;
+
+            .investment-stats-item {
+                @include flex(row, center, center);
+                gap: 0.75rem;
+                padding: 0.4rem;
+                border-radius: 0.25rem;
+                background: c.$bg-primary-light;
+
+                .icon-background {
+                    background: c.$light-blue;
+                    border-radius: 0.2rem;
+
+                    i {
+                        padding: 0.5rem;
+                        background: c.$site-primary-color;
+                        background-clip: text;
+                        color: transparent;
+                    }
+                }
+            }
+
+            .profit {
+                span {
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .show-filters-btn {
+            padding: 0.75rem;
+        }
+    }
+
+    .filters {
+        @include flex(row, flex-start, center);
+        flex-wrap: wrap;
+        gap: 1rem 0.5rem;
+
+        .clear-filters-btn {
+            padding: 0.75rem;
+        }
+    }
+
+    section {
+        .table {
+            .profit {
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.investment-item-modal {
+    @include flex(column, flex-start, stretch);
+    width: 100%;
+    max-width: 55rem;
+    height: 100%;
+    gap: 1rem;
+    margin-left: auto;
+
+    .modal-header {
+        @include flex(row, flex-end, center);
+    }
+
+    .modal-body {
+        @include flex(row, space-between, stretch);
+        flex: 1;
+        gap: 1.5rem;
+
+        .modal-body-item {
+            @include flex(column, flex-start, stretch);
+            flex: 1;
+            max-width: 50%;
+            gap: 0.5rem;
+
+            img {
+                width: 80%;
+                aspect-ratio: 1.333/1;
+                background: c.$bg-primary;
+                padding: 0.5rem;
+                margin: 0 auto;
+                border-radius: 0.5rem;
+            }
+
+            .item-name {
+                text-align: center;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            >div {
+                @include flex(row, space-between, center);
+                gap: 0.5rem;
+
+                span:nth-of-type(1) {
+                    text-transform: capitalize;
+                }
+
+                span:nth-of-type(2) {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .modal-body-item:nth-of-type(2) {
+            justify-content: space-between;
+
+            .transaction-form {
+                padding: 0;
+                background: none;
+
+                .form-bottom {
+                    @include flex(row, flex-start, flex-end);
+                    gap: 1rem;
+
+                    label {
+                        span {
+                            padding: 0.75rem 1rem;
+                            border: 1px solid transparent;
+                            border-radius: 0.25rem;
+                            cursor: pointer;
+                        }
+
+                        input[type='radio'] {
+                            display: none;
+                        }
+                    }
+
+                    .label-purchase {
+                        span {
+                            background: c.$light-green;
+                        }
+
+                        input[type='radio']:checked+span {
+                            border-color: c.$green;
+                        }
+                    }
+
+                    .label-sale {
+                        span {
+                            background: c.$light-red;
+                        }
+
+                        input[type='radio']:checked+span {
+                            border-color: c.$red;
+                        }
+                    }
+
+                    .btn {
+                        margin-left: auto;
+                    }
+                }
+            }
+
+            .buttons {
+                flex-wrap: wrap;
+
+                .delete-investment-item-btn {
+
+                    i,
+                    span {
+                        color: c.$red;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.add-investment-modal {
+    @include flex(column, flex-start, stretch);
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+
+    .modal-header {
+        @include flex(row, space-between, center);
+    }
+
+    .methods {
+        @include flex(row, flex-start, center);
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .btn-secondary {
+            padding: 1rem;
+        }
+
+        .btn-secondary-active {
+            border-color: c.$blue;
+        }
+
+        .import-csv-file-label {
+            @include flex(row, center, center);
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px dashed c.$border-bg;
+            border-radius: 0.25rem;
+            cursor: pointer;
+
+            input {
+                display: none;
+            }
+        }
+
+        .confirm-csv-file-items-btn {
+            position: relative;
+
+            .bubbles {
+                display: none;
+                position: absolute;
+                width: 75%
+            }
+
+            &:disabled {
+                background: c.$bg-primary;
+
+                &:hover {
+                    box-shadow: unset;
+                }
+
+                >span {
+                    visibility: hidden;
+                }
+
+                .bubbles {
+                    display: flex;
+                }
+            }
+        }
+    }
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .table-wrapper {
+        overflow-y: auto;
+    }
+}
+
+.login-page,
+.signup-page {
+    @include flex(column, flex-start, center);
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 450px;
+        margin-top: 5rem;
+    }
+}
+
+.event-items-price-changes-page {
+    header {
+        .filters {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+
+            .search-btn {
+                padding: 0.75rem;
+            }
+        }
+    }
+
+    section {
+        @include flex(column, flex-start, stretch);
+
+        .bubbles-wrapper {
+            width: 100%;
+            max-width: 10rem;
+            margin: 0 auto;
+        }
+
+        .table {
+            .priceBeforeSale {
+                min-width: 6rem;
+            }
+
+            .minPriceDuringSale {
+                min-width: 9rem;
+            }
+
+            .minPrice {
+                min-width: 7rem;
+            }
+
+            .maxPrice {
+                min-width: 12rem;
+            }
+
+            .currentPrice {
+                min-width: 8rem;
+            }
+        }
+    }
+}
+
+.events-page {
+    .table {
+        .row {
+
+            .\-,
+            .\+ {
+                flex: none;
+                width: 2rem;
+
+                .fields-container span {
+                    width: 100%;
+                }
+            }
+
+            .cell:nth-of-type(10),
+            .cell:nth-of-type(12) {
+                .fields-container {
+                    >span {
+                        color: c.$green;
+                        font-weight: 700;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.investment-stats-page {
+    section {
+        @include flex(column, flex-start, stretch);
+    }
+}
+
+.data-control-center-page {
+    section {
+        @include flex(row, flex-start, flex-start);
+        gap: 2rem;
+
+        .section-items {
+            @include flex(column, flex-start, stretch);
+            flex: 1;
+            gap: 1rem;
+
+            .section-item {
+                @include flex(column, flex-start, stretch);
+                width: 100%;
+                max-width: 311px;
+                gap: 1rem;
+                padding: 0.75rem;
+                background: c.$bg-primary-light-25;
+                border-radius: 0.5rem;
+            }
+
+            .btn-secondary {
+                max-width: fit-content;
+            }
+        }
+
+        .output-section {
+            @include flex(column, flex-start, stretch);
+            flex: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+
+            .output-section-header {
+                padding: 0.5rem 1rem;
+                background: c.$header-bg;
+            }
+
+            .output-section-body {
+                @include flex(column, flex-start, stretch);
+                gap: 1rem;
+                padding: 1rem;
+                background: c.$bg-primary;
+            }
+        }
+    }
+
+    .update-sticker-application-numbers-modal {
+        @include flex(column, flex-start, stretch);
+        width: 100%;
+        height: 100%;
+        gap: 1rem;
+
+        .modal-header {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem;
+
+            .close-btn {
+                margin-left: auto;
+            }
+        }
+
+        form {
+            .fields-group-item {
+                flex: none;
+                width: calc(25% - 1rem);
+            }
+
+            .btn {
+                width: fit-content;
+                margin-left: auto;
+            }
+        }
+    }
+}
+
+.sticker-application-numbers-page {
+    header {
+        .filters {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+
+            .search-btn {
+                padding: 0.75rem;
+            }
+        }
+    }
+
+    section {
+        @include flex(column, flex-start, stretch);
+        gap: 1rem;
+
+        .bubbles-wrapper {
+            width: 100%;
+            max-width: 10rem;
+            margin: 0 auto;
+        }
+
+        .table {
+            .applicationNumber {
+                flex: none;
+                width: 25rem;
+                margin-left: 2.5rem;
+
+                .fields-container {
+                    justify-content: space-between;
+
+                    span {
+                        flex: 1;
+                    }
+
+                    span:nth-of-type(1) {
+                        flex: 2;
+                    }
+                }
+            }
+
+            .image {
+                position: sticky;
+                left: 0;
+                background: c.$bg-primary;
+            }
+
+            .table-header,
+            .calculate-result-row {
+                .image {
+                    background: c.$header-bg;
+                }
+            }
+        }
+    }
+}
+
+.profile-page {
+    section {
+        @include flex(column, flex-start, flex-start);
+        flex: 1;
+        gap: 1rem;
+
+        .section-item {
+            @include flex(column, flex-start, stretch);
+            width: 100%;
+            max-width: 450px;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: c.$bg-primary-light;
+
+            .section-item-header {
+                @include flex(row, space-between, center);
+
+                .header-with-icon {
+                    background: unset;
+                    padding: 0;
+                }
+
+                .fa-regular.fa-pen-to-square {
+                    cursor: pointer;
+
+                    &:hover {
+                        color: c.$blue
+                    }
+                }
+            }
+
+            .section-item-body {
+                @include flex(column, flex-start, stretch);
+                gap: 1rem;
+
+                div {
+                    @include flex(row, space-between, center);
+
+                    span:nth-last-of-type(2) {
+                        color: c.$gray;
+                    }
+
+                    span:nth-last-of-type(1) {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
+        .buttons {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: auto;
+
+            .delete-account-btn {
+
+                i,
+                span {
+                    color: c.$red;
+                }
+            }
+        }
+    }
+
+    .modal-container {
+        @include flex(row, center, center);
+
+        .update-user-informations-modal,
+        .change-password-modal,
+        .delete-account-modal {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            transform: translateY(-4rem);
+
+            form {
+                background: unset;
+                padding: 0;
+            }
+        }
+
+        .delete-account-modal {
+            max-width: 450px;
+
+            .btn {
+                background: c.$red;
+
+                &:hover {
+                    box-shadow: 0 0 8px 3px c.$light-red;
+                }
+            }
+        }
+    }
+}
+
+.major-analysis-page {
+    header {
+        .filters {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+        }
+    }
+
+    section {
+        @include flex(row, flex-start, flex-start);
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        .bubbles-wrapper {
+            width: 100%;
+            max-width: 10rem;
+            margin: 0 auto;
+        }
+
+        .line-charts {
+            @include flex(column, flex-start, stretch);
+            width: calc(60% - 0.5rem);
+            gap: 1rem;
+
+            .line-chart:nth-of-type(1) {
+                z-index: 4;
+            }
+        }
+
+        .column-chart-wrapper {
+            @include flex(column, flex-start, stretch);
+            gap: 0.25rem;
+            width: calc(40% - 0.5rem);
+
+            .column-chart {
+                .color-info-box {
+                    div:nth-of-type(1) {
+                        .color {
+                            background: c.$blue;
+                        }
+
+                        .y-key-name {
+                            color: c.$blue;
+                        }
+                    }
+
+                    div:nth-of-type(2) {
+                        .color {
+                            background: #9333ea;
+                        }
+
+                        .y-key-name {
+                            color: #9333ea;
+                        }
+                    }
+                }
+
+                .column:nth-of-type(1) {
+                    background: c.$blue;
+                }
+
+                .column:nth-of-type(2) {
+                    background: #9333ea;
+                }
+            }
+
+            .capsule-images {
+                @include flex(row, flex-start, center);
+                width: 100%;
+                gap: 0.75rem;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                background: c.$bg-primary;
+
+                div {
+                    @include flex(row, center, center);
+                    flex: 1;
+
+                    img {
+                        width: 100%;
+                        aspect-ratio: 1.33/1;
+                    }
+
+                }
+            }
+        }
+
+        .table {
+            .Paper {
+                flex: 2;
+
+                .fields-container {
+                    gap: 0.5rem;
+                }
+
+                span {
+                    flex: 1;
+                }
+            }
+        }
+    }
+}

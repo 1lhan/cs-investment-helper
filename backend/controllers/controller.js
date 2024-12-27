@@ -1,98 +1,411 @@
 const express = require('express')
 const router = express.Router()
+const Big = require('big.js')
+const { authenticateToken, generateTags, getItemMarketPrice, getUser, steamFeeCalculator, formatItemNames, getItemPriceHistory, big, getStockData, urlHandler } = require('../utils')
+const { events } = require('../events')
+const userModel = require('../models/userModel')
 const eventItemModel = require('../models/eventItemModel')
 const stickerApplicationNumbers = require('../models/stickerApplicationNumbers')
-const userModel = require('../models/userModel')
-const { authenticateToken } = require('./utils')
 
-const tournamentNames = [
-    'Copenhagen 2024', 'Paris 2023', 'Rio 2022', 'Antwerp 2022', 'Stockholm 2021', '2020 RMR', 'Berlin 2019', 'Katowice 2019', 'London 2018',
-    'Boston 2018', 'Krakow 2017', 'Atlanta 2017', 'Cologne 2016', 'MLG Columbus 2016', 'Cluj-Napoca 2015', 'Katowice 2015', 'Katowice 2014'
-]
+router.post('/add-investment', authenticateToken, async (req, res) => {
+    const { userId, items } = req.body
 
-const variants = ['Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']
+    let user = await getUser(userId)
+    if (!user.success) return res.json(user)
+    user = user.user
 
-const getItemMarketPrice = async (itemName) => {
+    let i = 0;
+
+    const getItemsMarketPriceAndSet = new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+            const item = items[i]
+            const name = item.name
+
+            const itemMarketPrice = await getItemMarketPrice(name)
+            if (!itemMarketPrice.success) { clearInterval(interval); reject(new Error(itemMarketPrice.msg)) }
+
+            const itemIndex = user.investments.findIndex(item => item.name == name)
+
+            let date = item.date && item.date != '' ? new Date(item.date) : new Date()
+
+            if (itemIndex == -1) {
+                user.investments.push({
+                    name,
+                    initialPurchaseDate: date,
+                    avgCost: item.avgCost,
+                    quantity: item.quantity,
+                    currentTotalCost: big(item.avgCost).times(item.quantity),
+                    totalCost: big(item.avgCost).times(item.quantity),
+                    marketPrice: itemMarketPrice.price,
+                    lastUpdate: null,
+                    tags: generateTags(name)
+                })
+            }
+            else {
+                const existingItem = user.investments[itemIndex]
+
+                user.investments[itemIndex].avgCost = big(big(existingItem.avgCost).times(existingItem.quantity).plus(big(item.avgCost).times(item.quantity))).div(big(existingItem.quantity).plus(item.quantity))
+                user.investments[itemIndex].quantity = big(existingItem.quantity).plus(item.quantity)
+                user.investments[itemIndex].currentTotalCost = big(existingItem.currentTotalCost).plus(item.currentTotalCost || new Big(item.avgCost).times(item.quantity))
+                user.investments[itemIndex].totalCost = big(existingItem.totalCost).plus(item.totalCost || new Big(item.avgCost).times(item.quantity))
+                user.investments[itemIndex].marketPrice = itemMarketPrice.price
+                user.investments[itemIndex].lastUpdate = { date, avgCost: item.avgCost, quantity: item.quantity }
+            }
+
+            if (i == items.length - 1) { clearInterval(interval); resolve() }
+            else i++
+        }, 3200)
+    })
+
+    try { await getItemsMarketPriceAndSet }
+    catch (error) {
+        console.error((error.message || 'Error.') + ' (/add-investment, getItemsMarketPriceAndSet)')
+        return res.json({ success: false, msg: error.message || 'An error occurred while processing investment items.' })
+    }
+
     try {
-        const response = await fetch('http://steamcommunity.com/market/priceoverview/?currency=1&appid=730&market_hash_name=' + itemName)
-        const data = await response.json()
-        //
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            console.log(response)
-            console.log(data)
-            throw new Error('Invalid response format, expected JSON.')
-        }
-
-        if (!response.ok) {
-            console.error('Fetch error details (getItemMarketPrice()): ', { status: response.status, itemName })
-
-            if (response.status == 400) return { success: false, msg: 'Invalid cookie.' }
-            else if (response.status == 500) return { success: false, msg: `The item name is incorrect or the item has no listings. (${itemName})` }
-            else if (response.status == 429) return { success: false, msg: 'Too many request.' }
-            else return { success: false, msg: 'An error occurred while fetching item price.' }
-        }
-        else return { success: true, price: +data.lowest_price.slice(1).replaceAll(',', '') }
+        const save = await user.save()
+        return res.json({ success: true, user: save })
     }
     catch (error) {
-        console.log((error.message || 'An error occurred while fetching item price.') + 'getItemMarketPrice()')
-        return { success: false, msg: 'An error occurred while fetching item price.' }
+        console.error((error.message || 'An error occurred while processing investment items.') + ' (/add-investment)')
+        return res.json({ success: false, msg: 'An error occurred while processing investment items.' })
     }
-}
+})
 
-const getUser = async (userId) => {
+router.post('/delete-investment-item', authenticateToken, async (req, res) => {
+    const { itemId, userId } = req.body
+
+    let user = await getUser(userId)
+    if (!user.success) return res.json(user)
+    user = user.user
+
+    if (!user.investments.find(item => item._id == itemId)) return res.json({ success: false, msg: 'Investment item could not be found.' })
+
     try {
-        const user = await userModel.findById(userId).select('-password')
-        if (!user) return { success: false, msg: 'User could not be found.' }
-        return { success: true, user }
+        const updatedUser = await userModel.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { investments: { _id: itemId } } },
+            { new: true }
+        )
+
+        return res.json({ success: !!updatedUser, user: updatedUser })
     }
     catch (error) {
-        console.error((error.message || 'An error occurred while fetching user data.') + ' (getUser())')
-        return { success: false, msg: 'An error occurred while fetching user data.' }
+        console.error((error.message || 'An error occurred while deleting the investment item.') + ' (/delete-investment-item)')
+        return res.json({ success: false, msg: 'An error occurred while deleting the investment item.' })
     }
-}
+})
 
-const itemTagHandler = (itemName) => {
-    let tags = []
+router.post('/save-transaction', authenticateToken, async (req, res) => {
+    const { itemId, userId, price, quantity, date, transactionType } = req.body
 
-    if (itemName.split('|')[0] == 'Sticker ') {
-        let splittedName = itemName.split('|')
+    let user = await getUser(userId)
+    if (!user.success) return res.json(user)
+    user = user.user
 
-        tags.push('Sticker')
+    const itemIndex = user.investments.findIndex(item => item._id == itemId)
+    if (itemIndex == -1) return res.json({ success: false, msg: 'Investment item could not be found.' })
+    const item = user.investments[itemIndex]
 
-        // If item name includes '(', that is mean sticker is not paper and this condition push the variant of the sticker to tags
-        if (splittedName[1].includes('(')) variants.forEach(variant => { if (splittedName[1].includes(variant)) tags.push(variant) })
-        else tags.push('Paper')
+    const _date = date && date != '' ? new Date(date) : new Date()
 
-        if (splittedName.length > 2) tags.push(splittedName[2].slice(1))
+    if (transactionType == 'purchase') {
+        const totalCostOfTransaction = big(price).times(quantity)
+        const newCurrentTotalCost = big(item.currentTotalCost).plus(totalCostOfTransaction)
+        const newQuantity = big(item.quantity).plus(quantity)
+
+        Object.assign(user.investments[itemIndex], {
+            avgCost: big(newCurrentTotalCost).div(newQuantity),
+            quantity: newQuantity,
+            currentTotalCost: newCurrentTotalCost,
+            totalCost: big(item.totalCost).plus(totalCostOfTransaction),
+            lastUpdate: { date: _date, avgCost: price, quantity }
+        })
     }
-    else if (['Capsule', 'Legends', 'Challengers', 'Contenders'].some(keyword => itemName.includes(keyword))) {
-        tags.push('Capsule')
-        tournamentNames.forEach(tournamentName => { if (itemName.includes(tournamentName)) tags.push(tournamentName) })
+    else {
+        if (quantity > item.quantity) return res.json({ success: false, msg: 'The quantity of the item to be sold cannot exceed the current quantity available.' })
+
+        const totalSalesOfTransaction = big(price).times(quantity)
+        const newTotalSales = big(item.totalSales || 0).plus(totalSalesOfTransaction)
+        const newSoldQuantity = big(item.soldQuantity || 0).plus(quantity)
+        const profitOfTransaction = big(big(price).minus(item.avgCost)).times(quantity)
+
+        Object.assign(user.investments[itemIndex], {
+            quantity: big(item.quantity).minus(quantity),
+            currentTotalCost: big(item.currentTotalCost).minus(big(item.avgCost).times(quantity)),
+            avgSalePrice: big(newTotalSales).div(newSoldQuantity),
+            soldQuantity: newSoldQuantity,
+            totalSales: newTotalSales,
+            salesProfit: big(item.salesProfit || 0).plus(profitOfTransaction),
+            netSalesProfit: big(big(steamFeeCalculator(price)).minus(item.avgCost)).times(quantity),
+            lastUpdate: { date: _date, avgSalePrice: price, soldQuantity: quantity }
+        })
     }
 
-    return tags
-}
+    try {
+        const save = await user.save()
+        return res.json({ success: !!save, user: save })
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while saving the transaction.') + ' (/save-transaction)')
+        return res.json({ success: false, msg: 'An error occurred while saving the transaction.' })
+    }
+})
 
-// Get Operations
+router.post('/undo-last-update', authenticateToken, async (req, res) => {
+    const { itemId, userId } = req.body
 
-router.get('/get-tournament-items/:eventName/:type/:variant', async (req, res) => {
+    let user = await getUser(userId)
+    if (!user.success) return res.json(user)
+    user = user.user
+
+    const itemIndex = user.investments.findIndex(item => item._id == itemId)
+    if (itemIndex == -1) return res.json({ success: false, msg: 'Investment item could not be found.' })
+
+    const itemLastUpdate = user.investments[itemIndex].lastUpdate
+    if (!itemLastUpdate) return res.json({ success: false, msg: 'The investment item has no last update data.' })
+
+    const item = user.investments[itemIndex]
+    const lastUpdate = item.lastUpdate
+
+    if (lastUpdate.avgCost) {
+        const totalCostOfLastUpdate = big(lastUpdate.avgCost).times(lastUpdate.quantity)
+        const newQuantity = big(item.quantity).minus(lastUpdate.quantity)
+        const newCurrentTotalCost = big(item.currentTotalCost).minus(totalCostOfLastUpdate)
+
+        Object.assign(user.investments[itemIndex], {
+            avgCost: big(newCurrentTotalCost).div(newQuantity),
+            quantity: newQuantity,
+            currentTotalCost: newCurrentTotalCost,
+            totalCost: big(item.totalCost).minus(totalCostOfLastUpdate)
+        })
+    }
+    else {
+        const totalSalesOfLastUpdate = big(lastUpdate.avgSalePrice).times(lastUpdate.soldQuantity)
+        const newSoldQuantity = big(item.soldQuantity).minus(lastUpdate.soldQuantity)
+        const newTotalSales = big(item.totalSales).minus(totalSalesOfLastUpdate)
+
+        Object.assign(user.investments[itemIndex], {
+            quantity: big(item.quantity).plus(lastUpdate.soldQuantity),
+            currentTotalCost: big(item.currentTotalCost).plus(big(item.avgCost).times(lastUpdate.soldQuantity)),
+            avgSalePrice: newSoldQuantity == 0 ? 0 : big(newTotalSales).div(newSoldQuantity),
+            soldQuantity: newSoldQuantity == 0 ? 0 : newSoldQuantity,
+            totalSales: newSoldQuantity == 0 ? 0 : newTotalSales,
+            salesProfit: big(item.salesProfit).minus(big(big(lastUpdate.avgSalePrice).minus(item.avgCost)).times(lastUpdate.soldQuantity)),
+            netSalesProfit: big(item.netSalesProfit).minus(big(steamFeeCalculator(lastUpdate.avgSalePrice)).minus(item.avgCost).times(lastUpdate.soldQuantity))
+        })
+    }
+
+    user.investments[itemIndex].lastUpdate = null
+
+    try {
+        const save = await user.save()
+        return res.json({ success: !!save, user: save })
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while saving user.') + ' (/undo-last-update)')
+        return res.json({ success: false, msg: 'An error occurred while processing undo last update.' })
+    }
+})
+
+router.post('/update-investment-market-prices', authenticateToken, async (req, res) => {
+    const { userId, date } = req.body
+
+    let user = await getUser(userId)
+    if (!user.success) return res.json(user)
+    user = user.user
+
+    const lastUpdateDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 30)
+    const updateStartDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.updateStartDate) > (3200 * user.investments.length) + (1000 * 10)
+    const isUpdating = user.investmentsMarketPriceUpdateStatus.isUpdating
+
+    const investments = user.investments.filter(item => item.quantity > 0)
+
+    if (!(lastUpdateDateCheck && (!isUpdating || (isUpdating && updateStartDateCheck)))) return res.json({ success: false, msg: 'Investments market price can be updated every 30 minutes.' })
+    if (investments.length == 0) return res.json({ success: false, msg: 'User has no investments.' })
+
+    try {
+        user.investmentsMarketPriceUpdateStatus.isUpdating = true
+        user.investmentsMarketPriceUpdateStatus.updateStartDate = new Date()
+
+        const save = await user.save()
+        user = save
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while saving user.') + ' (1.user save, /update-investment-market-prices)')
+        return res.json({ success: false, msg: 'An error occurred while updating the investment market prices.' })
+    }
+
+    let itemIndex = 0
+
+    const updateInvestmentMarketPrices = new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+            const item = investments[itemIndex]
+
+            console.log(`${itemIndex + 1} / ${investments.length}`)
+
+            const itemMarketPrice = await getItemMarketPrice(item.name)
+            if (!itemMarketPrice.success) { clearInterval(interval); return reject(new Error(itemMarketPrice.msg)) }
+
+            user.investments.find(_item => _item._id == item._id).marketPrice = itemMarketPrice.price
+
+            if (itemIndex == investments.length - 1) { clearInterval(interval); return resolve() }
+            itemIndex++
+        }, 3200)
+    })
+
+    try { await updateInvestmentMarketPrices }
+    catch (error) {
+        console.error((error.message || 'Error.') + ' (updateInvestmentMarketPrices, /update-investment-market-prices)')
+        return res.json({ success: false, msg: 'An error occurred while updating the investment market prices.' })
+    }
+
+    const totalCost = +investments.reduce((t, c) => big(t).plus(big(c.avgCost).times(c.quantity)), 0).toFixed(2)
+    const totalMarketValue = +investments.reduce((t, c) => big(t).plus(big(c.marketPrice).times(c.quantity)), 0).toFixed(2)
+    const lastItem = user.investmentValuationHistory[user.investmentValuationHistory.length - 1] // last investment valuation history item
+    const lastIndex = user.investmentValuationHistory.length - 1 // index of last investment valuation history item
+
+    if (lastItem == undefined) user.investmentValuationHistory.push([date, totalCost, totalMarketValue, 1])
+    else {
+        if (new Set([...lastItem[0].split('.'), ...date.split('.')]).size > 3) {
+            user.investmentValuationHistory[lastIndex] = lastItem.slice(0, 3)
+            user.investmentValuationHistory.push([date, totalCost, totalMarketValue, 1])
+        }
+        else {
+            if (lastItem[1] != totalCost) user.investmentValuationHistory[lastIndex] = [date, totalCost, totalMarketValue, 1]
+            else {
+                const counter = lastItem[3]
+
+                user.investmentValuationHistory[lastIndex] = [
+                    date,
+                    +big(big(lastItem[1]).times(counter).plus(totalCost)).div(counter + 1).toFixed(2),
+                    +big(big(lastItem[2]).times(counter).plus(totalMarketValue)).div(counter + 1).toFixed(2),
+                    counter + 1
+                ]
+            }
+        }
+    }
+
+    try {
+        user.investmentsMarketPriceUpdateStatus.isUpdating = false
+        user.investmentsMarketPriceUpdateStatus.lastUpdateDate = new Date()
+
+        const save = await user.save();
+        if (save) return res.json({ success: true, user })
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while saving the user.') + ' (2. user save, /update-investment-market-prices)')
+        return res.json({ success: false, msg: 'An error occurred while updating the investment market prices.' });
+    }
+})
+
+router.get('/get-event-items/:eventName/:type/:variant', async (req, res) => {
     const { eventName, type, variant } = req.params
 
     try {
         const query = {
-            ...(eventName !== 'Any' && { eventName }),
-            ...(type !== 'Any' && { type: { $in: type.includes(',') ? type.split(',') : [type] } }),
-            ...(variant !== 'Any' && { variant }),
+            ...(eventName != 'Any' && { eventName }),
+            ...(type != 'Any' && { type: { $in: type.includes(',') ? type.split(',') : [type] } }),
+            ...(variant != 'Any' && { variant }),
         }
 
         const data = await eventItemModel.find(query)
-
-        return res.json({ success: !!data.length, data: data || [], ...(data.length == 0 && { msg: 'No items found.' }) })
+        return res.json({ success: !!data.length && !data[0].items.length == 0, data: data || [], ...((data.length == 0 || data[0].items.length == 0) && { msg: 'No items found.' }) })
     }
     catch (error) {
-        console.error((error.message || 'An error occurred while fetching tournament items.') + ' (/get-tournament-items)')
-        return res.json({ success: false, message: 'An error occurred while fetching tournament items.' })
+        console.error((error.message || 'An error occurred while fetching event items.') + ' (/get-event-items)')
+        return res.json({ success: false, message: 'An error occurred while fetching event items.' })
+    }
+})
+
+router.post('/update-event-item', authenticateToken, async (req, res) => {
+    const { eventName, type, variant } = req.body
+
+    let event = events.find(item => item.name == eventName)
+    let items = ['Capsule', 'Patch Package', 'Agent', 'Case'].includes(type) ? event.items[type] : formatItemNames(event, type, variant)
+    items = items.map(item => { return { name: item, priceHistory: [] } })
+
+    for (let i in items) {
+        let priceHistory = await getItemPriceHistory(items[i].name, event.releaseDate)
+        if (!priceHistory.success) return res.json({ success: false, msg: priceHistory.msg })
+        items[i].priceHistory = priceHistory.priceHistory
+    }
+
+    try {
+        await eventItemModel.findOneAndUpdate(
+            { eventName, type, ...(variant && { variant }) },
+            { eventName, type, ...(variant && { variant }), items },
+            { upsert: true, new: true }
+        )
+
+        return res.json({ success: true })
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while updating the event item.') + ' (/update-event-item)')
+        return res.json({ success: false, msg: 'An error occurred while updating the event item.' });
+    }
+})
+
+router.post('/update-sticker-application-numbers', authenticateToken, async (req, res) => {
+    const { eventName, variant, formValues } = req.body
+
+    const event = events.find(event => event.name == eventName)
+    let stickerMetrics
+
+    try { stickerMetrics = await stickerApplicationNumbers.findOne({ eventName, variant }) }
+    catch (error) {
+        console.error((error.message || 'An error occurred while fetching sticker application numbers.') + ' (/update-sticker-application-numbers)')
+        return res.json({ success: false, msg: 'An error occurred while fetching sticker application numbers.' })
+    }
+
+    try {
+        if (stickerMetrics == null) {
+            stickerMetrics = await new stickerApplicationNumbers({
+                eventName, variant, dates: [new Date()],
+                stickers: Object.keys(formValues).map(stickerName => { return { name: stickerName, data: [[formValues[stickerName], null, null]] } })
+            }).save()
+        }
+        else if ((new Date() - new Date(stickerMetrics.dates[stickerMetrics.dates.length - 1])) / (1000 * 60 * 60 * 24) > 27) {
+            stickerMetrics.dates.push(new Date())
+            Object.keys(formValues).forEach(stickerName => { stickerMetrics.stickers.find(item => item.name == stickerName).data.push([formValues[stickerName], null, null]) })
+            stickerMetrics = await stickerMetrics.save()
+        }
+        else if (!stickerMetrics.stickers.some(sticker => sticker.data[sticker.data.length - 1].some(value => value == null))) {
+            return res.json({ success: false, msg: "New data cannot be added yet because the required date has not arrived, and all the data fields in the last array of the stickers' data are already filled." })
+        }
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while creating new sticker application numbers.') + ' (/update-sticker-application-numbers)')
+        return res.json({ success: false, msg: 'An error occurred while creating new sticker application numbers.' })
+    }
+
+    const index = stickerMetrics.dates.length - 1
+
+    const stockData = await getStockData(urlHandler(eventName, variant))
+    if (!stockData.success) return res.json({ success: false, msg: stockData.msg || 'An error occurred while fetching items stock data.' })
+
+    for (let i in stickerMetrics.stickers) {
+        const stickerName = stickerMetrics.stickers[i].name
+
+        let itemPriceHistory = await getItemPriceHistory(stickerName, event.releaseDate)
+        if (!itemPriceHistory.success) return res.json({ success: false, msg: itemPriceHistory.msg })
+
+        const last2DaysOfPriceHistory = itemPriceHistory.priceHistory.filter(item => item[2] != 0).reverse().slice(0, 2)
+        const price = +big(last2DaysOfPriceHistory.reduce((t, c) => +big(t).plus(+big(c[1]).times(c[2])), 0)).div(last2DaysOfPriceHistory.reduce((t, c) => +big(t).plus(c[2]), 0)).toFixed(3)
+        const stock = stockData.data.find(item => item.name == stickerName).stock
+
+        stickerMetrics.stickers[i].data[index][1] = price
+        stickerMetrics.stickers[i].data[index][2] = stock
+    }
+
+    try {
+        await stickerMetrics.save()
+        return res.json({ success: true })
+    }
+    catch (error) {
+        console.error((error.message || 'An error occurred while saving sticker application data.') + ' (/update-sticker-application-numbers)')
+        return res.json({ success: false, msg: 'An error occurred while saving sticker application data.' })
     }
 })
 
@@ -108,262 +421,6 @@ router.get('/get-sticker-application-numbers/:eventName/:variant', async (req, r
         return res.json({ success: false, msg: 'An error occurred while fetching sticker application numbers.' })
     }
 })
-
-// Investment Operations
-
-router.post('/add-investment', authenticateToken, async (req, res) => {
-    const { userId, timezoneOffSet, items } = req.body
-
-    let user = await getUser(userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    let resultMsg = []
-    let i = 0;
-
-    const getItemsMarketPriceAndSet = new Promise((resolve, reject) => {
-        const interval = setInterval(async () => {
-            const name = items[i].name
-
-            const itemMarketPrice = await getItemMarketPrice(name)
-            if (!itemMarketPrice.success) { resultMsg.push(`${name} invalid item name.`); i++; return; }
-
-            const itemIndex = user.investments.findIndex(item => item.name == name)
-            let date = new Date(new Date().setUTCHours(0, 0, 0, 0))
-            timezoneOffSet >= 0 ? date.setHours(date.getHours() + (timezoneOffSet / 60)) : date.setHours(date.getHours() - ((timezoneOffSet * -1) / 60))
-
-            if (itemIndex == -1) user.investments.push({ ...items[i], marketPrice: itemMarketPrice.price, initialPurchaseDate: items[i].date ? new Date(items[i].date) : date, tags: itemTagHandler(name) })
-            else {
-                user.investments[itemIndex].totalCost += items[i].totalCost
-                user.investments[itemIndex].quantity += +items[i].quantity
-                user.investments[itemIndex].lastUpdate = { date: items[i].date ? new Date(items[i].date) : date, totalCost: items[i].totalCost, quantity: +items[i].quantity }
-            }
-
-            if (i == items.length - 1) { clearInterval(interval); resolve() }
-            else i++
-        }, 3200);
-    })
-
-    try { await getItemsMarketPriceAndSet }
-    catch (error) {
-        console.error((error.message || 'getItemsMarketPriceAndSet error.') + ' (/add-investment, getItemsMarketPriceAndSet)')
-        return res.json({ success: false, msg: 'An error occurred while processing investment items.' })
-    }
-
-    try {
-        if (resultMsg.length == items.length) return res.json({ success: false, msg: resultMsg })
-
-        const save = await user.save()
-        return res.json({ success: true, ...(resultMsg.length > 0 && { msg: resultMsg.length > 0 && [...resultMsg, 'Other investment items have been saved.'] }), user: save })
-    }
-    catch (error) {
-        console.error((error.message || 'An error occurred while processing investment items.') + ' (/add-investment)')
-        return res.json({ success: false, msg: 'An error occurred while processing investment items.' })
-    }
-})
-
-router.post('/save-transaction', authenticateToken, async (req, res) => {
-    const { userId, itemId, timezoneOffSet, price, quantity, date, transactionType } = req.body;
-
-    let user = await getUser(userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    try {
-        const item = user.investments.find(item => item._id == itemId)
-        if (!item) return res.json({ success: false, msg: 'Investment item could not be found.' })
-
-        let _date = new Date(new Date().setUTCHours(0, 0, 0, 0))
-        timezoneOffSet >= 0 ? _date.setHours(_date.getHours() + (timezoneOffSet / 60)) : _date.setHours(_date.getHours() - ((timezoneOffSet * -1) / 60))
-
-        if (transactionType == 'purchase') {
-            item.totalCost += +price * +quantity
-            item.quantity += +quantity
-            item.lastUpdate = { date: date ? new Date(date) : _date, totalCost: +price * +quantity, quantity: +quantity }
-        }
-        else {
-            item.totalSales += +price * +quantity
-            item.soldQuantity += +quantity
-            item.totalCost -= (+item.totalCost / +item.quantity) * +quantity
-            item.quantity -= +quantity
-            item.lastUpdate = { date: date ? new Date(date) : _date, totalSales: +price * +quantity, soldQuantity: +quantity }
-        }
-
-        const save = await user.save()
-        return res.json({ success: true, user: save })
-    }
-    catch (error) {
-        console.error((error.message || 'An error occurred while saving the transaction.') + ' (/save-transaction)')
-        return res.json({ success: false, msg: 'An error occurred while saving the transaction.' })
-    }
-})
-
-router.post('/undo-last-update', authenticateToken, async (req, res) => {
-    const { userId, itemId } = req.body
-
-    let user = await getUser(userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    const investmentItemIndex = user.investments.findIndex(item => item._id == itemId)
-    if (investmentItemIndex == -1) return res.json({ success: false, msg: 'Investment item does not exist.' })
-
-    const investmentItemLastUpdateObj = user.investments[investmentItemIndex].lastUpdate
-    if (!investmentItemLastUpdateObj) return res.json({ success: false, msg: 'The investment item has no last update data.' })
-
-    const investmentItem = user.investments[investmentItemIndex]
-
-    if (investmentItemLastUpdateObj.totalCost) {
-        investmentItem.totalCost -= investmentItemLastUpdateObj.totalCost
-        investmentItem.quantity -= investmentItemLastUpdateObj.quantity
-    }
-    else {
-        investmentItem.totalSales -= investmentItemLastUpdateObj.totalSales
-        investmentItem.soldQuantity -= investmentItemLastUpdateObj.soldQuantity
-        investmentItem.quantity += investmentItemLastUpdateObj.soldQuantity
-    }
-    investmentItem.lastUpdate = null
-
-    try {
-        await user.save()
-        return res.json({ success: true, user })
-    }
-    catch (error) {
-        console.error((error.message || 'An error occurred while saving user.') + ' (/undo-last-update)')
-        return res.json({ success: false, msg: 'An error occurred while processing undo last update.' })
-    }
-})
-
-router.post('/delete-investment-item', authenticateToken, async (req, res) => {
-    const { userId, itemId } = req.body
-
-    let user = await getUser(userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    if (!!user.investmentsMarketPriceUpdateStatus.isUpdating) {
-        return res.json({ success: false, msg: 'Please wait for the ongoing market price updates of investment items to complete before attempting to delete an investment item.' })
-    }
-
-    const investmentItemIndex = user.investments.findIndex(item => item._id == itemId)
-    if (investmentItemIndex == -1) return res.json({ success: false, msg: 'Investment item could not be found.' })
-
-    try {
-        const update = await userModel.findOneAndUpdate({ _id: userId }, { $pull: { investments: { _id: itemId } } }, { new: true })
-        return res.json({ success: true, user: update })
-    }
-    catch (error) {
-        console.error((error.message || 'An error occurred while deleting the investment item.') + ' (/delete-investment-item)')
-        return res.json({ success: false, msg: 'An error occurred while deleting the investment item.' })
-    }
-})
-
-// Investment Market Price Update Operations
-
-router.post('/permission-to-update-investments-market-price', authenticateToken, async (req, res) => {
-    let user = await getUser(req.body.userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    const lastUpdateDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 30)
-    const updateStartDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.updateStartDate) > (3200 * user.investments.length) + (1000 * 10)
-    const isUpdating = user.investmentsMarketPriceUpdateStatus.isUpdating
-
-    return res.json({ success: true, result: lastUpdateDateCheck && (!isUpdating || (isUpdating && updateStartDateCheck)) })
-})
-
-router.post('/update-investments-market-price', authenticateToken, async (req, res) => {
-    const { userId, date } = req.body
-
-    let user = await getUser(userId)
-    if (!user.success) return res.json(user)
-    user = user.user
-
-    if (user.investments.length == 0) return res.json({ success: false, msg: 'User has no investments.' })
-
-    user.investmentsMarketPriceUpdateStatus.isUpdating = true
-    user.investmentsMarketPriceUpdateStatus.updateStartDate = new Date()
-
-    try {
-        const _save = await user.save()
-        user = _save
-    }
-    catch (error) {
-        console.error((error.message || 'Failed to update user status before starting the investments market price update process.') + ' (/update-investments-market-price)')
-        return res.json({ success: false, msg: 'An error occurred while updating investments market price.' })
-    }
-
-    let itemIndex = 0;
-    const investmentItems = user.investments.filter(item => item.quantity > 0)
-
-    const updateItemsMarketPrices = new Promise((resolve, reject) => {
-        const interval = setInterval(async () => {
-            if (itemIndex == investmentItems.length) {
-                clearInterval(interval);
-                resolve()
-            }
-            else {
-                const itemMarketPrice = await getItemMarketPrice(investmentItems[itemIndex].name)
-
-                if (!itemMarketPrice.success) {
-                    clearInterval(interval);
-                    reject(new Error(itemMarketPrice.msg))
-                }
-                else {
-                    //console.log(`${itemIndex + 1}/${investmentItems.length}`)
-
-                    user.investments.find(item => item._id == investmentItems[itemIndex]._id).marketPrice = itemMarketPrice.price
-                    itemIndex++
-                }
-            }
-        }, 3200)
-    })
-
-    try { await updateItemsMarketPrices }
-    catch (error) {
-        console.error((error.message || 'updateItemsMarketPrice error.') + ' (/update-investments-market-price, updateItemsMarketPrice)')
-        return res.json({ success: false, msg: 'An error occurred while updating items market price.' });
-    }
-
-    try {
-        const totalCost = +(user.investments.reduce((t, c) => t + c.totalCost, 0)).toFixed(2);
-        const totalMarketValue = +(user.investments.reduce((t, c) => t + (c.marketPrice * c.quantity), 0)).toFixed(2);
-
-        if (user.investmentValuationHistory.length == 0) user.investmentValuationHistory.push([date, totalCost, totalMarketValue, 1])
-        else {
-            const lastValuation = user.investmentValuationHistory[user.investmentValuationHistory.length - 1]
-
-            if (Array.from(new Set([...lastValuation[0].split('.'), ...date.split('.')])).length > 3) {
-                if (lastValuation && lastValuation.length > 2) user.investmentValuationHistory[user.investmentValuationHistory.length - 1] = lastValuation.slice(0, 3)
-                user.investmentValuationHistory.push([date, totalCost, totalMarketValue, 1])
-            }
-            else {
-                if (lastValuation[1] != totalCost) user.investmentValuationHistory[user.investmentValuationHistory.length - 1] = [date, totalCost, totalMarketValue, 1]
-                else {
-                    const counter = lastValuation[3];
-                    user.investmentValuationHistory[user.investmentValuationHistory.length - 1] = [
-                        date,
-                        +(((lastValuation[1] * counter) + totalCost) / (counter + 1)).toFixed(2),
-                        +(((lastValuation[2] * counter) + totalMarketValue) / (counter + 1)).toFixed(2),
-                        counter + 1
-                    ]
-                }
-            }
-        }
-
-        user.investmentsMarketPriceUpdateStatus.isUpdating = false
-        user.investmentsMarketPriceUpdateStatus.lastUpdateDate = new Date()
-
-        const save = await user.save();
-        if (save) return res.json({ success: true, user })
-    }
-    catch (error) {
-        console.error((error.message || 'An error occurred while saving user.') + ' (/update-investments-market-price)')
-        return res.json({ success: false, msg: 'An error occurred while updating investments market price.' });
-    }
-})
-
-// User Operations
 
 router.post('/update-user-informations', authenticateToken, async (req, res) => {
     const { userId, username, email } = req.body
@@ -387,6 +444,8 @@ router.post('/delete-account', authenticateToken, async (req, res) => {
 
     let user = await getUser(userId)
     if (!user.success) return res.json(user)
+        
+    if (user.user.accountType == 'admin') return res.json({ success: false, msg: 'You cannot delete an admin account.' })
 
     try {
         const _delete = await userModel.findByIdAndDelete(userId)

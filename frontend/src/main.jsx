@@ -1,22 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { signal } from '@preact/signals-react'
-
-import Header from './components/Header.jsx'
-import Home from './pages/Home.jsx'
-import './style/style.css'
-import Events from './pages/Events.jsx'
-import DataControlCenter from './pages/DataControlCenter.jsx'
-import EventItemsPriceChanges from './pages/EventItemsPriceChanges.jsx'
-import MajorAnalysis from './pages/MajorAnalysis.jsx'
-import StickerApplicationNumbers from './pages/StickerApplicationNumbers.jsx'
-import Investments from './pages/Investments.jsx'
-import Login from './pages/Login.jsx'
-import Signup from './pages/Signup.jsx'
-import InvestmentStats from './pages/InvestmentStats.jsx'
-import Profile from './pages/Profile.jsx'
+import Header from './components/Header'
+import Investments from './pages/Investments/Investments'
+import Home from './pages/Home'
+import './Style/main.css'
+import Login from './pages/Login'
+import EventItemsPriceChanges from './pages/EventItemsPriceChanges'
+import Events from './pages/Events'
+import InvestmentStats from './pages/InvestmentStats'
+import DataControlCenter from './pages/DataControlCenter'
+import StickerApplicationNumbers from './pages/StickerApplicationNumbers'
+import Signup from './pages/SignUp'
+import Profile from './pages/Profile'
+import MajorAnalysis from './pages/MajorAnalysis'
 
 const autoLogin = async () => {
     const timeout = new Promise((_, reject) => { setTimeout(() => reject(new Error('Request timed out')), 5000) })
@@ -32,25 +30,18 @@ const autoLogin = async () => {
 
         if (!response.ok) throw new Error('Network response was not ok');
 
-        const data = await response.json()
-        return data.success ? data.user : null
+        let data = await response.json()
+        if (!data.success) return null
+
+        return data.user
     }
     catch (error) { return null }
 };
 
 const user = signal(await autoLogin())
 
-const blue = "#066edd"
-const green = '#34d399';
-const red = '#ff6c6c';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false
-        }
-    }
-})
+const itemTypes = ['Sticker', 'Autograph', 'Capsule', 'Souvenir Package', 'Case', 'Patch', 'Charm']
 
 const router = createBrowserRouter([
     {
@@ -62,7 +53,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/investments',
-                element: <Investments user={user} blue={blue} green={green} red={red} />
+                element: <Investments user={user} />
             },
             {
                 path: '/data-control-center',
@@ -70,7 +61,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/event-items-price-changes',
-                element: <EventItemsPriceChanges />
+                element: <EventItemsPriceChanges itemTypes={itemTypes} />
             },
             {
                 path: '/major-analysis',
@@ -78,19 +69,11 @@ const router = createBrowserRouter([
             },
             {
                 path: '/sticker-application-numbers',
-                element: <StickerApplicationNumbers green={green} red={red} />
+                element: <StickerApplicationNumbers />
             },
             {
                 path: '/events',
                 element: <Events />
-            },
-            {
-                path: '/profile',
-                element: <Profile user={user} />
-            },
-            {
-                path: '/investment-stats',
-                element: <InvestmentStats user={user} />
             },
             {
                 path: '/login',
@@ -99,13 +82,19 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <Signup />
+            },
+            {
+                path: '/profile',
+                element: <Profile user={user} />
+            },
+            {
+                path: '/investment-stats',
+                element: <InvestmentStats user={user} />
             }
         ]
     }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-    </QueryClientProvider>
+    <RouterProvider router={router} />
 )
