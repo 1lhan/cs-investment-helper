@@ -40,8 +40,8 @@ export default function EventItemsPriceChanges() {
                     toolTip: { path: 'maxPriceArr' },
                     fields: [
                         { label: 'maxPrice', type: 'number', sortable: true, calculate: 'average' },
-                        { label: '(x)', type: 'number', path: 'maxToMinPriceRatio', template: '(_rx)', sortable: true },
-                        { label: '(x)', type: 'number', path: 'maxToMinPriceDuringSaleRatio', template: '(_rx)', sortable: true }
+                        { label: '(x)', type: 'number', path: 'maxToMinPriceDuringSaleRatio', template: '(_rx)', sortable: true },
+                        { label: '(x)', type: 'number', path: 'maxToMinPriceRatio', template: '(_rx)', sortable: true }
                     ]
                 },
                 {
