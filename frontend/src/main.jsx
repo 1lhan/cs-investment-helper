@@ -2,19 +2,21 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { signal } from '@preact/signals-react'
+
 import Header from './components/Header'
-import Investments from './pages/Investments/Investments'
 import Home from './pages/Home'
-import './style/main.css'
-import Login from './pages/Login'
-import EventItemsPriceChanges from './pages/EventItemsPriceChanges'
-import Events from './pages/Events'
-import InvestmentStats from './pages/InvestmentStats'
+import Investments from './pages/Investments/Investments'
 import DataControlCenter from './pages/DataControlCenter'
+import EventItemsPriceChanges from './pages/EventItemsPriceChanges'
+import MajorAnalysis from './pages/MajorAnalysis'
 import StickerApplicationNumbers from './pages/StickerApplicationNumbers'
+import Events from './pages/Events'
+import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Profile from './pages/Profile'
-import MajorAnalysis from './pages/MajorAnalysis'
+import InvestmentStats from './pages/InvestmentStats'
+
+import './style/main.css'
 
 const autoLogin = async () => {
     const timeout = new Promise((_, reject) => { setTimeout(() => reject(new Error('Request timed out')), 5000) })
@@ -40,8 +42,8 @@ const autoLogin = async () => {
 
 const user = signal(await autoLogin())
 
-
-const itemTypes = ['Sticker', 'Autograph', 'Capsule', 'Souvenir Package', 'Case', 'Patch', 'Charm']
+const itemTypes = ['Charm', 'Collectible', 'Souvenir Package', 'Capsule', 'Pass', 'Patch', 'Sticker']
+const variants = ['Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']
 
 const router = createBrowserRouter([
     {
@@ -53,7 +55,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/investments',
-                element: <Investments user={user} />
+                element: <Investments user={user} itemTypes={itemTypes} variants={variants} />
             },
             {
                 path: '/data-control-center',
@@ -61,7 +63,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/event-items-price-changes',
-                element: <EventItemsPriceChanges itemTypes={itemTypes} />
+                element: <EventItemsPriceChanges />
             },
             {
                 path: '/major-analysis',

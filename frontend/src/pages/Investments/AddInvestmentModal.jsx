@@ -1,8 +1,7 @@
 import { batch, useSignal } from '@preact/signals-react';
-import { usePostRequest } from '../../utils';
+import { big, usePostRequest } from '../../utils';
 import { useRef } from 'react';
 import Papaparse from 'papaparse'
-import Big from 'big.js'
 import HeaderWithIcon from '../../components/HeaderWithIcon';
 import Form from '../../components/Form';
 import Table from '../../components/Table';
@@ -18,10 +17,7 @@ export default function AddInvestmentModal({ showAddInvestmentModal, user, setBo
     const convertMilliseconds = (ms) => {
         const minutes = Math.floor(ms / 60000)
         const seconds = Math.floor((ms % 60000) / 1000).toFixed(0)
-
-        if (minutes < 1) return seconds == '0' ? `${seconds} second` : `${seconds} second${seconds != '1' ? 's' : ''}`
-
-        return `${minutes} minute${minutes != 1 ? 's' : ''} ${seconds != '0' ? `${seconds} second${seconds !== '1' ? 's' : ''}` : ''}`
+        return [minutes > 0 ? `${minutes} minute${minutes != 1 ? 's' : ''}` : null, seconds > 0 ? `${seconds} second${seconds != 1 ? 's' : ''}` : null].filter(Boolean).join(' ')
     }
 
     const addInvestmentManually = async (e) => {
@@ -74,36 +70,38 @@ export default function AddInvestmentModal({ showAddInvestmentModal, user, setBo
                 const filteredItems = results.data.filter(item => item[' App Id'] == 730 && item[' Type'] == 'purchase' && item[' Display Price'].slice(-3) == 'USD')
 
                 const groupedItems = filteredItems.reduce((acc, item) => {
+                    if (!item[' Market Name'] || !item[' Display Price']) return alert(`Invalid CSV format. Missing "Market Name" or "Display Price" in rows.`)
+
                     const name = item[' Market Name']
                     const price = +item[' Display Price'].slice(1, -4)
                     const existingItem = acc.find(entry => entry.name == name)
 
                     if (existingItem) {
-                        existingItem.avgCost = +new Big(+new Big(existingItem.avgCost).times(existingItem.quantity).plus(price)).div(existingItem.quantity + 1)
-                        existingItem.quantity = +new Big(existingItem.quantity + 1)
-                        existingItem.totalCost = +new Big(existingItem.totalCost).plus(price)
+                        existingItem.quantity = +big(existingItem.quantity).plus(1)
+                        existingItem.totalCost = +big(existingItem.totalCost).plus(price)
                     }
-                    else acc.push({ name, avgCost: price, quantity: 1, totalCost: price })
+                    else acc.push({ name, quantity: 1, totalCost: price })
 
                     return acc
                 }, [])
 
-                processedCsvFileData.value = groupedItems
+                processedCsvFileData.value = groupedItems.map(item => { item.avgCost = +big(item.totalCost).div(item.quantity); return item })
             }
         })
     }
 
     const deleteItemFromTable = (itemIndex) => processedCsvFileData.value = processedCsvFileData.value.filter((_, index) => index != itemIndex)
-
+    
+    const AddInvestmentFromCsvFileMsg = () => addInvestmentFromCsvFileMsg.value && <span className="add-investment-by-csv-file-msg">{addInvestmentFromCsvFileMsg.value}</span>
 
     const MethodSelector = () => {
         return (
             <div className="methods">
-                <button className={"btn-secondary" + (selectedMethod.value == 'manually' ? ' btn-secondary-active' : '')} onClick={() => selectedMethod.value = 'manually'}>
+                <button className={'btn-secondary' + (selectedMethod.value == 'manually' ? ' btn-secondary-active' : '')} onClick={() => selectedMethod.value = 'manually'}>
                     <i className="fa-brands fa-wpforms" />
                     <span>Manually</span>
                 </button>
-                <button className={"btn-secondary" + (selectedMethod.value == 'csv' ? ' btn-secondary-active' : '')} onClick={() => selectedMethod.value = 'csv'}>
+                <button className={'btn-secondary' + (selectedMethod.value == 'csv' ? ' btn-secondary-active' : '')} onClick={() => selectedMethod.value = 'csv'}>
                     <i className="fa-solid fa-file-csv" />
                     <span>Import Csv File</span>
                 </button>
@@ -123,10 +121,6 @@ export default function AddInvestmentModal({ showAddInvestmentModal, user, setBo
                 <AddInvestmentFromCsvFileMsg />
             </div>
         )
-    }
-
-    const AddInvestmentFromCsvFileMsg = () => {
-        return addInvestmentFromCsvFileMsg.value && <span className="add-investment-by-csv-file-msg">{addInvestmentFromCsvFileMsg.value}</span>
     }
 
     const AddInvestmentContent = () => {

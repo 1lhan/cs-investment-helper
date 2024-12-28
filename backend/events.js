@@ -19,7 +19,7 @@ const events = [
         championAutograph: null
     },
     {
-        name: "The armory", type: "operation", eventImage: "Gallery Case",
+        name: "The Armory", type: "operation", eventImage: "Gallery Case",
         releaseDate: new Date("2024-10-02T23:49:00.000Z"), tournamentStartDate: null, tournamentEndDate: null, saleStartDate: null, endDate: null,
         items: {
             Sticker: ['Ruby Wave (Lenticular)', 'Ruby Stream (Lenticular)', 'Winding Scorch (Foil)', 'Bolt Energy (Foil)', 'Bolt Charge (Foil)', 'Bolt Strike (Foil)', 'Boom Trail (Glitter)', 'Boom Blast (Glitter)',

@@ -3,7 +3,7 @@ import { formatDate, splitCamelCase, usePostRequest } from '../../utils';
 
 export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
     const transactionFormMsg = useSignal(null)
-
+    
     const saveTransaction = async (e) => {
         e.preventDefault()
 
@@ -52,16 +52,16 @@ export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
         setBodyOverflow('auto')
     }
 
-    const getProfitClass = (value, highlightBaseline) => value > highlightBaseline ? 'green' : value < highlightBaseline ? 'red' : ''
-
-    const TransactionFormMsg = () => (transactionFormMsg?.value && <span className="form-msg">{transactionFormMsg}</span>)
-
     const renderField = (field, fieldIndex) => {
         return <div key={fieldIndex}>
             <span>{splitCamelCase(field)}</span>
             <span>{+item.value[field].toFixed(3)}</span>
         </div>
     }
+
+    const getProfitClass = (value, highlightBaseline) => value > highlightBaseline ? 'green' : value < highlightBaseline ? 'red' : ''
+
+    const TransactionFormMsg = () => transactionFormMsg?.value && <span className="form-msg">{transactionFormMsg}</span>
 
     if (!item.value) return null;
 
@@ -95,12 +95,12 @@ export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
 
                                     <div>
                                         <span>Sales Profit</span>
-                                        <span className={getProfitClass(item.value.salesProfit, 0)}>{item.value.salesProfit}</span>
+                                        <span className={getProfitClass(item.value.salesProfit, 0)}>{+item.value.salesProfit.toFixed(3)}</span>
                                     </div>
 
                                     <div>
                                         <span>Net Sales Profit</span>
-                                        <span className={getProfitClass(item.value.netSalesProfit, 0)}>{item.value.netSalesProfit}</span>
+                                        <span className={getProfitClass(item.value.netSalesProfit, 0)}>{+item.value.netSalesProfit.toFixed(3)}</span>
                                     </div>
                                 </>
                             }
@@ -142,7 +142,7 @@ export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
                                     <div className="fields-group row">
                                         <div className="fields-group-item">
                                             <span>Price</span>
-                                            <input name="price" type="number" step="0.001" />
+                                            <input name="price" type="number" step="0.01" />
                                         </div>
                                         <div className="fields-group-item">
                                             <span>Quantity</span>

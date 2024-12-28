@@ -1,11 +1,12 @@
 import { batch, useComputed, useSignal, useSignalEffect } from '@preact/signals-react'
 import { big } from '../../utils'
+import { events } from '../../events'
 import CustomSelect from '../../components/CustomSelect'
-import Table from '../../components/Table'
 import AddInvestmentModal from './AddInvestmentModal'
 import InvestmentItemModal from './InvestmentsItemModal'
+import Table from '../../components/Table'
 
-export default function Investments({ user }) {
+export default function Investments({ user, itemTypes, variants }) {
     const showFilters = useSignal(false)
     const showAddInvestmentModal = useSignal(false)
     const selectedItem = useSignal(null)
@@ -28,6 +29,7 @@ export default function Investments({ user }) {
             .filter(item => filterValues.value.filter(filter => filter != 'Any').every(filters => item.tags.includes(filters)))
             .sort((a, b) => { return sortState.value.isAscending ? a[sortState.value.field] - b[sortState.value.field] : b[sortState.value.field] - a[sortState.value.field] }) : []
     )
+    console.log(investments.value)
 
     const setBodyOverflow = value => document.querySelector('body').style.overflow = value
 
@@ -72,10 +74,12 @@ export default function Investments({ user }) {
 
         return (
             <div className="filters">
-                <CustomSelect title="Type" state={type} options={['Charm', 'Collectible', 'Souvenir Package', 'Capsule', 'Pass', 'Patch', 'Sticker']} />
-                <CustomSelect title="Event" state={eventName} options={['Shanghai 2024', 'Copenhagen 2024', 'Paris 2023', 'Rio 2022', 'Antwerp 2022', 'Stockholm 2021']} />
-                <CustomSelect title="Variant" state={variant} options={['Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']} />
-                <button className="btn-secondary clear-filters-btn" onClick={() => batch(() => { type.value = 'Any'; eventName.value = 'Any'; variant.value = 'Any' })}><i className="fa-solid fa-filter-circle-xmark" /></button>
+                <CustomSelect title="Type" state={type} options={itemTypes} />
+                <CustomSelect title="Event" state={eventName} options={events.map(event => event.name)} />
+                <CustomSelect title="Variant" state={variant} options={variants} />
+                <button className="btn-secondary clear-filters-btn" onClick={() => batch(() => { type.value = 'Any'; eventName.value = 'Any'; variant.value = 'Any' })}>
+                    <i className="fa-solid fa-filter-circle-xmark" />
+                </button>
             </div>
         )
     }
@@ -88,7 +92,7 @@ export default function Investments({ user }) {
             setBodyOverflow('hidden')
         }
 
-        return investments.value.length > 0 && <Table data={investments} sortState={sortState} calculate={true} columns={[
+        return <Table data={investments} sortState={sortState} calculate={true} columns={[
             { fields: [{ label: 'image', type: 'image', path: 'name' }] },
             { fields: [{ label: 'name', type: 'text' }] },
             { fields: [{ label: 'market-page', type: 'link', className: 'fa-brands fa-steam', path: 'name' }] },
@@ -102,7 +106,7 @@ export default function Investments({ user }) {
         ]} />
     }
 
-    if (!user.value) return <span className="msg-box" style={{ margin: '1rem auto' }}>Please log in to view investments</span>
+    if (!user.value) return <span className="msg-box" style={{ margin: '1rem auto' }}>Please log in to view your investments</span>
 
     return (
         <div className="investments-page container">

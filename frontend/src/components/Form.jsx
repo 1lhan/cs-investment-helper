@@ -14,7 +14,7 @@ export default function Form({ title, submitFunction, onClickCloseBtn, formMsgSt
 
     const renderField = (field) => {
         const { name, type, defaultValue, isStepAllowed } = field
-        const inputProps = { name, type, defaultValue: defaultValue || '', ...(type == 'number' && isStepAllowed && { step: '0.001' }) }
+        const inputProps = { name, type, defaultValue: defaultValue || '', ...(type == 'number' && isStepAllowed && { step: '0.01' }) }
 
         if (['text', 'email', 'date', 'number'].includes(type)) return <input {...inputProps} />
         else if (type == 'password') {

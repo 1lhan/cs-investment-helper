@@ -184,6 +184,7 @@ input[type="date"] {
         position: relative;
         top: 5rem;
         height: calc(100% - 6rem);
+        min-height: unset;
         padding: 0;
 
         .modal {

@@ -29,7 +29,7 @@ export default function Signup() {
         <div className="signup-page container">
             <div className="form-wrapper">
                 <Form title="Signup" submitFunction={handleSignup} formMsgState={registerFormMsg} submitBtnInnerText="Signup"
-                    fields={[{ align: "column", fields: [{ name: "username", type: "text" }, { name: "email", type: "email" }, { name: "password", type: "password" }, { name: "confirmPassword", type: "password" }] }]} />
+                    fields={[{ align: 'column', fields: [{ name: 'username', type: 'text' }, { name: 'email', type: 'email' }, { name: 'password', type: 'password' }, { name: 'confirmPassword', type: 'password' }] }]} />
             </div>
         </div>
     )

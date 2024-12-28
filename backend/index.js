@@ -7,8 +7,7 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json({ limit: '25mb' }))
 
-const allowedOrigins = [process.env.ALLOWED_ORIGIN];
-
+const allowedOrigins = [process.env.ALLOWED_ORIGIN]
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes(origin) || !origin) callback(null, true)
@@ -17,13 +16,12 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
-};
+}
+app.use(cors(corsOptions))
 
-app.use(cors(corsOptions));
-
-app.use(require('./controllers/controller'))
-//app.use(require('./controllers/dataController'))
 app.use(require('./controllers/authController'))
+app.use(require('./controllers/controller'))
+app.use(require('./controllers/adminController'))
 
 app.listen(5000, () => { console.log('server running') })
 

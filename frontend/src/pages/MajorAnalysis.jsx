@@ -93,8 +93,8 @@ export default function MajorAnalysis() {
 
     const SectionContent = () => {
         if (pageMsg.value) return <span className="msg-box">{pageMsg}</span>
-        else if (isLoading.value) return <div className="bubbles-wrapper"><Bubbles /></div>
-        else if (capsuleData.value) {
+        if (isLoading.value) return <div className="bubbles-wrapper"><Bubbles /></div>
+        if (capsuleData.value) {
             return (
                 <>
                     <div className="line-charts">
@@ -155,6 +155,7 @@ export default function MajorAnalysis() {
                 </>
             )
         }
+        return null
     }
 
     return (

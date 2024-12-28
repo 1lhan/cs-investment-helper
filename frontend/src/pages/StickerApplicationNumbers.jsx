@@ -1,10 +1,10 @@
 import { batch, useSignal } from '@preact/signals-react';
 import { big, formatDate, monthDiff, useGetRequest } from '../utils';
+import { events } from '../events';
 import HeaderWithIcon from '../components/HeaderWithIcon';
 import CustomSelect from '../components/CustomSelect';
 import Bubbles from '../components/Bubbles';
 import Table from '../components/Table';
-import { events } from '../events';
 
 export default function StickerApplicationNumbers() {
     const eventName = useSignal('Any')
@@ -34,7 +34,7 @@ export default function StickerApplicationNumbers() {
 
         const formattedDates = data.dates.map(date => formatDate(date))
 
-        const formattedData = JSON.parse(JSON.stringify(data.stickers)).map((sticker, stickerIndex) => {
+        const formattedData = data.stickers.map((sticker, _) => {
             sticker.data.forEach((dataItem, dataItemIndex) => {
                 sticker[`applicationNumber${dataItemIndex}`] = dataItem[0]
                 sticker[`price${dataItemIndex}`] = dataItem[1]
@@ -83,9 +83,9 @@ export default function StickerApplicationNumbers() {
     }
 
     const SectionContent = () => {
-        if (pageMsg.value) return <span className="msg-box">{pageMsg}</span>
-        else if (tableColumns.value == 'loading') return <div className="bubbles-wrapper"><Bubbles /></div>
-        else if (Array.isArray(tableColumns.value)) {
+        if (pageMsg.value) return <span className="msg-box">{pageMsg.value}</span>
+        if (tableColumns.value == 'loading') return <div className="bubbles-wrapper"><Bubbles /></div>
+        if (Array.isArray(tableColumns.value)) {
             return (
                 <>
                     <Table columns={tableColumns.value} sortState={sortState1} calculate={true} data={legendsCapsuleStickers} />
@@ -94,7 +94,7 @@ export default function StickerApplicationNumbers() {
                 </>
             )
         }
-        else return null
+        return null
     }
 
     return (

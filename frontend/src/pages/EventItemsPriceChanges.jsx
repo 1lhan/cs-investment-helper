@@ -1,12 +1,12 @@
 import { batch, useComputed, useSignal } from '@preact/signals-react';
-import { events } from '../events';
 import { big, calculateDateFilterIndex, useGetRequest } from '../utils';
-import CustomSelect from '../components/CustomSelect';
+import { events } from '../events';
 import HeaderWithIcon from '../components/HeaderWithIcon';
+import CustomSelect from '../components/CustomSelect';
 import Bubbles from '../components/Bubbles';
 import Table from '../components/Table';
 
-export default function EventItemsPriceChanges({ itemTypes }) {
+export default function EventItemsPriceChanges() {
     const eventName = useSignal('Any')
     const type = useSignal('Any')
     const variant = useSignal('Any')
@@ -126,7 +126,7 @@ export default function EventItemsPriceChanges({ itemTypes }) {
     }
 
     const Filters = () => {
-        const typeOptions = useComputed(() => eventName.value == 'Any' ? itemTypes : Object.keys(events.find(event => event.name == eventName.value).items))
+        const typeOptions = useComputed(() => eventName.value == 'Any' ? ['Sticker', 'Autograph', 'Capsule', 'Souvenir Package', 'Case', 'Patch', 'Charm'] : Object.keys(events.find(event => event.name == eventName.value).items))
 
         const variantOptions = useComputed(() => {
             if (events.find(event => event.name == eventName.value)?.type == 'operation' || ['Capsule', 'Souvenir Package', 'Patch Package', 'Case', 'Agent', 'Charm'].includes(type.value)) return []
@@ -161,9 +161,9 @@ export default function EventItemsPriceChanges({ itemTypes }) {
 
     const SectionContent = () => {
         if (pageMsg.value) return <span className="msg-box">{pageMsg}</span>
-        else if (tableData.value == 'loading') return <div className="bubbles-wrapper"><Bubbles /></div>
-        else if (Array.isArray(tableData.value)) return <Table columns={tableColumns.value} sortState={sortState} calculate={true} data={tableData} />
-        else return null
+        if (tableData.value == 'loading') return <div className="bubbles-wrapper"><Bubbles /></div>
+        if (Array.isArray(tableData.value)) return <Table columns={tableColumns.value} sortState={sortState} calculate={true} data={tableData} />
+        return null
     }
 
     return (

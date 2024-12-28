@@ -22,56 +22,32 @@ const authenticateToken = (req, res, next) => {
 }
 
 const generateTags = (itemName) => {
-    const itemTypes = ['Charm', 'Collectible', 'Souvenir Package', 'Capsule', 'Pass', 'Patch', 'Sticker']
     const variants = ['Paper', 'Glitter', 'Holo', 'Foil', 'Gold', 'Lenticular']
-    const tournamentNames = [
-        'Shanghai 2024', 'Copenhagen 2024', 'Paris 2023', 'Rio 2022', 'Antwerp 2022', 'Stockholm 2021', '2020 RMR', 'Berlin 2019', 'Katowice 2019', 'London 2018',
-        'Boston 2018', 'Krakow 2017', 'Atlanta 2017', 'Cologne 2016', 'MLG Columbus 2016', 'Cluj-Napoca 2015', 'Katowice 2015', 'Katowice 2014'
-    ]
+    const tournamentNames = ['Shanghai 2024', 'Copenhagen 2024', 'Paris 2023', 'Rio 2022', 'Antwerp 2022', 'Stockholm 2021', '2020 RMR']
 
     let tags = []
+    const splittedItemName = itemName.includes('|') && itemName.split(' | ')
 
     if (itemName.includes('Charm')) tags.push('Charm')
     else if (itemName.slice(-3) == 'Pin') tags.push('Collectible')
-    else if (itemName.includes('Souvenir Package')) {
-        tags.push('Souvenir Package')
-
-        tournamentNames.forEach(tournamentName => {
-            if (itemName.includes(tournamentName)) tags.push(tournamentName)
-        })
-    }
-    else if (['Capsule', 'Legends', 'Challengers', 'Contenders'].some(keyword => itemName.includes(keyword))) {
-        tags.push('Capsule')
-        tournamentNames.forEach(tournamentName => {
-            if (itemName.includes(tournamentName)) tags.push(tournamentName)
-        })
-    }
-    else if (itemName.includes('Pass')) {
-        tags.push('Pass')
-
-        tournamentNames.forEach(tournamentName => {
-            if (itemName.includes(tournamentName)) tags.push(tournamentName)
-        })
-    }
+    else if (itemName.includes('Souvenir Package')) tags.push('Souvenir Package')
+    else if (['Capsule', 'Legends', 'Challengers', 'Contenders'].some(keyword => itemName.includes(keyword))) tags.push('Capsule')
+    else if (itemName.includes('Pass')) tags.push('Pass')
     else if (itemName.slice(0, 5) == 'Patch') {
         tags.push('Patch')
-
-        let splittedItemName = itemName.split(' | ')
-
         if (variants.some(variant => itemName.includes(variant))) tags.push(splittedItemName[1].split('(')[1].slice(0, -1))
-
-        if (splittedItemName[2]) tags.push(splittedItemName[2])
     }
     else if (itemName.slice(0, 7) == 'Sticker') {
         tags.push('Sticker')
-
-        let splittedItemName = itemName.split(' | ')
-
         if (variants.some(variant => itemName.includes(variant))) tags.push(splittedItemName[1].split('(')[1].slice(0, -1))
         else tags.push('Paper')
-
-        if (splittedItemName[2]) tags.push(splittedItemName[2])
     }
+
+    const operationEvents = events.filter(event => event.type == 'operation').map(event => { return { name: event.name, items: Object.values(event.items).flat() } })
+    const foundedEvent = operationEvents.find(event => event.items.includes(splittedItemName[1] || itemName))
+    if(foundedEvent) tags.push(foundedEvent.name)
+
+    tournamentNames.forEach(tournamentName => { if (itemName.includes(tournamentName)) tags.push(tournamentName) })
 
     return tags
 }

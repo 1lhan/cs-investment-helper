@@ -1,6 +1,6 @@
 import { batch, useSignal } from '@preact/signals-react';
-import { events } from '../events';
 import { formatItemNames, usePostRequest } from '../utils';
+import { events } from '../events';
 import HeaderWithIcon from '../components/HeaderWithIcon';
 import CustomSelect from '../components/CustomSelect';
 import Bubbles from '../components/Bubbles';
@@ -70,7 +70,7 @@ export default function DataControlCenter({ user }) {
                 </div>
                 <div className="output-section-body">
                     {output.value.map((outputItem, outputItemIndex) =>
-                        <span className={"output-row" + (outputItem.success == true ? ' green' : outputItem.success == false ? 'red' : '')} key={outputItemIndex}>{outputItem.msg}</span>
+                        <span className={'output-row' + (outputItem.success == true ? ' green' : outputItem.success == false ? 'red' : '')} key={outputItemIndex}>{outputItem.msg}</span>
                     )}
                 </div>
             </div>
@@ -111,7 +111,7 @@ export default function DataControlCenter({ user }) {
                         </div>
                         <div className="modal-body">
                             {(tournamentName.value != 'Any' && variant.value != 'Any') &&
-                                <Form submitFunction={updateStickerApplicationNumbers} formMsgState={updateStickerApplicationNumbersFormMsg} submitBtnInnerText='Update'
+                                <Form submitFunction={updateStickerApplicationNumbers} formMsgState={updateStickerApplicationNumbersFormMsg} submitBtnInnerText="Update"
                                     fields={[{
                                         align: 'row',
                                         fields: formatItemNames(events.find(event => event.name == tournamentName.value), 'Sticker', variant.value).map(sticker => { return { name: sticker, type: 'number' } })

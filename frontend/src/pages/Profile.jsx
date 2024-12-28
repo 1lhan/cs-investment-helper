@@ -154,7 +154,7 @@ export default function Profile({ user }) {
                     <div className="section-item-body">
                         <div>
                             <span>
-                                {user.value.investmentsMarketPriceUpdateStatus.isUpdating ? "Updating..." : formatDate(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate, { hour: "2-digit", minute: "2-digit" })}
+                                {user.value.investmentsMarketPriceUpdateStatus.isUpdating ? 'Updating...' : formatDate(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate, { hour: '2-digit', minute: '2-digit' })}
                             </span>
                         </div>
                     </div>

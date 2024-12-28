@@ -360,96 +360,6 @@
     }
 }
 
-.login-page,
-.signup-page {
-    @include flex(column, flex-start, center);
-
-    .form-wrapper {
-        width: 100%;
-        max-width: 450px;
-        margin-top: 5rem;
-    }
-}
-
-.event-items-price-changes-page {
-    header {
-        .filters {
-            @include flex(row, flex-start, center);
-            flex-wrap: wrap;
-            gap: 1rem 0.5rem;
-
-            .search-btn {
-                padding: 0.75rem;
-            }
-        }
-    }
-
-    section {
-        @include flex(column, flex-start, stretch);
-
-        .bubbles-wrapper {
-            width: 100%;
-            max-width: 10rem;
-            margin: 0 auto;
-        }
-
-        .table {
-            .priceBeforeSale {
-                min-width: 6rem;
-            }
-
-            .minPriceDuringSale {
-                min-width: 9rem;
-            }
-
-            .minPrice {
-                min-width: 7rem;
-            }
-
-            .maxPrice {
-                min-width: 12rem;
-            }
-
-            .currentPrice {
-                min-width: 8rem;
-            }
-        }
-    }
-}
-
-.events-page {
-    .table {
-        .row {
-
-            .\-,
-            .\+ {
-                flex: none;
-                width: 2rem;
-
-                .fields-container span {
-                    width: 100%;
-                }
-            }
-
-            .cell:nth-of-type(10),
-            .cell:nth-of-type(12) {
-                .fields-container {
-                    >span {
-                        color: c.$green;
-                        font-weight: 700;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.investment-stats-page {
-    section {
-        @include flex(column, flex-start, stretch);
-    }
-}
-
 .data-control-center-page {
     section {
         @include flex(row, flex-start, flex-start);
@@ -525,7 +435,7 @@
     }
 }
 
-.sticker-application-numbers-page {
+.event-items-price-changes-page {
     header {
         .filters {
             @include flex(row, flex-start, center);
@@ -540,7 +450,6 @@
 
     section {
         @include flex(column, flex-start, stretch);
-        gap: 1rem;
 
         .bubbles-wrapper {
             width: 100%;
@@ -549,132 +458,24 @@
         }
 
         .table {
-            .applicationNumber {
-                flex: none;
-                width: 25rem;
-                margin-left: 2.5rem;
-
-                .fields-container {
-                    justify-content: space-between;
-
-                    span {
-                        flex: 1;
-                    }
-
-                    span:nth-of-type(1) {
-                        flex: 2;
-                    }
-                }
+            .priceBeforeSale {
+                min-width: 6rem;
             }
 
-            .image {
-                position: sticky;
-                left: 0;
-                background: c.$bg-primary;
+            .minPriceDuringSale {
+                min-width: 9rem;
             }
 
-            .table-header,
-            .calculate-result-row {
-                .image {
-                    background: c.$header-bg;
-                }
-            }
-        }
-    }
-}
-
-.profile-page {
-    section {
-        @include flex(column, flex-start, flex-start);
-        flex: 1;
-        gap: 1rem;
-
-        .section-item {
-            @include flex(column, flex-start, stretch);
-            width: 100%;
-            max-width: 450px;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: c.$bg-primary-light;
-
-            .section-item-header {
-                @include flex(row, space-between, center);
-
-                .header-with-icon {
-                    background: unset;
-                    padding: 0;
-                }
-
-                .fa-regular.fa-pen-to-square {
-                    cursor: pointer;
-
-                    &:hover {
-                        color: c.$blue
-                    }
-                }
+            .minPrice {
+                min-width: 7rem;
             }
 
-            .section-item-body {
-                @include flex(column, flex-start, stretch);
-                gap: 1rem;
-
-                div {
-                    @include flex(row, space-between, center);
-
-                    span:nth-last-of-type(2) {
-                        color: c.$gray;
-                    }
-
-                    span:nth-last-of-type(1) {
-                        font-weight: 600;
-                    }
-                }
+            .maxPrice {
+                min-width: 12rem;
             }
-        }
 
-        .buttons {
-            @include flex(row, flex-start, center);
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: auto;
-
-            .delete-account-btn {
-
-                i,
-                span {
-                    color: c.$red;
-                }
-            }
-        }
-    }
-
-    .modal-container {
-        @include flex(row, center, center);
-
-        .update-user-informations-modal,
-        .change-password-modal,
-        .delete-account-modal {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            transform: translateY(-4rem);
-
-            form {
-                background: unset;
-                padding: 0;
-            }
-        }
-
-        .delete-account-modal {
-            max-width: 450px;
-
-            .btn {
-                background: c.$red;
-
-                &:hover {
-                    box-shadow: 0 0 8px 3px c.$light-red;
-                }
+            .currentPrice {
+                min-width: 8rem;
             }
         }
     }
@@ -781,5 +582,204 @@
                 }
             }
         }
+    }
+}
+
+.sticker-application-numbers-page {
+    header {
+        .filters {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+
+            .search-btn {
+                padding: 0.75rem;
+            }
+        }
+    }
+
+    section {
+        @include flex(column, flex-start, stretch);
+        gap: 1rem;
+
+        .bubbles-wrapper {
+            width: 100%;
+            max-width: 10rem;
+            margin: 0 auto;
+        }
+
+        .table {
+            .applicationNumber {
+                flex: none;
+                width: 25rem;
+                margin-left: 2.5rem;
+
+                .fields-container {
+                    justify-content: space-between;
+
+                    span {
+                        flex: 1;
+                    }
+
+                    span:nth-of-type(1) {
+                        flex: 2;
+                    }
+                }
+            }
+
+            .image {
+                position: sticky;
+                left: 0;
+                background: c.$bg-primary;
+            }
+
+            .table-header,
+            .calculate-result-row {
+                .image {
+                    background: c.$header-bg;
+                }
+            }
+        }
+    }
+}
+
+.events-page {
+    .table {
+        .row {
+
+            .\-,
+            .\+ {
+                flex: none;
+                width: 2rem;
+
+                .fields-container span {
+                    width: 100%;
+                }
+            }
+
+            .cell:nth-of-type(10),
+            .cell:nth-of-type(12) {
+                .fields-container {
+                    >span {
+                        color: c.$green;
+                        font-weight: 700;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.login-page,
+.signup-page {
+    @include flex(column, flex-start, center);
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 450px;
+        margin-top: 5rem;
+    }
+}
+
+.profile-page {
+    section {
+        @include flex(column, flex-start, flex-start);
+        flex: 1;
+        gap: 1rem;
+
+        .section-item {
+            @include flex(column, flex-start, stretch);
+            width: 100%;
+            max-width: 450px;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: c.$bg-primary-light;
+
+            .section-item-header {
+                @include flex(row, space-between, center);
+
+                .header-with-icon {
+                    background: unset;
+                    padding: 0;
+                }
+
+                .fa-regular.fa-pen-to-square {
+                    cursor: pointer;
+
+                    &:hover {
+                        color: c.$blue
+                    }
+                }
+            }
+
+            .section-item-body {
+                @include flex(column, flex-start, stretch);
+                gap: 1rem;
+
+                div {
+                    @include flex(row, space-between, center);
+
+                    span:nth-last-of-type(2) {
+                        color: c.$gray;
+                    }
+
+                    span:nth-last-of-type(1) {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
+        .buttons {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: auto;
+
+            .delete-account-btn {
+
+                i,
+                span {
+                    color: c.$red;
+                }
+            }
+        }
+    }
+
+    .modal-container {
+        @include flex(row, center, center);
+
+        .update-user-informations-modal,
+        .change-password-modal,
+        .delete-account-modal {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            transform: translateY(-4rem);
+
+            form {
+                background: unset;
+                padding: 0;
+            }
+        }
+
+        .delete-account-modal {
+            max-width: 450px;
+
+            .btn {
+                background: c.$red;
+
+                &:hover {
+                    box-shadow: 0 0 8px 3px c.$light-red;
+                }
+            }
+        }
+    }
+}
+
+.investment-stats-page {
+    section {
+        @include flex(column, flex-start, stretch);
     }
 }

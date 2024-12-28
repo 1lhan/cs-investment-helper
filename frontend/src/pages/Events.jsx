@@ -1,7 +1,7 @@
-import { useSignal } from "@preact/signals-react";
-import { events } from "../events";
-import HeaderWithIcon from "../components/HeaderWithIcon";
-import Table from "../components/Table";
+import { useSignal } from '@preact/signals-react';
+import { events } from '../events';
+import HeaderWithIcon from '../components/HeaderWithIcon';
+import Table from '../components/Table';
 
 export default function Events() {
     const calculateDayDifference = (date1, date2) => (date1.setHours(0, 0, 0, 0) - date2.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)
