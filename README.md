@@ -3,9 +3,9 @@ making it easier to monitor and manage their investments growth.
 
 Market Values & Investment Analysis Tools
 
-Event Items Price Changes: Track the price changes of tournament items over time, including their profitability during different periods.
+Event Items Price Changes: Track the price changes of event items over time, including their profitability during different periods.
 
-Major Analysis: View graphical representations of tournament item prices and market data to understand trends and patterns.
+Major Analysis: View graphical representations of tournament item prices and market data to understand trends.
 
 Sticker Application Numbers: Monitor the price, stock, and application numbers of tournament stickers.
 
@@ -13,14 +13,19 @@ Events: View the dates of past events along with the start and end dates of spec
 
 https://csinvestmenthelper.netlify.app
 
-![1](https://github.com/user-attachments/assets/984dc2eb-a159-4801-a04a-0c8cd7f4ae13)
-![2](https://github.com/user-attachments/assets/f73ae6be-3483-486f-987d-8017b24bb80e)
-![3](https://github.com/user-attachments/assets/8a0878e7-10f3-44f9-94f5-34ad2adf9584)
-![4](https://github.com/user-attachments/assets/75584005-ccf7-4e91-918a-df6f1202c516)
-![5](https://github.com/user-attachments/assets/76fe7b49-e93d-40f8-92fa-ef2baf86e93a)
-![6](https://github.com/user-attachments/assets/a97f1a8e-3194-4372-8dce-3c59ce03a83d)
-![7](https://github.com/user-attachments/assets/4933098f-1fd2-456e-8c87-e59cfc767a6f)
-![8](https://github.com/user-attachments/assets/f82c9442-d5d0-4486-a2ae-bc10607abf01)
-![9](https://github.com/user-attachments/assets/291ac0da-4147-462e-8fdf-5a3bc3d23655)
-![10](https://github.com/user-attachments/assets/53e5941d-5b46-4567-82ee-c37cb3bdb31d)
-![11](https://github.com/user-attachments/assets/bf902b70-f53c-46e1-8b60-fc1ccb2d0b05)
+![Ekran Görüntüsü (30)](https://github.com/user-attachments/assets/72dd4470-0313-4384-a47e-dd7bcfb16906)
+![Ekran Görüntüsü (31)](https://github.com/user-attachments/assets/865dcb21-20c3-41e7-8306-d4f00087e298)
+![Ekran Görüntüsü (44)](https://github.com/user-attachments/assets/7eb4754b-cc96-4fb7-99d2-3446af088ce2)
+![Ekran Görüntüsü (45)](https://github.com/user-attachments/assets/08f024ba-5a10-4fb7-8618-e2842ca7fa25)
+![Ekran Görüntüsü (32)](https://github.com/user-attachments/assets/13b5b988-a707-4ef3-992c-d3adfd9e39e6)
+![Ekran Görüntüsü (33)](https://github.com/user-attachments/assets/0e7be431-2623-44c0-b5e8-27c2f4c36dad)
+![Ekran Görüntüsü (34)](https://github.com/user-attachments/assets/ab401424-6318-40ed-9b11-6c9c2eb9db3b)
+![Ekran Görüntüsü (41)](https://github.com/user-attachments/assets/78422a01-3bde-42e7-9a35-fae37496435a)
+![Ekran Görüntüsü (46)](https://github.com/user-attachments/assets/b945acaa-bf68-4b7d-8d25-6d25d6e079c0)
+![Ekran Görüntüsü (47)](https://github.com/user-attachments/assets/0fbe147b-2e95-440b-a7b7-91e8a82f73c9)
+![Ekran Görüntüsü (36)](https://github.com/user-attachments/assets/952e2f9d-1f94-4e8a-ae0f-b877f05ed642)
+![Ekran Görüntüsü (37)](https://github.com/user-attachments/assets/34cfd407-c9c6-438a-b7f6-a0c35a32937c)
+![Ekran Görüntüsü (38)](https://github.com/user-attachments/assets/ac160d80-929e-41c6-abfd-88be976f8cd6)
+![Ekran Görüntüsü (39)](https://github.com/user-attachments/assets/01ed77fa-e702-4d2e-8e82-ef5a59a1af44)
+![Ekran Görüntüsü (42)](https://github.com/user-attachments/assets/a86d1c00-1ec3-4357-a22e-6fe488ec03ae)
+![Ekran Görüntüsü (43)](https://github.com/user-attachments/assets/eca48960-5b4d-492d-a7b2-ea37b337c737)
