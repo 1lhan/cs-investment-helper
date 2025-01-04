@@ -70,7 +70,7 @@ export default function DataControlCenter({ user }) {
                 </div>
                 <div className="output-section-body">
                     {output.value.map((outputItem, outputItemIndex) =>
-                        <span className={'output-row' + (outputItem.success == true ? ' green' : outputItem.success == false ? 'red' : '')} key={outputItemIndex}>{outputItem.msg}</span>
+                        <span className={'output-row' + (outputItem.success == true ? ' green' : outputItem.success == false ? ' red' : '')} key={outputItemIndex}>{outputItem.msg}</span>
                     )}
                 </div>
             </div>
@@ -104,14 +104,16 @@ export default function DataControlCenter({ user }) {
                 <div className="modal-container container">
                     <div className="update-sticker-application-numbers-modal modal">
                         <div className="modal-header">
-                            <HeaderWithIcon title="Update Sticker Application Numbers" iconClass="fa-regular fa-note-sticky" size="medium" />
-                            <CustomSelect title="Tournament Name" state={tournamentName} options={['Shanghai 2024', 'Copenhagen 2024']} />
-                            <CustomSelect title="Variant" state={variant} options={['Glitter', 'Holo']} />
+                            <div>
+                                <HeaderWithIcon title="Update Sticker Application Numbers" iconClass="fa-regular fa-note-sticky" size="medium" />
+                                <CustomSelect title="Tournament Name" state={tournamentName} options={['Shanghai 2024', 'Copenhagen 2024']} />
+                                <CustomSelect title="Variant" state={variant} options={['Glitter', 'Holo']} />
+                            </div>
                             <i className="close-btn fa-solid fa-xmark" onClick={() => showUpdateStickerApplicationNumbersModal.value = false} />
                         </div>
                         <div className="modal-body">
                             {(tournamentName.value != 'Any' && variant.value != 'Any') &&
-                                <Form submitFunction={updateStickerApplicationNumbers} formMsgState={updateStickerApplicationNumbersFormMsg} submitBtnInnerText="Update"
+                                <Form submitFunction={updateStickerApplicationNumbers} formMsgState={updateStickerApplicationNumbersFormMsg} submitBtnInnerText="Update" labelSplitCamelCase={false}
                                     fields={[{
                                         align: 'row',
                                         fields: formatItemNames(events.find(event => event.name == tournamentName.value), 'Sticker', variant.value).map(sticker => { return { name: sticker, type: 'number' } })

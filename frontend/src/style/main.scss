@@ -14,6 +14,7 @@
     width: 100%;
     height: 4rem;
     background: c.$header-bg;
+    z-index: 13;
 
     .container {
         @include flex(row, space-between, center);
@@ -29,10 +30,24 @@
             font-weight: 800;
         }
 
+        .hamburger-menu-btn-label {
+            display: none;
+            font-size: 1.25rem;
+        }
+
+        #header-content-cb {
+            display: none;
+        }
+
         .header-content {
             @include flex(row, flex-start, center);
             flex: 1;
-            gap: 2rem;
+            gap: 0 2rem;
+            z-index: 10;
+
+            .close-btn {
+                display: none;
+            }
 
             .header-btn {
                 @include flex(row, center, center);
@@ -60,7 +75,7 @@
                 }
 
                 .dropdown {
-                    z-index: 8;
+                    z-index: 11;
                 }
             }
 
@@ -100,6 +115,7 @@
             }
 
             .to-login-page-btn {
+                padding: 0.5rem;
                 color: c.$blue;
                 margin-left: auto;
                 font-weight: 600;
@@ -110,13 +126,10 @@
 
 .investments-page {
     header {
-        justify-content: flex-end;
-
         .investment-stats {
-            @include flex(row, center, center);
+            @include flex(row, flex-start, center);
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-right: auto;
 
             .investment-stats-item {
                 @include flex(row, center, center);
@@ -145,9 +158,16 @@
             }
         }
 
-        .show-filters-btn {
-            padding: 0.75rem;
+        .header-buttons {
+            @include flex(row, flex-start, center);
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+
+            .show-filters-btn {
+                padding: 0.75rem;
+            }
         }
+
     }
 
     .filters {
@@ -163,7 +183,19 @@
     section {
         .table {
             .profit {
+                min-width: 7rem;
                 font-weight: 700;
+            }
+
+            .quantity {
+                min-width: 4rem;
+            }
+
+            .avgCost,
+            .marketPrice,
+            .currentTotalCost,
+            .totalMarketValue {
+                min-width: 5rem;
             }
         }
     }
@@ -357,6 +389,15 @@
 
     .table-wrapper {
         overflow-y: auto;
+
+        .table {
+
+            .avgCost,
+            .quantity,
+            .totalCost {
+                min-width: 5rem;
+            }
+        }
     }
 }
 
@@ -410,11 +451,17 @@
         width: 100%;
         height: 100%;
         gap: 1rem;
+        overflow-y: auto;
 
         .modal-header {
-            @include flex(row, flex-start, center);
-            flex-wrap: wrap;
+            @include flex(row, flex-start, flex-start);
             gap: 1rem;
+
+            >div {
+                @include flex(row, flex-start, center);
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
 
             .close-btn {
                 margin-left: auto;
@@ -570,8 +617,17 @@
         }
 
         .table {
-            .Paper {
+
+            .cell:nth-last-of-type(3),
+            .cell:nth-last-of-type(4),
+            .cell:nth-last-of-type(5) {
+                min-width: 7rem;
+            }
+
+            .cell:nth-of-type(6),
+            .cell:nth-of-type(7) {
                 flex: 2;
+                min-width: 18rem;
 
                 .fields-container {
                     gap: 0.5rem;
@@ -609,6 +665,8 @@
         }
 
         .table {
+            overflow-x: auto;
+
             .applicationNumber {
                 flex: none;
                 width: 25rem;
@@ -631,6 +689,10 @@
                 position: sticky;
                 left: 0;
                 background: c.$bg-primary;
+
+                &:hover img {
+                    transform: unset;
+                }
             }
 
             .table-header,
@@ -665,6 +727,10 @@
                         font-weight: 700;
                     }
                 }
+            }
+
+            .cell:nth-of-type(odd):not(:first-of-type) {
+                min-width: 6rem;
             }
         }
     }
@@ -783,3 +849,5 @@
         @include flex(column, flex-start, stretch);
     }
 }
+
+@import '_responsiveStyles';

@@ -45,4 +45,4 @@ export default function ColumnChart({ title, data, xKey, yKeys }) {
     )
 }
 
-// <ColumnChart title='Capsules Period Market Data' data={capsulesData} xKey={null} yKeys={["price", "volume"]} />
+// <ColumnChart title="Capsules Period Market Data" data={capsulesData} xKey={null} yKeys={['price', 'volume']} />

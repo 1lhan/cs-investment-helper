@@ -45,7 +45,7 @@ const generateTags = (itemName) => {
 
     const operationEvents = events.filter(event => event.type == 'operation').map(event => { return { name: event.name, items: Object.values(event.items).flat() } })
     const foundedEvent = operationEvents.find(event => event.items.includes(splittedItemName[1] || itemName))
-    if(foundedEvent) tags.push(foundedEvent.name)
+    if (foundedEvent) tags.push(foundedEvent.name)
 
     tournamentNames.forEach(tournamentName => { if (itemName.includes(tournamentName)) tags.push(tournamentName) })
 
@@ -170,7 +170,7 @@ const getItemPriceHistory = async (itemName, startDate) => {
                 }
 
                 isProcessDone = true
-                console.error(`Fetch error details: ${{ status: response.status, itemName, startDate }} (getItemPriceHistory())`)
+                console.error(`Fetch error details: status: ${response.status}, item name: ${itemName}, start date: ${startDate}, (getItemPriceHistory())`)
                 return { success: false, msg: errorMessages[response.status] || 'An error occurred while fetching item price history.' }
             }
         }
@@ -255,7 +255,7 @@ const getStockData = async (_url) => {
 
         await page.goto(url, { waitUntil: 'networkidle2' })
         await new Promise(resolve => setTimeout(resolve, 1000 * 2.5))
-        await page.screenshot({ path: `screenshot${pageNumber}.png` })
+        //await page.screenshot({ path: `screenshot${pageNumber}.png` })
 
         const dataScraping = await page.evaluate(() => {
             if (document.querySelector('.error_ctn') != null) { return { success: false, msg: document.querySelector('.error_ctn h3').innerText } }

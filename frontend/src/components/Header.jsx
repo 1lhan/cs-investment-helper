@@ -1,5 +1,6 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { formatDate, usePostRequest } from "../utils";
+import { NavLink, useNavigate } from 'react-router-dom';
+import { formatDate, usePostRequest } from '../utils';
+import { useEffect } from 'react';
 
 export default function Header({ user }) {
     const navigate = useNavigate()
@@ -18,7 +19,7 @@ export default function Header({ user }) {
 
     const logout = () => {
         if (confirm('Are you sure you want log out')) {
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             user.value = null
             navigate('/')
             window.location.reload()
@@ -35,22 +36,40 @@ export default function Header({ user }) {
         if (!lastUpdateDateCheck || (isUpdating && !updateStartDateCheck)) return;
 
         const response = await usePostRequest('update-investment-market-prices', { userId: user.value._id, token: document.cookie, date: formatDate(new Date()) })
+        if (response.user) user.value = response.user
     }
-    updateInvestmentMarketPrices()
+
+    const closeHeaderContent = () => {
+        if (window.innerWidth > 768) return;
+        document.getElementById('header-content-cb').checked = false
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => { updateInvestmentMarketPrices() }, 30000)
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <header className="header">
             <div className="container">
                 <NavLink className="home-page-btn">CS Investment Helper</NavLink>
 
+                <label className="hamburger-menu-btn-label" htmlFor="header-content-cb">
+                    <i className="fa-solid fa-bars" />
+                </label>
+
+                <input id="header-content-cb" type="checkbox" />
+
                 <div className="header-content">
-                    <NavLink className="header-btn" to="/investments">
+                    <i className="fa-solid fa-xmark close-btn" onClick={() => closeHeaderContent()} />
+
+                    <NavLink className="header-btn" to="/investments" onClick={() => closeHeaderContent()}>
                         <i className="fa-solid fa-hand-holding-dollar" />
                         <span>Investments</span>
                     </NavLink>
 
                     {user.value?.accountType == 'admin' &&
-                        <NavLink className="header-btn" to="/data-control-center">
+                        <NavLink className="header-btn" to="/data-control-center" onClick={() => closeHeaderContent()}>
                             <i className="fa-solid fa-database" />
                             <span>Data Control Center</span>
                         </NavLink>
@@ -63,7 +82,7 @@ export default function Header({ user }) {
                         </div>
                         <div className="dropdown">
                             {headerToolsPages.map((page, pageIndex) =>
-                                <NavLink className="dropdown-item" to={'/' + page[1]} key={pageIndex}>
+                                <NavLink className="dropdown-item" to={'/' + page[1]} key={pageIndex} onClick={() => closeHeaderContent()}>
                                     <i className={page[0]} />
                                     <span>{page[1].replaceAll('-', ' ')}</span>
                                 </NavLink>
@@ -71,13 +90,13 @@ export default function Header({ user }) {
                         </div>
                     </div>
 
-                    {!user.value ? <NavLink className="to-login-page-btn" to="/login">Log in</NavLink> :
+                    {!user.value ? <NavLink className="to-login-page-btn" to="/login" onClick={() => closeHeaderContent()}>Log in</NavLink> :
                         <div className="user-menu">
                             <label htmlFor="user-menu-dropdown-cb">{user.value.username}</label>
                             <input id="user-menu-dropdown-cb" type="checkbox" />
                             <div className="dropdown">
                                 {userMenuDropdownPages.map((page, pageIndex) =>
-                                    <NavLink className="dropdown-item" to={page[1]} onClick={() => document.getElementById('user-menu-dropdown-cb').checked = false} key={pageIndex}>
+                                    <NavLink className="dropdown-item" to={page[1]} onClick={() => { document.getElementById('user-menu-dropdown-cb').checked = false; closeHeaderContent() }} key={pageIndex}>
                                         <i className={page[0]} />
                                         <span>{page[1].replaceAll('-', ' ')}</span>
                                     </NavLink>

@@ -1,0 +1,11 @@
+@mixin flex($fd, $jc, $ai) {
+    display: flex;
+    flex-direction: $fd;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+@mixin blur {
+    background: rgba(15, 22, 37, 0.75);
+    backdrop-filter: blur(15px);
+}

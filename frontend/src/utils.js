@@ -33,7 +33,7 @@ export const useGetRequest = async (endpoint) => {
         const data = await response.json()
         return data
     }
-    catch (error) { return { success: false, msg: "An error occurred while processing your request."/*, error: error.message || error.toString()*/ } }
+    catch (error) { return { success: false, msg: "An error occurred while processing your request." } }
 }
 
 export const usePostRequest = async (endpoint, requestBody) => {
@@ -49,7 +49,7 @@ export const usePostRequest = async (endpoint, requestBody) => {
         const data = await response.json()
         return data
     }
-    catch (error) { return { success: false, msg: "An error occurred while processing your request."/*, error: error.message || error.toString()*/ } }
+    catch (error) { return { success: false, msg: "An error occurred while processing your request." } }
 }
 
 export const calculateDateFilterIndex = (date, item, _eventName, dateType, period) => {

@@ -1,8 +1,8 @@
-import { useRef } from "react"
-import { splitCamelCase } from "../utils"
-import Bubbles from "./Bubbles"
+import { useRef } from 'react'
+import { splitCamelCase } from '../utils'
+import Bubbles from './Bubbles'
 
-export default function Form({ title, submitFunction, onClickCloseBtn, formMsgState, submitBtnInnerText, fields }) {
+export default function Form({ title, submitFunction, onClickCloseBtn, formMsgState, submitBtnInnerText, labelSplitCamelCase = true, fields }) {
     const submitBtn = useRef(null)
 
     const _onSubmit = async (e) => {
@@ -43,10 +43,10 @@ export default function Form({ title, submitFunction, onClickCloseBtn, formMsgSt
             }
             <div className="form-body">
                 {fields.map(({ align, fields }, fieldsGroupIndex) =>
-                    <div className={"fields-group" + (align ? ` ${align}` : '')} key={fieldsGroupIndex}>
+                    <div className={'fields-group' + (align ? ` ${align}` : '')} key={fieldsGroupIndex}>
                         {fields.map((field, fieldIndex) =>
                             <div className="fields-group-item" key={fieldIndex}>
-                                <span>{splitCamelCase(field.name)}</span>
+                                <span>{labelSplitCamelCase ? splitCamelCase(field.name) : field.name}</span>
                                 {renderField(field)}
                             </div>
                         )}
@@ -62,4 +62,4 @@ export default function Form({ title, submitFunction, onClickCloseBtn, formMsgSt
     )
 }
 
-// <Form title='' submitFunction={null} onClickCloseBtn={null} formMsgState={null} submitBtnInnerText='' fields={[{ align: 'row', fields: [{ name: 'username', type: 'text' }] }]} />
+// <Form title="" submitFunction={null} onClickCloseBtn={null} formMsgState={null} submitBtnInnerText="" labelSplitCamelCase={false} fields={[{ align: 'row', fields: [{ name: 'username', type: 'text' }] }]} />

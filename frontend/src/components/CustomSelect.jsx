@@ -1,4 +1,4 @@
-import { splitCamelCase } from "../utils"
+import { splitCamelCase } from '../utils'
 
 export default function CustomSelect({ id, title, state, func, options }) {
     const checkBoxId = (id || title.toLowerCase()) + '-cb'

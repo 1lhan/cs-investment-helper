@@ -1,0 +1,170 @@
+@use './mixins.scss' as m;
+@use './colors.scss' as c;
+
+@media (max-width: 1280px) {
+    .table {
+        overflow-x: auto;
+    }
+
+    .major-analysis-page {
+        section {
+            @include flex(column, flex-start, stretch);
+
+            .line-charts,
+            .column-chart-wrapper {
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 0.9rem;
+    }
+
+    .table {
+        .row .image {
+            width: 3.5rem;
+        }
+    }
+
+    .header {
+        .container {
+            .hamburger-menu-btn-label {
+                display: block;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+
+            #header-content-cb:checked+.header-content {
+                @include m.flex(column, flex-start, stretch);
+            }
+
+            .header-content {
+                @include m.blur;
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                min-height: fit-content;
+                padding: 0.5rem;
+
+                .close-btn {
+                    display: block;
+                    margin-left: auto;
+                }
+
+                .header-btn {
+                    justify-content: flex-start;
+                }
+
+                .tools-btn-wrapper {
+                    .tools-btn {
+                        pointer-events: none;
+                    }
+
+                    .dropdown {
+                        all: unset;
+                    }
+                }
+
+                .user-menu {
+                    margin: unset;
+
+                    .dropdown {
+                        all: unset;
+                    }
+                }
+
+                .to-login-page-btn {
+                    margin-left: unset;
+                }
+            }
+        }
+    }
+
+    .investments-page {
+        header {
+            .investment-stats {
+                min-width: fit-content;
+                order: -1;
+            }
+        }
+
+        .table {
+            .profit {
+                flex: 1.5;
+            }
+        }
+    }
+
+    .investment-item-modal {
+        overflow-y: auto;
+
+        .modal-body {
+            @include m.flex(column, flex-start, stretch);
+
+            .modal-body-item {
+                max-width: unset;
+
+                .buttons {
+                    margin-top: 1rem;
+                }
+            }
+        }
+    }
+
+    .data-control-center-page {
+        .update-sticker-application-numbers-modal {
+
+            form {
+                .fields-group-item {
+                    width: calc(33.333% - 0.666rem);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 0.85rem;
+    }
+
+    .modal-backdrop {
+        .modal-container {
+            .modal {
+                padding: 0.75rem;
+            }
+        }
+    }
+
+    form {
+        padding: 0.75rem
+    }
+
+    .data-control-center-page {
+        section {
+            @include m.flex(column, flex-start, stretch);
+
+            .section-items {
+
+                .section-item,
+                .btn-secondary {
+                    max-width: unset;
+                }
+            }
+        }
+
+        .update-sticker-application-numbers-modal {
+            form {
+                .fields-group-item {
+                    width: calc(50% - 0.5rem);
+                }
+            }
+        }
+    }
+}

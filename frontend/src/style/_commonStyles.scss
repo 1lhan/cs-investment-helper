@@ -57,9 +57,20 @@ body {
     padding: 1rem 0.5rem;
     margin: 0 auto;
 
-    header{
+    header {
         @include flex(row, space-between, center);
+        flex-wrap: wrap;
         gap: 1rem;
+    }
+
+    .custom-select:nth-last-of-type(2) {
+        z-index: 7;
+    }
+    .custom-select:nth-last-of-type(3) {
+        z-index: 8;
+    }
+    .custom-select:nth-last-of-type(4) {
+        z-index: 9;
     }
 }
 
@@ -123,7 +134,7 @@ input[type="date"] {
         box-shadow: 0 0 8px 3px rgba(6, 110, 221, 0.5);
     }
 
-    &.animated-btn{
+    &.animated-btn {
         position: relative;
 
         .bubbles {
@@ -178,11 +189,12 @@ input[type="date"] {
     width: 100vw;
     height: 100vh;
     background: c.$transparent-bg;
-    z-index: 9;
+    z-index: 12;
 
     .modal-container {
         position: relative;
         top: 5rem;
+        width: calc(100% - 1rem);
         height: calc(100% - 6rem);
         min-height: unset;
         padding: 0;
@@ -206,7 +218,7 @@ input[type="date"] {
     padding: 0.5rem 0;
     border: 1px solid c.$border-bg;
     border-radius: 0.25rem;
-    z-index: 7;
+    z-index: 10;
 
     .dropdown-item {
         @include flex(row, flex-start, center);
@@ -222,7 +234,7 @@ input[type="date"] {
     }
 }
 
-.msg-box{
+.msg-box {
     @include flex(row, center, center);
     width: 100%;
     max-width: 1500px;

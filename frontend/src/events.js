@@ -4,8 +4,8 @@ export const events = [
         releaseDate: new Date("2024-11-27T22:22:00.000Z"), tournamentStartDate: new Date("2024-11-30T03:00:00.000Z"), tournamentEndDate: new Date("2024-12-15T03:09:25.000Z"),
         saleStartDate: null, endDate: null,
         items: {
-            Sticker: ["G2 Esports", "Natus Vincere", "Vitality", "Team Spirit", "MOUZ", "FaZe Clan", "HEROIC", "3DMAX", "Perfect World", "FURIA", "Virtus.pro", "Team Liquid", "Complexity Gaming", "BIG", "Fnatic", "The MongolZ",
-                "paiN Gaming", "Perfect World", "GamerLegion", "MIBR", "Cloud9", "FlyQuest", "Passion UA", "Wildcard", "Rare Atom", "Imperial Esports", "Perfect World"],
+            Sticker: ["G2 Esports", "Natus Vincere", "Vitality", "Team Spirit", "MOUZ", "FaZe Clan", "HEROIC", "3DMAX", "FURIA", "Virtus.pro", "Team Liquid", "Complexity Gaming", "BIG", "Fnatic", "The MongolZ", "paiN Gaming",
+                "GamerLegion", "MIBR", "Cloud9", "FlyQuest", "Passion UA", "Wildcard", "Rare Atom", "Imperial Esports", "Perfect World"],
             Autograph: ["Snax", "huNter-", "malbsMd", "m0NESY", "NiKo", "w0nderful", "Aleksib", "jL", "b1t", "iM", "ZywOo", "apEX", "mezii", "FlameZ", "Spinx", "chopper", "magixx", "donk", "sh1ro", "zont1x", "torzsi", "xertioN",
                 "Brollan", "Jimpphat", "siuhy", "karrigan", "rain", "ropz", "broky", "frozen", "TeSeS", "sjuush", "kyxsan", "NertZ", "degster", "Ex3rcice", "Djoko", "Maka", "Lucky", "Graviti", "FalleN", "chelo", "yuurih",
                 "KSCERATO", "skullz", "FL1T", "Jame", "fame", "n0rb3r7", "electronic", "Twistzz", "ultimate", "YEKINDAR", "jks", "NAF", "EliGE", "floppy", "Grim", "hallzerk", "JT", "tabseN", "Krimbo", "JDC", "syrsoN", "rigoN",

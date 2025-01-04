@@ -62,7 +62,7 @@ export default function LineChart({ id, xKey, yKeys, data, keyNames, useSameYAxi
                 <div className="color-informations">
                     {yKeys.map((yKey, yKeyIndex) =>
                         <div key={yKeyIndex}>
-                            <span className={"color " + `color${yKeyIndex + 1}`} />
+                            <span className={'color ' + `color${yKeyIndex + 1}`} />
                             <span className="y-key-name">{keyNames[yKey] || yKey}</span>
                         </div>
                     )}
@@ -86,7 +86,7 @@ export default function LineChart({ id, xKey, yKeys, data, keyNames, useSameYAxi
                         </div>
                     )}
 
-                    {["vertical", "horizontal"].map((item, index) =>
+                    {['vertical', 'horizontal'].map((item, index) =>
                         <div className={`${item}-back-lines`} key={index}>
                             {[...new Array(7)].map((_, lineIndex) => <span key={lineIndex} />)}
                         </div>
@@ -103,4 +103,4 @@ export default function LineChart({ id, xKey, yKeys, data, keyNames, useSameYAxi
     )
 }
 
-// <LineChart id="investment-valuation-history-chart" xKey={0} yKeys={[1, 2]} data={[...user.value.investmentValuationHistory]} keyNames={{ 0: "Date", 1: "cost", 2: "value" }} />
+// <LineChart id="investment-valuation-history-chart" xKey={0} yKeys={[1, 2]} data={[...user.value.investmentValuationHistory]} keyNames={{ 0: 'Date', 1: 'cost', 2: 'value' }} />

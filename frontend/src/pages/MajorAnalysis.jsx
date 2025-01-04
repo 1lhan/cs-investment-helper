@@ -164,7 +164,7 @@ export default function MajorAnalysis() {
                 <HeaderWithIcon title="Major Analysis" iconClass="fa-solid fa-magnifying-glass-chart" />
                 <div className="filters">
                     <CustomSelect title="Event Name" state={eventName} options={events.filter(event => event.type == 'tournament').map(item => item.name)} />
-                    <CustomSelect title="Period" state={period} options={['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Last 3 Months', 'Last Month']} />
+                    <CustomSelect title="Period" state={period} options={['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month']} />
                     <button className="btn search-btn" onClick={() => fetchAndFormatData()}><i className="fa-solid fa-magnifying-glass" /></button>
                 </div>
             </header>
@@ -174,32 +174,3 @@ export default function MajorAnalysis() {
         </div>
     )
 }
-/*
-<Table data={stickersPeriodMarketData} sortState={sortValue} calculate={true}
-    fields={[
-        { fields: [{ name: 'id', type: 'number', sortable: true }] },
-        { fields: [{ name: 'image', type: 'image', path: 'name' }] },
-        { fields: [{ name: `price: ${variants.value[1]}/${variants.value[0]}`, type: 'number', path: 'priceRatio1', sortable: true }] },
-        { fields: [{ name: `price: ${variants.value[2]}/${variants.value[1]}`, type: 'number', path: 'priceRatio2', sortable: true }] },
-        { fields: [{ name: `price: ${variants.value[3]}/${variants.value[2]}`, type: 'number', path: 'priceRatio3', sortable: true }] },
-        {
-            groupName: 'Price', fields: [
-                { name: variants.value[0], type: 'number', path: 'priceVariant0', sortable: true, calculate: 'addition' },
-                { name: variants.value[1], type: 'number', path: 'priceVariant1', sortable: true, calculate: 'addition' },
-                { name: variants.value[2], type: 'number', path: 'priceVariant2', sortable: true, calculate: 'addition' },
-                { name: variants.value[3], type: 'number', path: 'priceVariant3', sortable: true, calculate: 'addition' }
-            ]
-        },
-        {
-            groupName: 'Volume', fields: [
-                { name: variants.value[0], type: 'number', path: 'volumeVariant0', sortable: true, calculate: 'addition' },
-                { name: variants.value[1], type: 'number', path: 'volumeVariant1', sortable: true, calculate: 'addition' },
-                { name: variants.value[2], type: 'number', path: 'volumeVariant2', sortable: true, calculate: 'addition' },
-                { name: variants.value[3], type: 'number', path: 'volumeVariant3', sortable: true, calculate: 'addition' }
-            ]
-        },
-    ]}
-/>
-
-export const calculateDateFilterIndex = (date, item, _eventName, dateType, period)
-*/

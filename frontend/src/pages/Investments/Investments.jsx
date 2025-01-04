@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { batch, useComputed, useSignal, useSignalEffect } from '@preact/signals-react'
 import { big } from '../../utils'
 import { events } from '../../events'
@@ -7,6 +8,7 @@ import InvestmentItemModal from './InvestmentsItemModal'
 import Table from '../../components/Table'
 
 export default function Investments({ user, itemTypes, variants }) {
+    const windowInnerWidth = useSignal(window.innerWidth)
     const showFilters = useSignal(false)
     const showAddInvestmentModal = useSignal(false)
     const selectedItem = useSignal(null)
@@ -29,7 +31,6 @@ export default function Investments({ user, itemTypes, variants }) {
             .filter(item => filterValues.value.filter(filter => filter != 'Any').every(filters => item.tags.includes(filters)))
             .sort((a, b) => { return sortState.value.isAscending ? a[sortState.value.field] - b[sortState.value.field] : b[sortState.value.field] - a[sortState.value.field] }) : []
     )
-    console.log(investments.value)
 
     const setBodyOverflow = value => document.querySelector('body').style.overflow = value
 
@@ -85,25 +86,39 @@ export default function Investments({ user, itemTypes, variants }) {
     }
 
     const TableWrapper = () => {
-        if (investments.value.length == 0) return null;
-
         const showInvestmentItemDetails = (index) => {
             selectedItem.value = investments.value[index]
             setBodyOverflow('hidden')
         }
 
-        return <Table data={investments} sortState={sortState} calculate={true} columns={[
-            { fields: [{ label: 'image', type: 'image', path: 'name' }] },
-            { fields: [{ label: 'name', type: 'text' }] },
-            { fields: [{ label: 'market-page', type: 'link', className: 'fa-brands fa-steam', path: 'name' }] },
-            { fields: [{ label: 'quantity', type: 'number', sortable: true, calculate: 'addition' }] },
-            { fields: [{ label: 'avgCost', type: 'number', sortable: true }] },
-            { fields: [{ label: 'marketPrice', type: 'number', sortable: true }] },
-            { fields: [{ label: 'profit', type: 'number', sortable: true, highlightBaseline: 0 }, { label: '(x)', type: 'number', path: 'profitAsX', template: '(_rx)', sortable: true, highlightBaseline: 1 }] },
-            { fields: [{ label: 'currentTotalCost', type: 'number', sortable: true }] },
-            { fields: [{ label: 'totalMarketValue', type: 'number', sortable: true }] },
-            { fields: [{ label: 'button', type: 'button', className: 'fa-solid fa-ellipsis-vertical', onClick: showInvestmentItemDetails }] }
-        ]} />
+        const tableColumns = useComputed(() => {
+            let columns = [
+                { fields: [{ label: 'image', type: 'image', path: 'name' }] },
+                { fields: [{ label: 'name', type: 'text' }] },
+                { fields: [{ label: 'market-page', type: 'link', className: 'fa-brands fa-steam', path: 'name' }] },
+                { fields: [{ label: 'quantity', type: 'number', sortable: true, calculate: 'addition' }] },
+                { fields: [{ label: 'avgCost', type: 'number', sortable: true }] },
+                { fields: [{ label: 'marketPrice', type: 'number', sortable: true }] },
+                { fields: [{ label: 'profit', type: 'number', sortable: true, highlightBaseline: 0 }, { label: '(x)', type: 'number', path: 'profitAsX', template: '(_rx)', sortable: true, highlightBaseline: 1 }] },
+                { fields: [{ label: 'currentTotalCost', type: 'number', sortable: true }] },
+                { fields: [{ label: 'totalMarketValue', type: 'number', sortable: true }] },
+                { fields: [{ label: 'button', type: 'button', className: 'fa-solid fa-ellipsis-vertical', onClick: showInvestmentItemDetails }] }
+            ]
+
+            if (windowInnerWidth <= 480) columns = [...columns.slice(0, 1), ...columns.slice(4, 7), ...columns.slice(-1)]
+            else if (windowInnerWidth <= 768) columns = [...columns.slice(0, 1), ...columns.slice(4)]
+
+            return columns
+        })
+
+        useEffect(() => {
+            const handleResize = () => windowInnerWidth.value = window.innerWidth
+            window.addEventListener('resize', handleResize)
+            return () => { window.removeEventListener('resize', handleResize) }
+        }, [])
+
+        if (investments.value.length == 0) return null;
+        return <Table data={investments} sortState={sortState} calculate={window.innerWidth > 480} columns={tableColumns.value} />
     }
 
     if (!user.value) return <span className="msg-box" style={{ margin: '1rem auto' }}>Please log in to view your investments</span>
@@ -112,11 +127,13 @@ export default function Investments({ user, itemTypes, variants }) {
         <div className="investments-page container">
             <header>
                 <InvestmentStats />
-                <button className="btn-secondary show-filters-btn" onClick={() => showFilters.value = !showFilters.value}><i className="fa-solid fa-filter" /></button>
-                <button className="btn-secondary" onClick={() => { showAddInvestmentModal.value = true; setBodyOverflow('hidden') }}>
-                    <i className="fa-solid fa-plus" />
-                    <span>Add Investments</span>
-                </button>
+                <div className="header-buttons">
+                    <button className="btn-secondary show-filters-btn" onClick={() => showFilters.value = !showFilters.value}><i className="fa-solid fa-filter" /></button>
+                    <button className="btn-secondary" onClick={() => { showAddInvestmentModal.value = true; setBodyOverflow('hidden') }}>
+                        <i className="fa-solid fa-plus" />
+                        <span>Add Investments</span>
+                    </button>
+                </div>
             </header>
             <Filters />
             <section>

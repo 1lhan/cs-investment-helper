@@ -43,9 +43,9 @@ export default function Table({ data, sortState, calculate, columns }) {
 
         if (label == 'button' || label == 'market-page') return <i className={className} key={fieldIndex} />
         else return <span
-            className={sortable && (sortState.value.field == fieldKey ? 'blue' : '')}
-            style={{ cursor: sortable && 'pointer' }}
-            onClick={() => sortable && handleSort(fieldKey, type)}
+            className={(sortState && sortable) && (sortState.value.field == fieldKey ? 'blue' : '')}
+            style={{ cursor: (sortState && sortable) && 'pointer' }}
+            onClick={() => (sortState && sortable) && handleSort(fieldKey, type)}
             key={fieldIndex}
         >
             {splitCamelCase(label)}
@@ -65,7 +65,7 @@ export default function Table({ data, sortState, calculate, columns }) {
                 let fieldKey = path || label
 
                 if (calculate == 'addition') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0)).toFixed(2)
-                else if (calculate == 'average') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0) / data.value.length).toFixed(toFixed)
+                else if (calculate == 'average') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0) / data.value.length).toFixed(toFixed || 2)
             }
         }
 

@@ -114,7 +114,7 @@ export default function EventItemsPriceChanges() {
             pageMsg.value = null
             tableData.value = processItems
             sortState.value = { field: 'id', isAscending: true }
-            if (eventName.value != 'Any' && events.find(event => event.name == eventName.value).type == 'operation') {
+            if (eventName.value != 'Any' && !events.find(event => event.name == eventName.value).saleStartDate) {
                 let updatedTableColumns = tableColumns.value.filter((_, index) => index != 4 && index != 5).map((item, index) => {
                     if (index == 4) return { ...item, fields: item.fields.slice(0, 1) }
                     if (index == 5) return { ...item, fields: item.fields.slice(0, 2) }

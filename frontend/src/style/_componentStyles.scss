@@ -16,7 +16,6 @@
     @include flex(column, flex-start, stretch);
     width: 100%;
     gap: 3px;
-    overflow-x: auto;
 
     .row {
         @include flex(row, flex-start, stretch);
@@ -73,7 +72,7 @@
 
             img {
                 width: 100%;
-                transition: 0.4s all;
+                transition: 0.4s transform;
             }
         }
 
@@ -256,6 +255,7 @@ form {
     font-size: 1.15rem;
     border-radius: 0.5rem;
     background: c.$bg-primary-light;
+    white-space: nowrap;
 
     span {
         font-weight: 700;

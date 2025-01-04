@@ -14,6 +14,7 @@ export default function StickerApplicationNumbers() {
     const legendsCapsuleStickers = useSignal(null)
     const challengersCapsuleStickers = useSignal(null)
     const contendersCapsuleStickers = useSignal(null)
+    const tournamentSticker = useSignal(null)
     const sortState1 = useSignal({ field: null, isAscending: true })
     const sortState2 = useSignal({ field: null, isAscending: true })
     const sortState3 = useSignal({ field: null, isAscending: true })
@@ -55,6 +56,7 @@ export default function StickerApplicationNumbers() {
             legendsCapsuleStickers.value = formattedData.slice(0, 8)
             challengersCapsuleStickers.value = formattedData.slice(8, 16)
             contendersCapsuleStickers.value = formattedData.slice(16, 24)
+            tournamentSticker.value = formattedData.slice(24)
 
             tableColumns.value = [
                 { fields: [{ label: 'image', type: 'image', path: 'name' }] },
@@ -91,6 +93,7 @@ export default function StickerApplicationNumbers() {
                     <Table columns={tableColumns.value} sortState={sortState1} calculate={true} data={legendsCapsuleStickers} />
                     <Table columns={tableColumns.value} sortState={sortState2} calculate={true} data={challengersCapsuleStickers} />
                     <Table columns={tableColumns.value} sortState={sortState3} calculate={true} data={contendersCapsuleStickers} />
+                    <Table columns={tableColumns.value} data={tournamentSticker} />
                 </>
             )
         }
