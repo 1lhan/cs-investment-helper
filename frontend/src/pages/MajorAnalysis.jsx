@@ -16,6 +16,7 @@ export default function MajorAnalysis() {
     const pageMsg = useSignal(null)
     const isLoading = useSignal(false)
     const lastUpdateDate = useSignal(null)
+    const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month']
 
     const capsuleData = useSignal(null)
     const stickersDailyMarketData = useSignal(null)
@@ -163,8 +164,11 @@ export default function MajorAnalysis() {
             <header>
                 <HeaderWithIcon title="Major Analysis" iconClass="fa-solid fa-magnifying-glass-chart" />
                 <div className="filters">
-                    <CustomSelect title="Event Name" state={eventName} options={events.filter(event => event.type == 'tournament').map(item => item.name)} />
-                    <CustomSelect title="Period" state={period} options={['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month']} />
+                    <CustomSelect title="Event Name" state={eventName}
+                        func={() => { if (eventName.value != 'Any' && !events.find(event => event.name == eventName.value).saleStartDate && period.value == 'Sale Period') period.value = 'Any' }}
+                        options={events.filter(event => event.type == 'tournament').map(item => item.name)} />
+                    <CustomSelect title="Period" state={period}
+                        options={eventName.value == 'Any' ? periodOptions : events.find(event => event.name == eventName.value).saleStartDate ? periodOptions : [...periodOptions.slice(0, 2), ...periodOptions.slice(4)]} />
                     <button className="btn search-btn" onClick={() => fetchAndFormatData()}><i className="fa-solid fa-magnifying-glass" /></button>
                 </div>
             </header>

@@ -49,6 +49,10 @@ export default function Header({ user }) {
         return () => clearTimeout(timer)
     }, [])
 
+    useEffect(() => {
+        document.title = document.location.pathname.slice(1).split('-').map(item => item[0].toUpperCase() + item.slice(1)).join(' ') + ' / CSIH'
+    }, [window.location.pathname])
+
     return (
         <header className="header">
             <div className="container">
