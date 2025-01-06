@@ -50,7 +50,7 @@ export default function Header({ user }) {
     }, [])
 
     useEffect(() => {
-        document.title = document.location.pathname.slice(1).split('-').map(item => item[0].toUpperCase() + item.slice(1)).join(' ') + ' / CSIH'
+        document.title = document.location.pathname == '/' ? 'CSIH' : document.location.pathname.slice(1).split('-').map(item => item[0].toUpperCase() + item.slice(1)).join(' ') + ' / CSIH'
     }, [window.location.pathname])
 
     return (

@@ -78,7 +78,7 @@ router.post('/update-sticker-application-numbers', authenticateToken, async (req
         if (!itemPriceHistory.success) return res.json({ success: false, msg: itemPriceHistory.msg })
 
         const last2DaysOfPriceHistory = itemPriceHistory.priceHistory.filter(item => item[2] != 0).reverse().slice(0, 2)
-        const price = +big(last2DaysOfPriceHistory.reduce((t, c) => +big(t).plus(+big(c[1]).times(c[2])), 0)).div(last2DaysOfPriceHistory.reduce((t, c) => +big(t).plus(c[2]), 0)).toFixed(3)
+        const price = big(last2DaysOfPriceHistory.reduce((t, c) => big(t).plus(big(c[1]).times(c[2])), 0)).div(last2DaysOfPriceHistory.reduce((t, c) => big(t).plus(c[2]), 0)).toFixed(3)
         const stock = stockData.data.find(item => item.name == stickerName).stock
 
         stickerMetrics.stickers[i].data[index][1] = price

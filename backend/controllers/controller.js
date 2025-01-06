@@ -81,7 +81,7 @@ router.post('/add-investment', authenticateToken, async (req, res) => {
                 const existingItem = user.investments[itemIndex]
                 const newCurrentTotalCost = big(existingItem.currentTotalCost).plus(item.currentTotalCost || big(item.avgCost).times(item.quantity))
                 const newQuantity = big(existingItem.quantity).plus(item.quantity)
-                
+
                 user.investments[itemIndex].avgCost = big(newCurrentTotalCost).div(newQuantity)
                 user.investments[itemIndex].quantity = newQuantity
                 user.investments[itemIndex].currentTotalCost = newCurrentTotalCost
@@ -176,7 +176,7 @@ router.post('/save-transaction', authenticateToken, async (req, res) => {
             soldQuantity: newSoldQuantity,
             totalSales: newTotalSales,
             salesProfit: big(item.salesProfit || 0).plus(profitOfTransaction),
-            netSalesProfit: +big(+big(steamFeeCalculator(price)).minus(item.avgCost)).times(quantity),
+            netSalesProfit: big(item.netSalesProfit || 0).plus(big(big(steamFeeCalculator(price)).minus(item.avgCost)).times(quantity)),
             lastUpdate: { date: _date, avgSalePrice: price, soldQuantity: quantity }
         })
     }
@@ -231,7 +231,7 @@ router.post('/undo-last-update', authenticateToken, async (req, res) => {
             soldQuantity: newSoldQuantity == 0 ? 0 : newSoldQuantity,
             totalSales: newSoldQuantity == 0 ? 0 : newTotalSales,
             salesProfit: big(item.salesProfit).minus(big(big(lastUpdate.avgSalePrice).minus(item.avgCost)).times(lastUpdate.soldQuantity)),
-            netSalesProfit: big(item.netSalesProfit).minus(big(steamFeeCalculator(lastUpdate.avgSalePrice)).minus(item.avgCost).times(lastUpdate.soldQuantity))
+            netSalesProfit: big(item.netSalesProfit).minus(big(big(steamFeeCalculator(lastUpdate.avgSalePrice)).minus(item.avgCost)).times(lastUpdate.soldQuantity))
         })
     }
 
@@ -315,8 +315,8 @@ router.post('/update-investment-market-prices', authenticateToken, async (req, r
 
                 user.investmentValuationHistory[lastIndex] = [
                     date,
-                    +big(big(lastItem[1]).times(counter).plus(totalCost)).div(counter + 1).toFixed(2),
-                    +big(big(lastItem[2]).times(counter).plus(totalMarketValue)).div(counter + 1).toFixed(2),
+                    big(big(lastItem[1]).times(counter).plus(totalCost)).div(counter + 1).toFixed(2),
+                    big(big(lastItem[2]).times(counter).plus(totalMarketValue)).div(counter + 1).toFixed(2),
                     counter + 1
                 ]
             }
