@@ -1082,14 +1082,20 @@ input[type=date]::-webkit-calendar-picker-indicator {
   min-width: 7rem;
   font-weight: 700;
 }
-.investments-page section .table .quantity {
+.investments-page section .table .quantity,
+.investments-page section .table .soldQuantity {
   min-width: 4rem;
 }
 .investments-page section .table .avgCost,
 .investments-page section .table .marketPrice,
 .investments-page section .table .currentTotalCost,
-.investments-page section .table .totalMarketValue {
+.investments-page section .table .totalMarketValue,
+.investments-page section .table .avgSalePrice {
   min-width: 5rem;
+}
+.investments-page section .table .netSalesProfit {
+  min-width: 8rem;
+  font-weight: 700;
 }
 
 .investment-item-modal {

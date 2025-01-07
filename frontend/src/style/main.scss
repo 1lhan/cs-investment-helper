@@ -187,15 +187,22 @@
                 font-weight: 700;
             }
 
-            .quantity {
+            .quantity,
+            .soldQuantity {
                 min-width: 4rem;
             }
 
             .avgCost,
             .marketPrice,
             .currentTotalCost,
-            .totalMarketValue {
+            .totalMarketValue,
+            .avgSalePrice {
                 min-width: 5rem;
+            }
+
+            .netSalesProfit {
+                min-width: 8rem;
+                font-weight: 700;
             }
         }
     }

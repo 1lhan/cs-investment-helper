@@ -3,7 +3,7 @@ import { formatDate, splitCamelCase, usePostRequest } from '../../utils';
 
 export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
     const transactionFormMsg = useSignal(null)
-    
+
     const saveTransaction = async (e) => {
         e.preventDefault()
 
@@ -78,14 +78,16 @@ export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
                             <img src={'https://api.steamapis.com/image/item/730/' + item.value.name} alt={item.value.name} />
                             <span className="item-name">{item.value.name}</span>
 
-                            {['quantity', 'avgCost', 'marketPrice'].map((field, fieldIndex) => renderField(field, fieldIndex))}
+                            {(item.value.quantity > 0 ? ['quantity', 'avgCost', 'marketPrice'] : ['quantity', 'avgCost']).map((field, fieldIndex) => renderField(field, fieldIndex))}
 
-                            <div>
-                                <span>Profit</span>
-                                <span className={getProfitClass(item.value.profit, 0)}>{`${item.value.profit} (${item.value.profitAsX}x)`}</span>
-                            </div>
+                            {item.value.quantity > 0 &&
+                                <div>
+                                    <span>Profit</span>
+                                    <span className={getProfitClass(item.value.profit, 0)}>{`${item.value.profit} (${item.value.profitAsX}x)`}</span>
+                                </div>
+                            }
 
-                            {['currentTotalCost', 'totalMarketValue', 'totalCost'].map((field, fieldIndex) => renderField(field, fieldIndex))}
+                            {['currentTotalCost', 'totalMarketValue', 'totalCost'].slice(item.value.quantity > 0 ? 0 : 2).map((field, fieldIndex) => renderField(field, fieldIndex))}
 
                             {item.value.soldQuantity > 0 &&
                                 <>
@@ -100,7 +102,7 @@ export default function InvestmentItemModal({ item, user, setBodyOverflow }) {
 
                                     <div>
                                         <span>Net Sales Profit</span>
-                                        <span className={getProfitClass(item.value.netSalesProfit, 0)}>{+item.value.netSalesProfit.toFixed(3)}</span>
+                                        <span className={getProfitClass(item.value.netSalesProfit, 0)}>{`${+item.value.netSalesProfit.toFixed(3)} (${item.value.netSalesProfitAsX}x)`}</span>
                                     </div>
                                 </>
                             }

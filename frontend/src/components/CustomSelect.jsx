@@ -1,6 +1,6 @@
 import { splitCamelCase } from '../utils'
 
-export default function CustomSelect({ id, title, state, func, options }) {
+export default function CustomSelect({ id, title, state, func, options, addAnyToOptions = true }) {
     const checkBoxId = (id || title.toLowerCase()) + '-cb'
 
     const onClickOption = (value) => {
@@ -19,7 +19,7 @@ export default function CustomSelect({ id, title, state, func, options }) {
                 <i className="fa-solid fa-chevron-down" />
             </label>
             <div className="options">
-                {['Any', ...options].map((option, optionIndex) =>
+                {(addAnyToOptions ? ['Any', ...options] : [...options]).map((option, optionIndex) =>
                     <button onClick={(() => onClickOption(option))} disabled={state == option} key={optionIndex}>
                         {splitCamelCase(option)}
                     </button>
@@ -29,4 +29,4 @@ export default function CustomSelect({ id, title, state, func, options }) {
     )
 }
 
-// <CustomSelect id="" title="" state={ } func={ } options={ } />
+// <CustomSelect id="" title="" state={ } func={ } options={ } addAnyToOptions={false} />
