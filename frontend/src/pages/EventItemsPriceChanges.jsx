@@ -14,13 +14,17 @@ export default function EventItemsPriceChanges() {
     const startDate = useSignal('')
     const endDate = useSignal('')
     const sortState = useSignal({ field: 'id', isAscending: true })
+    const activeFilters = useSignal(null)
 
     const pageMsg = useSignal(null)
     const tableData = useSignal(null)
     const tableColumns = useSignal(null)
 
     const fetchAndFormatData = async () => {
-        if (eventName.value == 'Any' && type.value == 'Any' && variant.value == 'Any') return;
+        const filterString = eventName.value + type.value + variant.value + period.value
+
+        if ((eventName.value == 'Any' && type.value == 'Any' && variant.value == 'Any') || activeFilters.value == filterString) return;
+
         batch(() => {
             tableColumns.value = [
                 { fields: [{ label: 'id', type: 'number', sortable: true }] },
@@ -45,19 +49,24 @@ export default function EventItemsPriceChanges() {
                     ]
                 },
                 {
-                    toolTip: { path: 'currentPriceArr' },
-                    fields: [{ label: 'currentPrice', type: 'number', sortable: true, calculate: 'average' }, { label: '(x)', type: 'number', path: 'currentToMinPriceRatio', template: '(_rx)', sortable: true }]
-                }
+                    toolTip: { path: 'priceArr' },
+                    fields: [
+                        { label: 'price', type: 'number', sortable: true, calculate: 'average' },
+                        { label: '(x)', type: 'number', path: 'currentToMinPriceRatio', template: '(_rx)', sortable: true }
+                    ]
+                },
+                { fields: [{ label: 'volume', type: 'number', sortable: true, calculate: 'addition' }] },
             ]
             tableData.value = 'loading'
             pageMsg.value = null
+            activeFilters.value = filterString
         })
 
         const response = await useGetRequest(`get-event-items/${eventName.value}/${type.value}/${variant.value}`)
-        if (!response.success) return batch(() => { pageMsg.value = response.msg; tableData.value = null })
+        if (!response.success) return batch(() => { pageMsg.value = response.msg; tableData.value = null; activeFilters.value = null })
 
         const arr = JSON.parse(JSON.stringify(response.data))
-        let processItems = []
+        let processedItems = []
 
         const getAvgPriceOfArr = arr => +big(arr.reduce((t, c) => big(t).plus(big(c[1]).times(c[2])), 0)).div(arr.reduce((t, c) => big(t).plus(c[2]), 0)).toFixed(2)
         const calculateRatio = (num1, num2) => +big(big(num1).div(num2)).minus(1).times(100).toFixed(0) // input 1.95, 7.04 output: -72
@@ -73,8 +82,9 @@ export default function EventItemsPriceChanges() {
             let dateFilterEndIndex = calculateDateFilterIndex(period.value == 'Any' ? endDate.value : null, items[0].priceHistory, event.name, 'end', period.value == 'Any' ? null : period.value)
 
             const _processedItems = items.map((item, itemIndex) => {
-                let currentPriceArr = item.priceHistory.filter(_item => _item[2] != 0).slice(-2)
-                let currentPrice = getAvgPriceOfArr(currentPriceArr)
+                let priceArr = item.priceHistory.filter(_item => _item[2] != 0).slice(-1)
+                let price = /*getAvgPriceOfArr(priceArr)*/ priceArr[0][1]
+                let volume = /*priceArr.reduce((t, c) => +big(t).plus(c[2]), 0)*/ priceArr[0][2]
 
                 let priceHistoryFilteredByDate = item.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex).filter(_item => _item[2] != 0)
 
@@ -102,17 +112,17 @@ export default function EventItemsPriceChanges() {
                 }
 
                 return {
-                    ...item, id: itemIndex + 1, name: item.name, currentPrice, currentPriceArr, minPrice, minPriceArr, maxPrice, maxPriceArr,
-                    maxToMinPriceRatio: +big(maxPrice).div(minPrice).toFixed(2), currentToMinPriceRatio: +big(currentPrice).div(minPrice).toFixed(2)
+                    ...item, id: itemIndex + 1, name: item.name, price, priceArr, volume, minPrice, minPriceArr, maxPrice, maxPriceArr,
+                    maxToMinPriceRatio: +big(maxPrice).div(minPrice).toFixed(2), currentToMinPriceRatio: +big(price).div(minPrice).toFixed(2)
                 }
             })
 
-            processItems = processItems.concat(_processedItems)
+            processedItems = processedItems.concat(_processedItems)
         }
 
         batch(() => {
             pageMsg.value = null
-            tableData.value = processItems
+            tableData.value = processedItems
             sortState.value = { field: 'id', isAscending: true }
             if (eventName.value != 'Any' && !events.find(event => event.name == eventName.value).saleStartDate) {
                 let updatedTableColumns = tableColumns.value.filter((_, index) => index != 4 && index != 5).map((item, index) => {

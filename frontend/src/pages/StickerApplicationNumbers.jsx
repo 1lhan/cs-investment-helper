@@ -10,6 +10,7 @@ export default function StickerApplicationNumbers() {
     const eventName = useSignal('Any')
     const variant = useSignal('Any')
     const pageMsg = useSignal(null)
+    const activeFilters = useSignal(null)
 
     const legendsCapsuleStickers = useSignal(null)
     const challengersCapsuleStickers = useSignal(null)
@@ -21,17 +22,26 @@ export default function StickerApplicationNumbers() {
     const tableColumns = useSignal(null)
 
     const fetchAndFormatData = async () => {
-        if (eventName.value == 'Any' || variant.value == 'Any') return;
+        const filterString = eventName.value + variant.value
 
-        batch(() => { tableColumns.value = 'loading'; pageMsg.value = null })
+        if (eventName.value == 'Any' || variant.value == 'Any' || activeFilters.value == filterString) return;
+
+        batch(() => { tableColumns.value = 'loading'; pageMsg.value = null; activeFilters.value = filterString })
+
         let data
 
         try {
             const response = await useGetRequest(`get-sticker-application-numbers/${eventName.value}/${variant.value}`)
-            if (!response.success) return pageMsg.value = response.msg
+            if (!response.success) {
+                activeFilters.value = null
+                return pageMsg.value = response.msg
+            }
             data = response.data
         }
-        catch (error) { return pageMsg.value = error.message || 'An error occurred while fetching sticker application numbers.' }
+        catch (error) {
+            activeFilters.value = null
+            return pageMsg.value = error.message || 'An error occurred while fetching sticker application numbers.'
+        }
 
         const formattedDates = data.dates.map(date => formatDate(date))
 

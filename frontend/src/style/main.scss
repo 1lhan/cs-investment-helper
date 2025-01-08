@@ -528,8 +528,13 @@
                 min-width: 12rem;
             }
 
-            .currentPrice {
+            .price {
                 min-width: 8rem;
+            }
+
+            .volume {
+                flex: none;
+                width: 5rem;
             }
         }
     }

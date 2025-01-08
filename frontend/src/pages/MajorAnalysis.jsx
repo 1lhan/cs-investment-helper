@@ -17,6 +17,7 @@ export default function MajorAnalysis() {
     const isLoading = useSignal(false)
     const lastUpdateDate = useSignal(null)
     const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month']
+    const activeFilters = useSignal(null)
 
     const capsuleData = useSignal(null)
     const stickersDailyMarketData = useSignal(null)
@@ -25,14 +26,24 @@ export default function MajorAnalysis() {
     const sortState = useSignal({ field: 'id', isAscending: true })
 
     const fetchAndFormatData = async () => {
-        batch(() => { pageMsg.value = null; isLoading.value = true })
+        const filterString = eventName.value + period.value
+
+        if (eventName.value == 'Any' || activeFilters.value == filterString) return;
+        
+        batch(() => { pageMsg.value = null; isLoading.value = true; activeFilters.value = filterString })
 
         let response
         try {
             response = await useGetRequest(`get-event-items/${eventName.value}/Sticker,Capsule/Any`)
-            if (!response.success) return pageMsg.value = response.msg || 'An error occurred while fetching data.'
+            if (!response.success) {
+                activeFilters.value = null
+                return pageMsg.value = response.msg || 'An error occurred while fetching data.'
+            }
         }
-        catch (error) { return pageMsg.value = error.message || 'An error occurred while fetching data.' }
+        catch (error) {
+            activeFilters.value = null
+            return pageMsg.value = error.message || 'An error occurred while fetching data.'
+        }
 
         const _variants = response.data.slice().filter(item => item.type == 'Sticker').map(item => item.variant)
         const firstItemPriceHistory = response.data.find(item => item.type == 'Sticker' && item.variant == 'Paper').items[0].priceHistory

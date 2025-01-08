@@ -1406,8 +1406,12 @@ input[type=date]::-webkit-calendar-picker-indicator {
 .event-items-price-changes-page section .table .maxPrice {
   min-width: 12rem;
 }
-.event-items-price-changes-page section .table .currentPrice {
+.event-items-price-changes-page section .table .price {
   min-width: 8rem;
+}
+.event-items-price-changes-page section .table .volume {
+  flex: none;
+  width: 5rem;
 }
 
 .major-analysis-page header .filters {
