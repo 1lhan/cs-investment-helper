@@ -1,8 +1,8 @@
 export const events = [
     {
         name: "Shanghai 2024", type: "tournament", eventImage: "Sticker | Perfect World (Holo) | Shanghai 2024",
-        releaseDate: new Date("2024-11-27T22:22:00.000Z"), tournamentStartDate: new Date("2024-11-30T03:00:00.000Z"), tournamentEndDate: new Date("2024-12-15T03:09:25.000Z"),
-        saleStartDate: null, endDate: null,
+        releaseDate: new Date("2024-11-27T22:22:00.000Z"), tournamentStartDate: new Date("2024-11-30T03:00:00.000Z"), tournamentEndDate: new Date("2024-12-15T09:25:00.000Z"),
+        saleStartDate: new Date("2025-01-15T01:22:00.000Z"), endDate: null,
         items: {
             Sticker: ["G2 Esports", "Natus Vincere", "Vitality", "Team Spirit", "MOUZ", "FaZe Clan", "HEROIC", "3DMAX", "FURIA", "Virtus.pro", "Team Liquid", "Complexity Gaming", "BIG", "Fnatic", "The MongolZ", "paiN Gaming",
                 "GamerLegion", "MIBR", "Cloud9", "FlyQuest", "Passion UA", "Wildcard", "Rare Atom", "Imperial Esports", "Perfect World"],
