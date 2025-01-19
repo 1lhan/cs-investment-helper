@@ -76,7 +76,7 @@ export default function EventItemsPriceChanges() {
             const event = events.find(event => event.name == eventName)
 
             const saleStartDateIndex = event.saleStartDate ? items[0].priceHistory.findIndex(item => item[0] == new Date(event.saleStartDate).toDateString().slice(4)) : 0
-            const saleEndDateIndex = event.endDate ? items[0].priceHistory.findIndex(item => item[0] == new Date(event.endDate).toDateString().slice(4)) : 0
+            const saleEndDateIndex = event.endDate ? items[0].priceHistory.findIndex(item => item[0] == new Date(event.endDate).toDateString().slice(4)) : items[0].priceHistory.length
 
             let dateFilterStartIndex = calculateDateFilterIndex(period.value == 'Any' ? startDate.value : null, items[0].priceHistory, event.name, 'start', period.value == 'Any' ? null : period.value)
             let dateFilterEndIndex = calculateDateFilterIndex(period.value == 'Any' ? endDate.value : null, items[0].priceHistory, event.name, 'end', period.value == 'Any' ? null : period.value)
