@@ -1,6 +1,3 @@
-@use './mixins.scss' as m;
-@use './colors.scss' as c;
-
 @media (max-width: 1280px) {
     .table {
         overflow-x: auto;
@@ -38,11 +35,11 @@
             }
 
             #header-content-cb:checked+.header-content {
-                @include m.flex(column, flex-start, stretch);
+                @include flex(column, flex-start, stretch);
             }
 
             .header-content {
-                @include m.blur;
+                @include blur;
                 display: none;
                 position: absolute;
                 top: 0;
@@ -105,7 +102,7 @@
         overflow-y: auto;
 
         .modal-body {
-            @include m.flex(column, flex-start, stretch);
+            @include flex(column, flex-start, stretch);
 
             .modal-body-item {
                 max-width: unset;
@@ -148,7 +145,7 @@
 
     .data-control-center-page {
         section {
-            @include m.flex(column, flex-start, stretch);
+            @include flex(column, flex-start, stretch);
 
             .section-items {
 

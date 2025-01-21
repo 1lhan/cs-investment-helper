@@ -1,6 +1,6 @@
 import { useComputed } from '@preact/signals-react'
 import { NavLink } from 'react-router-dom'
-import { formatDate, splitCamelCase } from '../utils'
+import { big, formatDate, splitCamelCase } from '../utils'
 import ToolTip from './ToolTip'
 
 export default function Table({ data, sortState, calculate, columns }) {
@@ -64,8 +64,8 @@ export default function Table({ data, sortState, calculate, columns }) {
                 let { label, path, calculate, toFixed } = fields[j]
                 let fieldKey = path || label
 
-                if (calculate == 'addition') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0)).toFixed(2)
-                else if (calculate == 'average') result[fieldKey] = +(data.value.reduce((t, c) => t + c[fieldKey], 0) / data.value.length).toFixed(toFixed || 2)
+                if (calculate == 'addition') result[fieldKey] = +(data.value.reduce((t, c) => big(t).plus(c[fieldKey]), 0)).toFixed(2) 
+                else if (calculate == 'average') result[fieldKey] = +(data.value.reduce((t, c) => big(t).plus(c[fieldKey]), 0) / data.value.length).toFixed(toFixed != undefined ? toFixed : 2)
             }
         }
 

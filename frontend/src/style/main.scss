@@ -1,19 +1,13 @@
-@use '_colors' as c;
-@import '_componentStyles';
+@import '_colors';
+@import '_mixins';
 @import '_commonStyles';
+@import '_componentStyles';
 @import '_lineChartStyle';
-
-@mixin flex($fd, $jc, $ai) {
-    display: flex;
-    flex-direction: $fd;
-    justify-content: $jc;
-    align-items: $ai;
-}
 
 .header {
     width: 100%;
     height: 4rem;
-    background: c.$header-bg;
+    background: $header-bg;
     z-index: 13;
 
     .container {
@@ -23,7 +17,7 @@
         gap: 2rem;
 
         .home-page-btn {
-            background: c.$site-primary-color;
+            background: $site-primary-color;
             background-clip: text;
             color: transparent;
             font-size: 1.25rem;
@@ -58,7 +52,7 @@
 
                     span,
                     i {
-                        color: c.$blue;
+                        color: $blue;
                     }
                 }
             }
@@ -85,7 +79,7 @@
 
                 label {
                     padding: 0.5rem;
-                    color: c.$blue;
+                    color: $blue;
                     font-size: 1.1rem;
                     font-weight: 600;
                     cursor: pointer;
@@ -108,7 +102,7 @@
 
                         span,
                         i {
-                            color: c.$red;
+                            color: $red;
                         }
                     }
                 }
@@ -116,7 +110,7 @@
 
             .to-login-page-btn {
                 padding: 0.5rem;
-                color: c.$blue;
+                color: $blue;
                 margin-left: auto;
                 font-weight: 600;
             }
@@ -136,15 +130,15 @@
                 gap: 0.75rem;
                 padding: 0.4rem;
                 border-radius: 0.25rem;
-                background: c.$bg-primary-light;
+                background: $bg-primary-light;
 
                 .icon-background {
-                    background: c.$light-blue;
+                    background: $light-blue;
                     border-radius: 0.2rem;
 
                     i {
                         padding: 0.5rem;
-                        background: c.$site-primary-color;
+                        background: $site-primary-color;
                         background-clip: text;
                         color: transparent;
                     }
@@ -234,7 +228,7 @@
             img {
                 width: 80%;
                 aspect-ratio: 1.333/1;
-                background: c.$bg-primary;
+                background: $bg-primary;
                 padding: 0.5rem;
                 margin: 0 auto;
                 border-radius: 0.5rem;
@@ -286,21 +280,21 @@
 
                     .label-purchase {
                         span {
-                            background: c.$light-green;
+                            background: $light-green;
                         }
 
                         input[type='radio']:checked+span {
-                            border-color: c.$green;
+                            border-color: $green;
                         }
                     }
 
                     .label-sale {
                         span {
-                            background: c.$light-red;
+                            background: $light-red;
                         }
 
                         input[type='radio']:checked+span {
-                            border-color: c.$red;
+                            border-color: $red;
                         }
                     }
 
@@ -317,7 +311,7 @@
 
                     i,
                     span {
-                        color: c.$red;
+                        color: $red;
                     }
                 }
             }
@@ -345,14 +339,14 @@
         }
 
         .btn-secondary-active {
-            border-color: c.$blue;
+            border-color: $blue;
         }
 
         .import-csv-file-label {
             @include flex(row, center, center);
             gap: 1rem;
             padding: 1rem;
-            border: 1px dashed c.$border-bg;
+            border: 1px dashed $border-bg;
             border-radius: 0.25rem;
             cursor: pointer;
 
@@ -371,7 +365,7 @@
             }
 
             &:disabled {
-                background: c.$bg-primary;
+                background: $bg-primary;
 
                 &:hover {
                     box-shadow: unset;
@@ -424,7 +418,7 @@
                 max-width: 311px;
                 gap: 1rem;
                 padding: 0.75rem;
-                background: c.$bg-primary-light-25;
+                background: $bg-primary-light-25;
                 border-radius: 0.5rem;
             }
 
@@ -441,14 +435,14 @@
 
             .output-section-header {
                 padding: 0.5rem 1rem;
-                background: c.$header-bg;
+                background: $header-bg;
             }
 
             .output-section-body {
                 @include flex(column, flex-start, stretch);
                 gap: 1rem;
                 padding: 1rem;
-                background: c.$bg-primary;
+                background: $bg-primary;
             }
         }
     }
@@ -579,11 +573,11 @@
                 .color-info-box {
                     div:nth-of-type(1) {
                         .color {
-                            background: c.$blue;
+                            background: $blue;
                         }
 
                         .y-key-name {
-                            color: c.$blue;
+                            color: $blue;
                         }
                     }
 
@@ -599,7 +593,7 @@
                 }
 
                 .column:nth-of-type(1) {
-                    background: c.$blue;
+                    background: $blue;
                 }
 
                 .column:nth-of-type(2) {
@@ -613,7 +607,7 @@
                 gap: 0.75rem;
                 padding: 1rem;
                 border-radius: 0.5rem;
-                background: c.$bg-primary;
+                background: $bg-primary;
 
                 div {
                     @include flex(row, center, center);
@@ -700,7 +694,7 @@
             .image {
                 position: sticky;
                 left: 0;
-                background: c.$bg-primary;
+                background: $bg-primary;
 
                 &:hover img {
                     transform: unset;
@@ -710,7 +704,7 @@
             .table-header,
             .calculate-result-row {
                 .image {
-                    background: c.$header-bg;
+                    background: $header-bg;
                 }
             }
         }
@@ -735,7 +729,7 @@
             .cell:nth-of-type(12) {
                 .fields-container {
                     >span {
-                        color: c.$green;
+                        color: $green;
                         font-weight: 700;
                     }
                 }
@@ -772,7 +766,7 @@
             gap: 1rem;
             padding: 1rem;
             border-radius: 0.5rem;
-            background: c.$bg-primary-light;
+            background: $bg-primary-light;
 
             .section-item-header {
                 @include flex(row, space-between, center);
@@ -786,7 +780,7 @@
                     cursor: pointer;
 
                     &:hover {
-                        color: c.$blue
+                        color: $blue
                     }
                 }
             }
@@ -799,7 +793,7 @@
                     @include flex(row, space-between, center);
 
                     span:nth-last-of-type(2) {
-                        color: c.$gray;
+                        color: $gray;
                     }
 
                     span:nth-last-of-type(1) {
@@ -819,7 +813,7 @@
 
                 i,
                 span {
-                    color: c.$red;
+                    color: $red;
                 }
             }
         }
@@ -846,10 +840,10 @@
             max-width: 450px;
 
             .btn {
-                background: c.$red;
+                background: $red;
 
                 &:hover {
-                    box-shadow: 0 0 8px 3px c.$light-red;
+                    box-shadow: 0 0 8px 3px $light-red;
                 }
             }
         }
