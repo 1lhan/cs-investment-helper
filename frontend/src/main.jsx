@@ -30,7 +30,7 @@ const autoLogin = async () => {
             timeout
         ])
 
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) throw new Error('Network response was not ok')
 
         let data = await response.json()
         if (!data.success) return null
@@ -38,7 +38,7 @@ const autoLogin = async () => {
         return data.user
     }
     catch (error) { return null }
-};
+}
 
 const user = signal(await autoLogin())
 
