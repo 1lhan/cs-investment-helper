@@ -19,7 +19,7 @@ import InvestmentStats from './pages/InvestmentStats'
 import './style/main.css'
 
 const autoLogin = async () => {
-    const timeout = new Promise((_, reject) => { setTimeout(() => reject(new Error('Request timed out')), 5000) })
+    const timeout = new Promise((_, reject) => { setTimeout(() => reject(), 5000) })
     try {
         const response = await Promise.race([
             fetch(import.meta.env.VITE_REACT_APP_BACKEND_URL + '/auto-login', {
@@ -30,7 +30,7 @@ const autoLogin = async () => {
             timeout
         ])
 
-        if (!response.ok) throw new Error('Network response was not ok')
+        if (!response.ok) return null
 
         let data = await response.json()
         if (!data.success) return null

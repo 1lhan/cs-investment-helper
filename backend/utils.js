@@ -8,10 +8,10 @@ const big = (value) => new Big(value)
 
 const authenticateToken = (req, res, next) => {
     const token = req.body.token.slice(6, req.body.token.length)
-    if (!token) return res.status(401).json({ success: false, msg: 'Access denied. No token provided.' })
+    if (!token) return res.json({ success: false, msg: 'Access denied. No token provided.' })
 
     jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
-        if (err) return res.status(403).json({ success: false, msg: 'Invalid token.' })
+        if (err) return res.json({ success: false, msg: 'Invalid token.' })
         req.user = decoded
         next()
     })
