@@ -84,8 +84,12 @@ export default function Investments({ user, itemTypes, variants }) {
                 <CustomSelect title="Type" state={type} options={itemTypes} />
                 <CustomSelect title="Event" state={eventName} options={events.map(event => event.name)} />
                 <CustomSelect title="Variant" state={variant} options={variants} />
-                <CustomSelect title="Status" state={status} options={['available', 'sold']} addAnyToOptions={false} />
-                <button className="btn-secondary clear-filters-btn" onClick={() => batch(() => { type.value = 'Any'; eventName.value = 'Any'; variant.value = 'Any'; status.value = 'available' })}>
+                <CustomSelect title="Status" state={status} func={() => { sortState.value = { field: status.value == 'available' ? 'profitAsX' : 'netSalesProfitAsX', isAscending: false } }} options={['available', 'sold']}
+                    addAnyToOptions={false} />
+                <button className="btn-secondary clear-filters-btn" onClick={() => batch(() => {
+                    type.value = 'Any'; eventName.value = 'Any'; variant.value = 'Any'; status.value = 'available';
+                    sortState.value = { field: status.value == 'available' ? 'profitAsX' : 'netSalesProfitAsX', isAscending: false }
+                })}>
                     <i className="fa-solid fa-filter-circle-xmark" />
                 </button>
             </div>
