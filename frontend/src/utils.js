@@ -71,6 +71,8 @@ export const calculateDateFilterIndex = (date, item, _eventName, dateType, perio
         }
         else if (period == 'Last Month') return dateType == 'start' ? -30 : undefined
         else if (period == 'Last 3 Months') return dateType == 'start' ? -90 : undefined
+        else if (period == 'First Month') return dateType == 'start' ? 7 : 37
+        else if (period == 'First 2 Weeks') return dateType == 'start' ? 7 : 21
     }
 }
 

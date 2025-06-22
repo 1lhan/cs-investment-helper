@@ -18,6 +18,7 @@ export default function DataControlCenter({ user }) {
             if (type == 'Sticker') return ['Paper', 'Holo', 'Foil', 'Gold']
             else if (type == 'Autograph') return ['Paper', 'Holo', 'Gold']
         }
+        else if (_eventName == 'Austin 2025') return ['Paper', 'Foil', 'Holo', 'Gold']
         else return ['Paper', 'Glitter', 'Holo', 'Gold']
     }
 

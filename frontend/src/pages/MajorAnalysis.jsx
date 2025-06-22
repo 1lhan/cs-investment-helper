@@ -16,7 +16,7 @@ export default function MajorAnalysis() {
     const pageMsg = useSignal(null)
     const isLoading = useSignal(false)
     const lastUpdateDate = useSignal(null)
-    const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month']
+    const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month', 'First Month', 'First 2 Weeks']
     const activeFilters = useSignal(null)
 
     const capsuleData = useSignal(null)
@@ -29,7 +29,7 @@ export default function MajorAnalysis() {
         const filterString = eventName.value + period.value
 
         if (eventName.value == 'Any' || activeFilters.value == filterString) return;
-        
+
         batch(() => { pageMsg.value = null; isLoading.value = true; activeFilters.value = filterString })
 
         let response

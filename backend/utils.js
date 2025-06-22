@@ -160,7 +160,7 @@ const getItemPriceHistory = async (itemName, startDate) => {
                     if (retries == 4) { isProcessDone = true; return { success: false, msg: 'Too many request.' } }
                     else {
                         retries++
-                        await new Promise(resolve => setTimeout(resolve, 1000 * 30));
+                        await new Promise(resolve => setTimeout(resolve, 1000 * 60));
                         continue;
                     }
                 }

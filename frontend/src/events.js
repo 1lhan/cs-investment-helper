@@ -1,5 +1,27 @@
 export const events = [
     {
+        name: "Austin 2025", type: "tournament", eventImage: "Sticker | BLAST.Tv (Holo) | Austin 2025",
+        releaseDate: new Date("2025-05-23T00:12:00.000Z"), tournamentStartDate: new Date("2025-06-03T15:30:00.000Z"), tournamentEndDate: null,
+        saleStartDate: null, endDate: null,
+        items: {
+            Sticker: ["Vitality", "MOUZ", "Team Spirit", "The Mongolz", "Aurora", "Natus Vincere", "G2 Esports", "Team Liquid", "Falcons", "FaZe Clan", "3DMAX", "Virtus.Pro", "paiN Gaming", "FURIA", "MIBR", "M80",
+                "Complexity Gaming", "Wildcard", "HEROIC", "B8", "OG", "Nemiga", "BetBoom", "Imperial Esports", "NRG", "FlyQuest", "Metizport", "TYLOO", "Fluxo", "Chinggis Warriors", "Lynn Vision", "Legacy", "BLAST.tv"]
+            ,
+            Autograph: ["apEX", "ZywOo", "FlameZ", "mezii", "ropz", "torzsi", "Jimpphat", "Brollan", "Spinx", "xertioN", "chopper", "magixx", "donk", "sh1ro", "zont1x", "bLitz", "Techno4K", "Senzu", "910", "mzinho",
+                "MAJ3R", "XANTARES", "jottAAA", "Wicadia", "woxic", "w0nderful", "Aleksib", "jL", "b1t", "iM", "Snax", "huNter-", "malbsMd", "Heavygod", "hades", "Twistzz", "ultimate", "NertZ", "siuhy", "NAF",
+                "NiKo", "kyxsan", "m0NESY", "TeSeS", "Magisk", "karrigan", "broky", "EliGE", "frozen", "rain", "Maka", "Ex3rcice", "Lucky", "Graviti", "bodyy", "FL1T", "fame", "electronic", "FL4MUS", "ICY",
+                "biguzera", "NQZ", "snow", "dav1deuS", "dgt", "FalleN", "yuurih", "KSCERATO", "skullz", "molodoy", "exit", "insani", "Lucaozy", "brnz4n", "saffee", "reck", "Lake", "Swisher", "slaxz-", "s1n",
+                "Cxzi", "Grim", "hallzerk", "JT", "nicx", "stanislaw", "Sonic", "phzy", "susp", "JBa", "tN1R", "SunPayus", "xfl0ud", "LNZ", "yxngstxr", "headtr1ck", "kensizor", "esenthial", "npl", "alex666",
+                "Chr1zN", "F1KU", "nicoodoz", "spooke", "Buzz", "1eeR", "Xant3r", "khaN", "riskyb0b", "zweih", "zorte", "S1ren", "Magnojez", "Ax1Le", "Boombl4", "VINI", "TRY", "chayJESUS", "decenty", "noway",
+                "oSee", "HexT", "br0", "nitr0", "jeorge", "INS", "Liazz", "vexite", "regali", "nettik", "hampus", "isak", "Plopski", "L00m1", "adamb", "JamYoung", "Moseyuh", "Attacker", "Jee", "Mercury",
+                "arT", "piriajr", "zevy", "kye", "mlhzin", "controlez", "efire", "ROUX", "Ariucle", "cool4st", "westmelon", "z4KR", "Starry", "EmiliaQAQ", "C4LLM3SU3", "lux", "saadzin", "latto", "dumau", "n1ssim"],
+            Capsule: ['Austin 2025 Legends Sticker Capsule', 'Austin 2025 Challengers Sticker Capsule', 'Austin 2025 Contenders Sticker Capsule', 'Austin 2025 Legends Autograph Capsule',
+                'Austin 2025 Challengers Autograph Capsule', 'Austin 2025 Contenders Autograph Capsule'/*, 'Austin 2025 Champions Autograph Capsule'*/],
+            'Souvenir Package': ['Dust II', 'Mirage', 'Inferno', 'Nuke', 'Train', 'Ancient', 'Anubis']
+        },
+        championAutograph: null
+    },
+    {
         name: "Shanghai 2024", type: "tournament", eventImage: "Sticker | Perfect World (Holo) | Shanghai 2024",
         releaseDate: new Date("2024-11-27T22:22:00.000Z"), tournamentStartDate: new Date("2024-11-30T03:00:00.000Z"), tournamentEndDate: new Date("2024-12-15T09:25:00.000Z"),
         saleStartDate: new Date("2025-01-15T01:22:00.000Z"), endDate: new Date("2025-04-21T22:57:00.000Z"),
@@ -9,14 +31,14 @@ export const events = [
             Autograph: ["Snax", "huNter-", "malbsMd", "m0NESY", "NiKo", "w0nderful", "Aleksib", "jL", "b1t", "iM", "ZywOo", "apEX", "mezii", "FlameZ", "Spinx", "chopper", "magixx", "donk", "sh1ro", "zont1x", "torzsi", "xertioN",
                 "Brollan", "Jimpphat", "siuhy", "karrigan", "rain", "ropz", "broky", "frozen", "TeSeS", "sjuush", "kyxsan", "NertZ", "degster", "Ex3rcice", "Djoko", "Maka", "Lucky", "Graviti", "FalleN", "chelo", "yuurih",
                 "KSCERATO", "skullz", "FL1T", "Jame", "fame", "n0rb3r7", "electronic", "Twistzz", "ultimate", "YEKINDAR", "jks", "NAF", "EliGE", "floppy", "Grim", "hallzerk", "JT", "tabseN", "Krimbo", "JDC", "syrsoN", "rigoN",
-                "KRIMZ", "bodyy", "MATYS", "blameF", "afro", "bLitz", "910", "Techno4K", "Senzu", "mzinho", "biguzera", "lux", "kauez", "NQZ", "snow", "ztr", "sl3nd", "Volt", "FL4MUS", "aNdu", "drop", "saffee", "insani",
+                "KRIMZ", "bodyy", "MATYS", "blameF", "afro", "bLitz", "910", "Techno4K", "Senzu", "mzinho", "biguzera", "lux", "kauez", "NQZ", "snow", "ztr", "sl3nd", "volt", "FL4MUS", "aNdu", "drop", "saffee", "insani",
                 "brnz4n", "exit", "Boombl4", "Ax1Le", "Heavygod", "ICY", "Perfecto", "dexter", "Liazz", "aliStair", "INS", "vexite", "fEAR", "jambo", "jackasmo", "s-chilla", "zeRRoFIX", "stanislaw", "Sonic", "JBa", "phzy",
                 "susp", "Summer", "ChildKing", "somebody", "L1haNg", "Kaze", "VINI", "felps", "TRY", "decenty", "noway"],
             Capsule: ['Shanghai 2024 Legends Sticker Capsule', 'Shanghai 2024 Challengers Sticker Capsule', 'Shanghai 2024 Contenders Sticker Capsule', 'Shanghai 2024 Legends Autograph Capsule',
                 'Shanghai 2024 Challengers Autograph Capsule', 'Shanghai 2024 Contenders Autograph Capsule', 'Shanghai 2024 Champions Autograph Capsule'],
             'Souvenir Package': ['Dust II', 'Mirage', 'Inferno', 'Nuke', 'Vertigo', 'Ancient', 'Anubis']
         },
-        championAutograph: null
+        championAutograph: ["chopper", "magixx", "donk", "sh1ro", "zont1x"]
     },
     {
         name: "The Armory", type: "operation", eventImage: "Gallery Case",
