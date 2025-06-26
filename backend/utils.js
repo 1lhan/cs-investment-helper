@@ -230,8 +230,8 @@ const formatItemNames = (event, type, variant) => {
 }
 
 const urlHandler = (eventName, variant) => {
-    const tournamentIdsByName = { 'Shanghai 2024': 23, 'Copenhagen 2024': 22, 'Paris 2023': 21, 'Rio 2022': 20 }
-    const rarity = variant == 'Glitter' ? 'Mythical' : 'Legendary'
+    const tournamentIdsByName = { 'Austin 2025': 24, 'Shanghai 2024': 23, 'Copenhagen 2024': 22, 'Paris 2023': 21, 'Rio 2022': 20 }
+    const rarity = ['Glitter', 'Foil'].includes(variant) ? 'Mythical' : 'Legendary'
 
     return url = `https://steamcommunity.com/market/search?q=&category_730_Tournament%5B%5D=tag_Tournament${tournamentIdsByName[eventName]}&&category_730_Rarity%5B%5D=tag_Rarity_${rarity}&
         category_730_StickerCategory%5B%5D=tag_TeamLogo&category_730_StickerCategory%5B%5D=tag_Tournament&appid=730#p`

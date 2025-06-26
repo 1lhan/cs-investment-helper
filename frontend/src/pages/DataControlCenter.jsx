@@ -107,8 +107,8 @@ export default function DataControlCenter({ user }) {
                         <div className="modal-header">
                             <div>
                                 <HeaderWithIcon title="Update Sticker Application Numbers" iconClass="fa-regular fa-note-sticky" size="medium" />
-                                <CustomSelect title="Tournament Name" state={tournamentName} options={['Shanghai 2024', 'Copenhagen 2024']} />
-                                <CustomSelect title="Variant" state={variant} options={['Glitter', 'Holo']} />
+                                <CustomSelect title="Tournament Name" state={tournamentName} options={['Austin 2025', 'Shanghai 2024', 'Copenhagen 2024']} />
+                                <CustomSelect title="Variant" state={variant} options={['Glitter', 'Foil', 'Holo']} />
                             </div>
                             <i className="close-btn fa-solid fa-xmark" onClick={() => showUpdateStickerApplicationNumbersModal.value = false} />
                         </div>

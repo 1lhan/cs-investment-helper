@@ -115,8 +115,8 @@ export default function StickerApplicationNumbers() {
             <header>
                 <HeaderWithIcon title="Sticker Application Numbers" iconClass="fa-regular fa-note-sticky" />
                 <div className="filters">
-                    <CustomSelect title="Event Name" state={eventName} options={['Shanghai 2024', 'Copenhagen 2024', 'Paris 2023']} />
-                    <CustomSelect title="Variant" state={variant} options={['Glitter', 'Holo']} />
+                    <CustomSelect title="Event Name" state={eventName} options={['Austin 2025', 'Shanghai 2024', 'Copenhagen 2024', 'Paris 2023']} />
+                    <CustomSelect title="Variant" state={variant} options={['Glitter', 'Foil', 'Holo']} />
                     <button className="btn" disabled={tableColumns.value == 'loading'} onClick={() => fetchAndFormatData()}><i className="fa-solid fa-magnifying-glass" /></button>
                 </div>
             </header>
