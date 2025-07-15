@@ -73,6 +73,15 @@ export const calculateDateFilterIndex = (date, item, _eventName, dateType, perio
         else if (period == 'Last 3 Months') return dateType == 'start' ? -90 : undefined
         else if (period == 'First Month') return dateType == 'start' ? 7 : 37
         else if (period == 'First 2 Weeks') return dateType == 'start' ? 7 : 21
+        else if (period == 'Before Sale Start') {
+            const event = events.find(event => event.name == _eventName)
+
+            if (dateType == 'start') return item.findIndex(item => item[0] == new Date(event.releaseDate).toDateString().slice(4))
+            else {
+                if (event.saleStartDate) return item.findIndex(item => item[0] == new Date(event.saleStartDate).toDateString().slice(4))
+                else -1
+            }
+        }
     }
 }
 

@@ -16,7 +16,7 @@ export default function MajorAnalysis() {
     const pageMsg = useSignal(null)
     const isLoading = useSignal(false)
     const lastUpdateDate = useSignal(null)
-    const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month', 'First Month', 'First 2 Weeks']
+    const periodOptions = ['1 Year After Release', '2 Years After Release', 'First Month Of Sale', 'Sale Period', 'Last 3 Months', 'Last Month', 'First Month', 'First 2 Weeks', 'Before Sale Start']
     const activeFilters = useSignal(null)
 
     const capsuleData = useSignal(null)
@@ -50,7 +50,7 @@ export default function MajorAnalysis() {
 
         const dateFilterStartIndex = calculateDateFilterIndex(period.value == 'Any' ? startDate.value : null, firstItemPriceHistory, eventName.value, 'start', period.value == 'Any' ? null : period.value)
         const dateFilterEndIndex = calculateDateFilterIndex(period.value == 'Any' ? endDate.value : null, firstItemPriceHistory, eventName.value, 'end', period.value == 'Any' ? null : period.value)
-
+        
         const _capsuleData = response.data.find(item => item.type == 'Capsule').items.slice().map(capsule => {
             let volume = capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex).reduce((t, c) => +big(t).plus(c[2]), 0)
             let price = +(capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex).reduce((t, c) => +big(t).plus(+big(c[1]).times(c[2])), 0) / volume).toFixed(2)

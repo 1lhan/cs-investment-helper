@@ -1,7 +1,7 @@
 const events = [
     {
         name: "Austin 2025", type: "tournament", eventImage: "Sticker | BLAST.Tv (Holo) | Austin 2025",
-        releaseDate: new Date("2025-05-23T00:12:00.000Z"), tournamentStartDate: new Date("2025-06-03T15:30:00.000Z"), tournamentEndDate: null,
+        releaseDate: new Date("2025-05-23T00:12:00.000Z"), tournamentStartDate: new Date("2025-06-03T15:30:00.000Z"), tournamentEndDate: new Date("2025-06-22T19:30:00.000Z"),
         saleStartDate: null, endDate: null,
         items: {
             Sticker: ["Vitality", "MOUZ", "Team Spirit", "The Mongolz", "Aurora", "Natus Vincere", "G2 Esports", "Team Liquid", "Falcons", "FaZe Clan", "3DMAX", "Virtus.Pro", "paiN Gaming", "FURIA", "MIBR", "M80",
