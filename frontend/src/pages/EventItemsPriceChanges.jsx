@@ -147,6 +147,7 @@ export default function EventItemsPriceChanges() {
                     if (type.value == 'Sticker' || type.value == 'Any') return ['Paper', 'Holo', 'Foil', 'Gold']
                     else if (type.value == 'Autograph') return ['Paper', 'Holo', 'Gold']
                 }
+                else if (eventName.value == 'Austin 2025') return ['Paper', 'Foil', 'Holo', 'Gold']
                 else return ['Paper', 'Glitter', 'Holo', 'Gold']
             }
         })
