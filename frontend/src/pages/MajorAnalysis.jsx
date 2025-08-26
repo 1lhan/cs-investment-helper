@@ -50,10 +50,10 @@ export default function MajorAnalysis() {
 
         const dateFilterStartIndex = calculateDateFilterIndex(period.value == 'Any' ? startDate.value : null, firstItemPriceHistory, eventName.value, 'start', period.value == 'Any' ? null : period.value)
         const dateFilterEndIndex = calculateDateFilterIndex(period.value == 'Any' ? endDate.value : null, firstItemPriceHistory, eventName.value, 'end', period.value == 'Any' ? null : period.value)
-        
+
         const _capsuleData = response.data.find(item => item.type == 'Capsule').items.slice().map(capsule => {
-            let volume = capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex).reduce((t, c) => +big(t).plus(c[2]), 0)
-            let price = +(capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex).reduce((t, c) => +big(t).plus(+big(c[1]).times(c[2])), 0) / volume).toFixed(2)
+            let volume = capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex == -1 ? undefined : dateFilterEndIndex).reduce((t, c) => +big(t).plus(c[2]), 0)
+            let price = +(capsule.priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex == -1 ? undefined : dateFilterEndIndex).reduce((t, c) => +big(t).plus(+big(c[1]).times(c[2])), 0) / volume).toFixed(2)
             return { name: capsule.name, price, volume }
         })
 
@@ -66,7 +66,7 @@ export default function MajorAnalysis() {
 
             for (let itemIndex in items) {
                 let itemName = items[itemIndex].name
-                let itemPriceHistory = items[itemIndex].priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex)
+                let itemPriceHistory = items[itemIndex].priceHistory.slice(dateFilterStartIndex, dateFilterEndIndex == -1 ? undefined : dateFilterEndIndex)
 
                 if (variantIndex == 0) _stickersPeriodMarketData.push({ id: +itemIndex + 1, name: itemName })
                 if (itemIndex == 0) _stickersDailyMarketData[variant] = itemPriceHistory

@@ -1,6 +1,6 @@
 const events = [
     {
-        name: "Austin 2025", type: "tournament", eventImage: "Sticker | BLAST.Tv (Holo) | Austin 2025",
+        name: "Austin 2025", type: "tournament", eventImage: "Sticker | BLAST.tv (Holo) | Austin 2025",
         releaseDate: new Date("2025-05-23T00:12:00.000Z"), tournamentStartDate: new Date("2025-06-03T15:30:00.000Z"), tournamentEndDate: new Date("2025-06-22T19:30:00.000Z"),
         saleStartDate: new Date("2025-08-15T20:20:00.000Z"), endDate: null,
         items: {
@@ -49,7 +49,7 @@ const events = [
                 'Taste Buddy (Holo)', 'Say Cheese (Holo)', 'From The Deep (Glitter)', 'Kawaii Eyes (Glitter)', 'Hydro Wave', 'Hydro Stream', 'Hydro Geyser', 'Boom Trail', 'Boom Blast', 'Boom Epicenter', 'Boom Detonation',
                 'Scorch Loop', 'Winding Scorch', 'Scorch Loop (Reverse)', 'Hot Rod Heat', 'High Heat', 'Bolt Energy', 'Bolt Charge', 'Bolt Strike', 'Strike A Pose', 'Taste Bud', 'Ribbon Tie', 'XD', 'Quick Peek', 'Clown Wig',
                 'Clown Nose', 'Flex', 'Lefty (T)', 'Lefty (CT)', 'Glare', 'From The Deep', 'Fly High', 'Chompers', 'Blinky'],
-            Case: ['Gallery Case'],
+            Case: ['Gallery Case', 'Fever Case'],
             Charm: ["Hot Wurst", "Hot Howl", "Baby Karat T", "Baby Karat CT", "Diner Dog", "Diamond Dog", "Lil' Monster", "Semi-Precious", "Lil' Squirt", "Titeenium AWP", "Lil' Squatch", "Lil' Teacup", "Chicken Lil'", "Lil' Sandy",
                 "Lil' Whiskers", "That's Bananas", "Glamour Shot", "Hot Hands", "Disco MAC", "POP Art", "Die-cast AK", "Lil' SAS", "Hot Sauce", "Big Kev", "Lil' Crass", "Lil' Ava", "Stitch-Loaded", "Lil' Cap Gun", "Backsplash",
                 "Whittle Knife", "Pocket AWP", "Baby's AK"]
