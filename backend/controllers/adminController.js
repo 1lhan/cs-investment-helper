@@ -9,7 +9,7 @@ router.post('/update-event-item', authenticateToken, async (req, res) => {
     const { eventName, type, variant } = req.body
 
     let event = events.find(item => item.name == eventName)
-    let items = ['Capsule', 'Patch Package', 'Agent', 'Case'].includes(type) ? event.items[type] : formatItemNames(event, type, variant)
+    let items = ['Capsule', 'Patch Package', 'Agent', 'Case', 'Skin'].includes(type) ? event.items[type] : formatItemNames(event, type, variant)
     items = items.map(item => { return { name: item, priceHistory: [] } })
 
     for (let i in items) {

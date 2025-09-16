@@ -254,7 +254,7 @@ router.post('/update-investment-market-prices', authenticateToken, async (req, r
     if (!user.success) return res.json(user)
     user = user.user
 
-    const lastUpdateDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 30)
+    const lastUpdateDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 60)
     const updateStartDateCheck = new Date() - new Date(user.investmentsMarketPriceUpdateStatus.updateStartDate) > (3200 * user.investments.length) + (1000 * 10)
     const isUpdating = user.investmentsMarketPriceUpdateStatus.isUpdating
 

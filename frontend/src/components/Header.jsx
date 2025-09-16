@@ -29,7 +29,7 @@ export default function Header({ user }) {
     const updateInvestmentMarketPrices = async () => {
         if (user.value.investments.length == 0 || user.value.investments.filter(item => item.quantity > 0).length == 0) return;
 
-        const lastUpdateDateCheck = new Date() - new Date(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 30)
+        const lastUpdateDateCheck = new Date() - new Date(user.value.investmentsMarketPriceUpdateStatus.lastUpdateDate) > (1000 * 60 * 60)
         const updateStartDateCheck = new Date() - new Date(user.value.investmentsMarketPriceUpdateStatus.updateStartDate) > (3200 * user.value.investments.length) + (1000 * 10)
         const isUpdating = user.value.investmentsMarketPriceUpdateStatus.isUpdating
 
