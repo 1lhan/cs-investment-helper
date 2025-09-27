@@ -65,8 +65,8 @@ export default function StickerApplicationNumbers() {
         batch(() => {
             legendsCapsuleStickers.value = formattedData.slice(0, 8)
             challengersCapsuleStickers.value = formattedData.slice(8, 16)
-            contendersCapsuleStickers.value = formattedData.slice(16, 24)
-            tournamentSticker.value = formattedData.slice(24)
+            contendersCapsuleStickers.value = formattedData.slice(16, -1)
+            tournamentSticker.value = formattedData.slice(-1)
 
             tableColumns.value = [
                 { fields: [{ label: 'image', type: 'image', path: 'name' }] },
