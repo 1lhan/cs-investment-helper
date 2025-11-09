@@ -2,7 +2,7 @@ const events = [
     {
         name: "Austin 2025", type: "tournament", eventImage: "Sticker | BLAST.tv (Holo) | Austin 2025",
         releaseDate: new Date("2025-05-23T00:12:00.000Z"), tournamentStartDate: new Date("2025-06-03T15:30:00.000Z"), tournamentEndDate: new Date("2025-06-22T19:30:00.000Z"),
-        saleStartDate: new Date("2025-08-15T20:20:00.000Z"), endDate: null,
+        saleStartDate: new Date("2025-08-15T20:20:00.000Z"), endDate: new Date("2025-10-01T23:37:00.000Z"),
         items: {
             Sticker: ["Vitality", "MOUZ", "Team Spirit", "The Mongolz", "Aurora", "Natus Vincere", "G2 Esports", "Team Liquid", "Falcons", "FaZe Clan", "3DMAX", "Virtus.Pro", "paiN Gaming", "FURIA", "MIBR", "M80",
                 "Complexity Gaming", "Wildcard", "HEROIC", "B8", "OG", "Nemiga", "BetBoom", "Imperial Esports", "NRG", "FlyQuest", "Metizport", "TYLOO", "Fluxo", "Chinggis Warriors", "Lynn Vision", "Legacy", "BLAST.tv"]
@@ -16,7 +16,7 @@ const events = [
                 "oSee", "HexT", "br0", "nitr0", "jeorge", "INS", "Liazz", "vexite", "regali", "nettik", "hampus", "isak", "Plopski", "L00m1", "adamb", "JamYoung", "Moseyuh", "Attacker", "Jee", "Mercury",
                 "arT", "piriajr", "zevy", "kye", "mlhzin", "controlez", "efire", "ROUX", "Ariucle", "cool4st", "westmelon", "z4KR", "Starry", "EmiliaQAQ", "C4LLM3SU3", "lux", "saadzin", "latto", "dumau", "n1ssim"],
             Capsule: ['Austin 2025 Legends Sticker Capsule', 'Austin 2025 Challengers Sticker Capsule', 'Austin 2025 Contenders Sticker Capsule', 'Austin 2025 Legends Autograph Capsule',
-                'Austin 2025 Challengers Autograph Capsule', 'Austin 2025 Contenders Autograph Capsule'/*, 'Austin 2025 Champions Autograph Capsule'*/],
+                'Austin 2025 Challengers Autograph Capsule', 'Austin 2025 Contenders Autograph Capsule', 'Austin 2025 Champions Autograph Capsule'],
             'Souvenir Package': ['Dust II', 'Mirage', 'Inferno', 'Nuke', 'Train', 'Ancient', 'Anubis']
         },
         championAutograph: null
@@ -48,11 +48,28 @@ const events = [
                 'Gold Teef (Foil)', 'Mustachio (Foil)', 'Red Shades (Foil)', 'Boom Trail (Glitter)', 'Boom Blast (Glitter)', 'Boom Epicenter (Glitter)', 'Boom Detonation (Glitter)', 'Rainbow Route (Holo)', 'Hypnoteyes (Holo)',
                 'Taste Buddy (Holo)', 'Say Cheese (Holo)', 'From The Deep (Glitter)', 'Kawaii Eyes (Glitter)', 'Hydro Wave', 'Hydro Stream', 'Hydro Geyser', 'Boom Trail', 'Boom Blast', 'Boom Epicenter', 'Boom Detonation',
                 'Scorch Loop', 'Winding Scorch', 'Scorch Loop (Reverse)', 'Hot Rod Heat', 'High Heat', 'Bolt Energy', 'Bolt Charge', 'Bolt Strike', 'Strike A Pose', 'Taste Bud', 'Ribbon Tie', 'XD', 'Quick Peek', 'Clown Wig',
-                'Clown Nose', 'Flex', 'Lefty (T)', 'Lefty (CT)', 'Glare', 'From The Deep', 'Fly High', 'Chompers', 'Blinky'],
+                'Clown Nose', 'Flex', 'Lefty (T)', 'Lefty (CT)', 'Glare', 'From The Deep', 'Fly High', 'Chompers', 'Blinky',
+
+                "BullHit (Lenticular)", "Neon MVP (Lenticular)", "Digi-Strike (Lenticular)", "Queen Ava (Foil)", "King Crasswater (Foil)", "Hands Off (Foil)",
+                "Good As New (Foil)", "Eyes In The Sky (Foil)", "Ain't A Rental (Foil)", "Froggles (Holo)", "Evidence (Holo)", "Cutie (Holo)",
+                "Chrome Dome (Holo)", "Bomb Planted (Holo)", "T Tracks (Glitter)", "Overloaded (Glitter)", "CT Tracks (Glitter)", "Vice Cursor",
+                "Skelly Stabby", "Sent With Love", "POTS", "Pop Pup", "Mimicapsule", "Lock In", "Gloves On", "Fade Mangos", 
+                "Eyes of Farlow","Cubix Connexion", "Candy Apples", 
+                
+                "Lucas (Foil)", "Lorena (Foil)", "Clavis (Foil)", "Lucas (Holo)","Lorena (Holo)", "Clavis (Holo)","Lucas", "Lorena",
+                "Clavis"
+            ],
             Case: ['Gallery Case', 'Fever Case'],
             Charm: ["Hot Wurst", "Hot Howl", "Baby Karat T", "Baby Karat CT", "Diner Dog", "Diamond Dog", "Lil' Monster", "Semi-Precious", "Lil' Squirt", "Titeenium AWP", "Lil' Squatch", "Lil' Teacup", "Chicken Lil'", "Lil' Sandy",
-                "Lil' Whiskers", "That's Bananas", "Glamour Shot", "Hot Hands", "Disco MAC", "POP Art", "Die-cast AK", "Lil' SAS", "Hot Sauce", "Big Kev", "Lil' Crass", "Lil' Ava", "Stitch-Loaded", "Lil' Cap Gun", "Backsplash",
-                "Whittle Knife", "Pocket AWP", "Baby's AK"],
+                "Lil' Whiskers", "That's Bananas", "Glamour Shot", "Hot Hands", "Disco MAC", "POP Art", "Die-cast AK", "Lil' SAS", "Hot Sauce", "Pinch O' Salt", "Big Kev", "Lil' Crass", "Lil' Ava", "Stitch-Loaded", "Lil' Cap Gun", "Backsplash",
+                "Whittle Knife", "Pocket AWP", "Baby's AK",
+                
+                "Lil' Boo","Quick Silver","Lil' Eldritch","Lil' Serpent","Lil' Chirp",  "Lil' Hero","Piñatita","Lil' Happy","Lil' Prick","Lil' Moments","Hang Loose","Lil' Goop","Pocket Pop","Magmatude","Lil' Buns","Lil' Vino",
+                "Lil' Tusk","Lil' No. 2","Lil' Cackle","Lil' Smokey","Dead Weight","Lil' Baller","Lil' Curse",
+
+                "Butane Buddy","Lil' Ferno","8 Ball IGL","Glitter Bomb","Flash Bomb","Lil' Yeti","Eye of Ball","Hungry Eyes","Lil' Eco","Dr. Brian","Bomb Tag","Lil' Dumplin'","Lil' Bloody","Lil' Chomper","Lil' Facelift",
+                "Big Brain","Lil' Zen","Whittle Guy","Fluffy","Gritty","Splatter Cat","Biomech",
+            ],
             Skin: [
                 "AWP | CMYK (Factory New)", "AWP | CMYK (Minimal Wear)", "AWP | CMYK (Field-Tested)", "AWP | CMYK (Well-Worn)", "AWP | CMYK (Battle-Scarred)",
                 "Desert Eagle | Starcade (Factory New)", "Desert Eagle | Starcade (Minimal Wear)", "Desert Eagle | Starcade (Field-Tested)", "Desert Eagle | Starcade (Well-Worn)", "Desert Eagle | Starcade (Battle-Scarred)",

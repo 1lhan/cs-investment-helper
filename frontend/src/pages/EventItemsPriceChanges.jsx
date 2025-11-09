@@ -82,7 +82,7 @@ export default function EventItemsPriceChanges() {
             let dateFilterEndIndex = calculateDateFilterIndex(period.value == 'Any' ? endDate.value : null, items[0].priceHistory, event.name, 'end', period.value == 'Any' ? null : period.value)
 
             const _processedItems = items.map((item, itemIndex) => {
-                let priceArr = item.priceHistory.filter(_item => _item[2] != 0).slice(-2)
+                let priceArr = item.priceHistory.filter(_item => _item[2] != 0).slice(-1)
                 let price = getAvgPriceOfArr(priceArr)
                 let volume = priceArr.reduce((t, c) => +big(t).plus(c[2]), 0)
 
